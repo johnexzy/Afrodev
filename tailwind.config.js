@@ -1,0 +1,28 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./components/**/*.{js,vue,ts}",
+    "./layouts/**/*.vue",
+    "./pages/**/*.vue",
+    "./plugins/**/*.{js,ts}",
+    "./nuxt.config.{js,ts}",
+    "./app.vue",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        red: '#f98b4d'
+      },
+    
+      fontFamily: {
+        'sans': ['Raleway', 'sans-serif'],
+        // Montserrat: ['Montserrat', 'sans-serif'],
+        Raleway: ['Raleway', 'sans-serif'],
+        inter: ['Inter', 'sans-serif']
+      }, //end of fontFamily
+    },
+  },
+  plugins: [
+    require('@tailwindcss/aspect-ratio'),
+  ],
+}
