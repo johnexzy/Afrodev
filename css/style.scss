@@ -6,7 +6,18 @@
 @tailwind utilities;
 
 @layer base {
-    html {
-      font-family: 'Raleway', system-ui, sans-serif;
+  html {
+    font-family: 'Raleway', system-ui, sans-serif;
+  }
+
+  .text-header {
+    @apply text-5xl;
+    font-weight: 700;
+
+    line-height: 56px;
+    @media  (max-width: 700px) {
+      font-size: 33px;
+      line-height: 35px;
     }
   }
+}

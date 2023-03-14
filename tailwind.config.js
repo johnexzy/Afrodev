@@ -3,7 +3,8 @@ module.exports = {
   content: [
     "./components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",
-    "./pages/**/*.vue",
+    "./pages/**/*.vue", 
+    "./content/**/*.md",
     "./plugins/**/*.{js,ts}",
     "./nuxt.config.{js,ts}",
     "./app.vue",
@@ -24,5 +25,6 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/aspect-ratio'),
+    require('@tailwindcss/typography'),
   ],
 }
