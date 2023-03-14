@@ -202,7 +202,7 @@ useServerSeoMeta({
   ogTitle: "Afrodev - Blog",
   description: "Explore Practical Software Development Articles.",
   ogDescription: "Explore Practical Software Development Articles.",
-  ogImage: "https://res.cloudinary.com/dpq6dieap/image/upload/v1678755052/logo_rscrdw.png",
+  ogImage: "https://res.cloudinary.com/dpq6dieap/image/upload/v1678755812/meta_en37in.png",
   twitterCard: "summary_large_image",
 });
 </script>
