@@ -106,8 +106,8 @@ const data = await queryContent('/')
 useServerSeoMeta({
   title: "Afrodev",
   ogTitle: "Afrodev - Blog",
-  description: "Explore Practical Software Development Articles.",
-  ogDescription: "Explore Practical Software Development Articles.",
+  description: "Coding Chronicles: Explore Practical Software Development Stories",
+  ogDescription: "Coding Chronicles: Explore Practical Software Development Stories",
   ogImage: "https://res.cloudinary.com/dpq6dieap/image/upload/v1678755812/meta_en37in.png",
   twitterCard: "summary_large_image",
 });
