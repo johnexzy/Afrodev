@@ -1,8 +1,8 @@
 <template>
   <main class="mx-auto">
     <div class="text-center my-10">
-      <h1 class="text-5xl font-semibold">
-        Explore Practical <span class="">Software</span> Development Articles.
+      <h1 class="text-header font-semibold">
+        <span class="text-red"> The Code Chronicles: </span> Tales from a Software Developer
       </h1>
     </div>
     <div class="my-10 justify-center flex">
@@ -10,7 +10,15 @@
     </div>
 
     <div>
-      <h2 class="font-semibold">Articles</h2>
+    <div class="flex justify-between">
+      <h2 class="font-semibold">Tales & Stories</h2>
+      <label class="relative inline-flex items-center cursor-pointer">
+  <input type="checkbox" v-model="hideImages" class="sr-only peer" checked>
+  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+  <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle Images</span>
+</label>
+    </div>
+      
       <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2">
         <div class="group relative" v-for="(d, i) in data" :key="i">
           <div class="mb-4 flex justify-left">
@@ -30,6 +38,7 @@
             </div>
           </div>
           <div
+           v-if="!hideImages"
             class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-red group-hover:opacity-75 lg:aspect-none">
             <nuxt-img format="webp" src="/article-image.png" alt="Front of men&#039;s Basic Tee in black."
               sizes="sm:100vw md:50vw lg:400px"
@@ -82,10 +91,10 @@
 <script setup lang="ts">
 const data = reactive([
   {
-    title: "A Practical Guide To SEO In Nuxt 3",
-    modified: "March 4, 2023 •",
-    read_time: "6 min",
-    excerpt: "How to properly handle SEO in your Nuxt application",
+    title: "A Practical Guide To Gasless Token Transfer",
+    modified: "Oct 31, 2022 •",
+    read_time: "10 min",
+    excerpt: "How to delegate GAS payment to a different wallet using EIP-3009 implemented in USDC",
   },
   {
     title: "A Practical Guide To SEO In Nuxt 3",
@@ -118,6 +127,7 @@ const data = reactive([
     excerpt: "How to properly handle SEO in your Nuxt application",
   },
 ]);
+const hideImages = ref(true)
 
 useServerSeoMeta({
   title: "Afrodev",
