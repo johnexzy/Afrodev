@@ -34,7 +34,7 @@
             </a>
           </h3>
           <p class="mt-1 text-xs font-semibold font text-gray-500">
-            {{ d.date }} {{ d.read_time }}
+            {{ d.date }} • {{ d.read_time }} read
           </p>
           <p class="mt-3 text-sm font-semi-bold text-ellipsis">
             {{ d.excerpt }}
