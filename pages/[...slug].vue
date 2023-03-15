@@ -22,15 +22,15 @@
 const { path } = useRoute()
 
 const { data } = await useAsyncData(`content-${path}`, () => {
-    return queryContent().where({ _path: path }).only(['title', 'featured_image', 'date', 'read_time', 'author']).findOne()
+    return queryContent().where({ _path: path }).only(['title', 'featured_image', 'date', 'read_time', 'excerpt', 'author']).findOne()
 })
-const {title, featured_image, author} = data.value!
+const {title, featured_image, author, excerpt} = data.value!
 
 const ogImage = process.env.NODE_ENV == 'development' ? `http://localhost:3000${featured_image}` : `https://afrodev.space${featured_image}`
 useServerSeoMeta({
   title: title,
   ogTitle: title,
-  description: title,
+  description: excerpt,
   ogDescription: title,
   ogImage: ogImage,
   author: author,
