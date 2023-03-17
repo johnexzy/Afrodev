@@ -20,4 +20,9 @@
       line-height: 35px;
     }
   }
+
+  .prose > p > img {
+    @apply shadow-md;
+    @apply rounded-md
+  }
 }

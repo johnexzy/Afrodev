@@ -1,48 +1,70 @@
 <template>
-    <main>
+    <main v-if="!!data">
         <div class="mb-10 text-header text-center font-inter font-bold">
-            {{ title }}
+            {{ data.title }}
         </div>
-        <div class="max-w-72 justify-center flex">
-               <i>by</i> <span class="ml-2 font-semibold"> {{ author }} </span><span class="mt-1 ml-3 text-xs font-semibold font text-gray-500">
-                {{ data!.date }} • {{ data!.read_time }} read
+        <div class="justify-center flex">
+            <i>by</i> <span class="ml-2 font-semibold"> {{ data.author }} </span
+            ><span class="mt-1 ml-3 text-xs font-semibold font text-gray-500">
+                {{ data.date }} • {{ data.read_time }} read
             </span>
         </div>
         <div class="my-10 justify-center flex">
-            <nuxt-img class="max-w-72 max-h-80 rounded-md shadow-md" sizes="sm:100vw" :src="featured_image" alt="Image Banner"
-                format="webp" />
+            <nuxt-img
+                class="max-w-72 max-h-80 rounded-md shadow-lg"
+                sizes="sm:100vw"
+                :src="ogImage"
+                alt="Image Banner"
+                format="webp"
+            />
         </div>
-        <article class="mb-6 flex justify-center">
-            <ContentDoc  class="prose lg:prose-lg text-justify justify-center font-inter"  />
+        <article class="mb-6 sm:flex sm:justify-center">
+            <ContentDoc class="prose justify-center font-inter" />
         </article>
-        
     </main>
 </template>
 <script setup lang="ts">
-const { path } = useRoute()
+import { withBase } from 'ufo'
+const { path } = useRoute();
 
 const { data } = await useAsyncData(`content-${path}`, () => {
-    return queryContent().where({ _path: path }).only(['title', 'featured_image', 'date', 'read_time', 'excerpt', 'author']).findOne()
-})
-const {title, featured_image, author, excerpt} = data.value!
-
-const ogImage = process.env.NODE_ENV == 'development' ? `http://localhost:3000${featured_image}` : `https://afrodev.space${featured_image}`
-useServerSeoMeta({
-  title: title,
-  ogTitle: title,
-  description: excerpt,
-  ogDescription: title,
-  ogImage: ogImage,
-  author: author,
-  twitterCard: "summary_large_image"
+    return queryContent()
+        .where({ _path: path })
+        .only([
+            "title",
+            "featured_image",
+            "date",
+            "read_time",
+            "excerpt",
+            "author",
+        ])
+        .findOne();
 });
-console.log(process.env.NODE_ENV, process.env.PORT)
+
+
+const ogImage = computed(() => {
+
+  if (data.value?.featured_image?.startsWith('/') && !data.value?.featured_image.startsWith('//')) {
+    return withBase(data.value?.featured_image, useRuntimeConfig().app.baseURL)
+  }
+  return data.value?.featured_image
+})
+
+useServerSeoMeta({
+    title: data.value?.title,
+    ogTitle: data.value?.title,
+    description: data.value?.excerpt,
+    ogDescription: data.value?.excerpt,
+    ogImage: ogImage,
+    author: data.value?.author,
+    twitterCard: "summary_large_image",
+});
 definePageMeta({
     layout: "details",
 });
 </script>
 <style>
 a {
-    text-decoration: none !important
+    text-decoration: none !important;
 }
 </style>
