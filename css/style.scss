@@ -647,4 +647,9 @@
   .prose-sm> :last-child {
     margin-bottom: 0;
   }
+
+  // social icons
+  .socials > svg {
+    @apply text-xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-150  duration-300
+  }
 }

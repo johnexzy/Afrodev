@@ -20,6 +20,19 @@
             <comments is-dark class="hidden dark:block"></comments>
             <comments class="dark:hidden"></comments>
         </div>
+        <div>
+            <div class="my-10">
+                <div class="flex justify-between">
+                    <div>
+                        <h2 class="font-bold text-3xl dark:text-gray-300">More Stories from Afrodev</h2>
+                    </div>
+
+                </div>
+
+            </div>
+            <ListArticles :data="moreArticles" />
+        </div>
+
     </main>
 </template>
 <script setup lang="ts">
@@ -40,9 +53,15 @@ const { data } = await useAsyncData(`content-${path}`, () => {
         .findOne();
 });
 
+// fetch surrounding articles and remove null values
+const { data: moreArticles } = await useAsyncData(`more-${path}-1`, async () => {
+    return (await queryContent('/')
+        .only(['title', 'featured_image', 'excerpt', 'date', 'read_time', 'author', '_path']).limit(3)
+        .findSurround(path)).filter(x => x !== null)
+});
 
+// add base_url to featured_image
 const ogImage = computed(() => {
-
     if (data.value?.featured_image?.startsWith('/') && !data.value?.featured_image.startsWith('//')) {
         return withBase(data.value?.featured_image, useRuntimeConfig().app.baseURL)
     }
@@ -58,33 +77,9 @@ useServerSeoMeta({
     author: data.value?.author,
     twitterCard: "summary_large_image",
 });
-// useHead({
-//     script: [
-//         {
-//             body: true,
-            
-//             src: 'https://utteranc.es/client.js',
-//             crossorigin: 'anonymous',
-//             async: true,
 
-//             "issue-term": 'title',
-//             repo: 'johnexzy/utterances-afrodev',
-//             theme: 'github-dark',
-//         }
-//     ]
-// })
-definePageMeta({
-    layout: "details",
-});
 
-// const script = document.createElement("script")
-// script.src = "https://utteranc.es/client.js"
-// script.setAttribute('theme', 'github-light')
-// script.setAttribute('issue-term', 'title')
-// script.setAttribute('repo', 'johnexzy/utterances-afrodev')
 
-// script.crossOrigin = "anonymous"
-// document.getElementById('commentSection')?.appendChild(script)
 </script>
 <style>
 a {
