@@ -17,7 +17,8 @@
             <ContentDoc class="prose justify-center font-inter dark:text-gray-100" />
         </article>
         <div class="comment-section" id="commentSection">
-            <comments></comments>
+            <comments is-dark class="hidden dark:block"></comments>
+            <comments class="dark:hidden"></comments>
         </div>
     </main>
 </template>
