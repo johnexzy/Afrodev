@@ -649,7 +649,7 @@
   }
 
   // social icons
-  .socials > svg {
+  .socials > a > svg {
     @apply text-xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-150  duration-300
   }
 }
