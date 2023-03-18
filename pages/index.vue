@@ -27,7 +27,7 @@
       </div>
 
       <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2">
-        <NuxtLink :to="d._path" class="group relative" v-for="(d, i) in data" :key="i">
+        <a :href="configureUrl(d._path)" class="group relative" v-for="(d, i) in data" :key="i">
           <div class="flex justify-left">
             <div class="font-inter">
               <h3 class="text-md dark:text-gray-300 font-semibold">
@@ -52,7 +52,7 @@
             <nuxt-img format="webp" :src="d.featured_image" :alt="d.title" sizes="sm:100vw md:50vw lg:400px"
               class="cursor-pointer h-full w-full object-cover object-center lg:h-full lg:w-full" />
           </div>
-        </NuxtLink>
+        </a>
       </div>
     </div>
     <div class="my-10 h- flex items-center justify-center">
@@ -97,7 +97,7 @@
   </main>
 </template>
 <script setup lang="ts">
-
+import { withBase } from 'ufo'
 const hideImages = ref(true)
 
 
@@ -114,4 +114,6 @@ useServerSeoMeta({
   ogImage: "https://res.cloudinary.com/dpq6dieap/image/upload/v1678755812/meta_en37in.png",
   twitterCard: "summary_large_image",
 });
+
+const configureUrl = (path: string) => withBase(path, useRuntimeConfig().app.baseURL)
 </script>
