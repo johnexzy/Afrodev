@@ -1,18 +1,19 @@
 <template>
   <main class="mx-auto">
     <div class="text-center my-10">
-      <h1 class="text-header font-semibold">
-        <span class="text-red"> The Code Chronicles: </span> Tales from a Software Developer
+      <h1 class="text-header dark:text-white font-semibold">
+        <span class="text-red">Code Chronicles: </span> Tales from a Software Developer
       </h1>
     </div>
     <div class="my-10 justify-center flex">
-      <nuxt-img class="max-h-72 rounded-md" sizes="sm:100vw" src="/banner1.png" alt="Image Banner" format="webp" />
+      <nuxt-img class="max-h-72 rounded-md shadow-sm" sizes="sm:100vw" src="/banner1.png" alt="Image Banner"
+        format="webp" />
     </div>
 
     <div class="my-10">
       <div class="flex justify-between">
         <div>
-          <h2 class="font-bold text-3xl">Tales & Stories</h2>
+          <h2 class="font-bold text-3xl dark:text-gray-300">Tales & Stories</h2>
         </div>
         <div class="mt-2">
           <label class="relative inline-flex items-center cursor-pointer">
@@ -29,22 +30,22 @@
         <NuxtLink :to="d._path" class="group relative" v-for="(d, i) in data" :key="i">
           <div class="flex justify-left">
             <div class="font-inter">
-              <h3 class="text-md font-semibold">
-                <h3>
-                  <span aria-hidden="true" class="absolute inset-0"></span>
-                  {{ d.title }}
-                </h3>
+              <h3 class="text-md dark:text-gray-300 font-semibold">
+
+                <span aria-hidden="true" class="absolute inset-0"></span>
+                {{ d.title }}
+
               </h3>
-              <p class="mt-1 text-xs font-semibold font text-gray-500">
+              <p class="mt-1 text-xs font-semibold font text-gray-500 ">
                 {{ d.date }} • {{ d.read_time }} read
               </p>
-              
+
             </div>
           </div>
           <div class="font-inter mb-4">
-            <p class="w-full whitespace-nowrap overflow-hidden mt-3 text-sm font-semi-bold text-ellipsis">
-                {{ d.excerpt }}
-              </p>
+            <p class="w-full whitespace-nowrap overflow-hidden mt-3 text-sm font-semi-bold text-ellipsis dark:text-gray-300">
+              {{ d.excerpt }}
+            </p>
           </div>
           <div v-if="!hideImages"
             class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-red group-hover:opacity-75 lg:aspect-none">
@@ -70,17 +71,17 @@
           <a href="#" aria-current="page"
             class="relative z-10 inline-flex items-center bg-red px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">1</a>
           <a href="#"
-            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
+            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">2</a>
           <a href="#"
-            class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
+            class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">3</a>
           <span
-            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
+            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">...</span>
           <a href="#"
-            class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
+            class="relative hidden items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 md:inline-flex">8</a>
           <a href="#"
-            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
+            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">9</a>
           <a href="#"
-            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
+            class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-300 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">10</a>
           <a href="#"
             class="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0">
             <span class="sr-only">Next</span>

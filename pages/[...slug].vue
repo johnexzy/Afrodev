@@ -1,11 +1,11 @@
 <template>
     <main v-if="!!data">
-        <div class="mb-10 text-header text-center font-inter font-bold">
+        <div class="mb-10 text-header dark:text-gray-50 text-center font-inter font-bold">
             {{ data.title }}
         </div>
-        <div class="justify-center flex">
+        <div class="justify-center flex dark:text-gray-200">
             <i>by</i> <span class="ml-2 font-semibold"> {{ data.author }} </span
-            ><span class="mt-1 ml-3 text-xs font-semibold font text-gray-500">
+            ><span class="mt-1 ml-3 text-xs font-semibold font text-gray-500 dark:text-gray-400">
                 {{ data.date }} • {{ data.read_time }} read
             </span>
         </div>
@@ -19,7 +19,7 @@
             />
         </div>
         <article class="mb-6 sm:flex sm:justify-center">
-            <ContentDoc class="prose justify-center font-inter" />
+            <ContentDoc class="prose justify-center font-inter dark:text-gray-100" />
         </article>
     </main>
 </template>
