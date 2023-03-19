@@ -79,6 +79,14 @@ const data = await queryContent('/')
   .find()
 
 
+useServerSeoMeta({
+  title: "Afrodev",
+  ogTitle: "Afrodev - Blog",
+  description: "Coding Chronicles: Practical Software Development Stories",
+  ogDescription: "Coding Chronicles: Practical Software Development Stories",
+  ogImage: "https://res.cloudinary.com/dpq6dieap/image/upload/v1678755812/meta_en37in.png",
+  twitterCard: "summary_large_image",
+});
 
 const configureUrl = (path: string) => withBase(path, useRuntimeConfig().app.baseURL)
 </script>
