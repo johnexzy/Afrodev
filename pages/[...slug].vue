@@ -60,6 +60,16 @@ const { data: moreArticles } = await useAsyncData(`more-${path}-1`, async () => 
         .findSurround(path)).filter(x => x !== null)
 });
 
+// load lazysizes
+useHead({
+  script: [
+    {
+      src: "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js",
+      type: "text/javascript",
+      async: true,
+    },
+  ],
+});
 // add base_url to featured_image
 const ogImage = computed(() => {
     if (data.value?.featured_image?.startsWith('/') && !data.value?.featured_image.startsWith('//')) {
@@ -67,6 +77,8 @@ const ogImage = computed(() => {
     }
     return data.value?.featured_image
 })
+
+console.log(ogImage)
 
 useServerSeoMeta({
     title: data.value?.title,

@@ -30,15 +30,6 @@ const props = defineProps({
   },
 });
 
-useHead({
-  script: [
-    {
-      src: "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js",
-      type: "text/javascript",
-      async: true,
-    },
-  ],
-});
 const refinedSrc = computed(() => {
   if (props.src?.startsWith("/") && !props.src.startsWith("//")) {
     return withBase(props.src, useRuntimeConfig().app.baseURL);
