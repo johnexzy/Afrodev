@@ -21,10 +21,9 @@
                     {{ d.excerpt }}
                 </p>
             </div>
-            <div v-if="!hideImages"
-                class="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-red group-hover:opacity-75 lg:aspect-none">
-                <nuxt-img format="webp" :src="d.featured_image" :alt="d.title" sizes="sm:100vw md:50vw lg:400px"
-                    class="cursor-pointer h-full w-full object-cover object-center lg:h-full lg:w-full" />
+            <div class="justify-center flex group-hover:opacity-75" v-if="!hideImages">
+                <nuxt-img class="max-w-72 max-h-80 rounded-md shadow-lg" sizes="sm:100vw" :src="d.featured_image" :alt="d.title" 
+                    format="webp" />
             </div>
         </a>
     </div>
