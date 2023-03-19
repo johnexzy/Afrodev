@@ -23,5 +23,3 @@ fields:
 - type: text
   name: read_time
   label: read_time
-pages:
-- content/deploying-one-contract-address-across-chains-a-practical-guide.md
