@@ -73,12 +73,10 @@ useHead({
 // add base_url to featured_image
 const ogImage = computed(() => {
     if (data.value?.featured_image?.startsWith('/') && !data.value?.featured_image.startsWith('//')) {
-        return withBase(data.value?.featured_image, useRuntimeConfig().app.baseURL)
+        return withBase(data.value?.featured_image, useRuntimeConfig().baseURL)
     }
     return data.value?.featured_image
 })
-
-console.log(ogImage)
 
 useServerSeoMeta({
     title: data.value?.title,

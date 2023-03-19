@@ -32,7 +32,7 @@ const props = defineProps({
 
 const refinedSrc = computed(() => {
   if (props.src?.startsWith("/") && !props.src.startsWith("//")) {
-    return withBase(props.src, useRuntimeConfig().app.baseURL);
+    return withBase(props.src, useRuntimeConfig().baseURL);
   }
   return props.src;
 });
