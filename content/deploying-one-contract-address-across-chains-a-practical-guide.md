@@ -35,7 +35,7 @@ This is **the (sequential) number of transactions sent from a given address**. I
 
 ## Let’s go down the rabbit hole
 
-A very quick way to play around with this convention is to use [remix](https://remix.ethereum.org/). Here's a simple Storage contract, we'll be deploying using to a remix vm.
+A very quick way to play around with this convention is to use [remix](https://remix.ethereum.org/). Here's a simple Storage contract.
 
     // SPDX-License-Identifier: GPL-3.0
     
