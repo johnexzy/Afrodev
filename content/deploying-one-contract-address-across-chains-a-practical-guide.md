@@ -35,7 +35,7 @@ This is **the (sequential) number of transactions sent from a given address**. I
 
 ## Let’s go down the rabbit hole
 
-Here's a simple Storage contract, 
+A very quick way to play around with this convention is to use [remix](https://remix.ethereum.org/). Here's a simple Storage contract, we'll be deploying using to a remix vm.
 
     // SPDX-License-Identifier: GPL-3.0
     
@@ -44,7 +44,6 @@ Here's a simple Storage contract,
     /**
      * @title Storage
      * @dev Store & retrieve value in a variable
-     * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
      */
     contract Storage {
     
@@ -66,5 +65,7 @@ Here's a simple Storage contract,
             return number;
         }
     }
+
+We will utilize a single virtual account within the Remix IDE to deploy the contract onto two EVM virtual networks, the Remix VM (London) and Remix VM (Berlin).
 
 w [remix](https://remix.ethereum.org/) IDE. 
