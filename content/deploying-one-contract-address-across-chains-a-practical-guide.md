@@ -9,7 +9,7 @@ date: March 19, 2023
 read_time: 5 min
 
 ---
-While dabbling with dApps and smart contracts, you may have noticed some contracts with the same  addresses across testnets and mainnets. It provides a good developer experience for developers building with your smart contracts. A clean example is [Uniswap router](https://docs.uniswap.org/protocol/V2/reference/smart-contracts/router-02) smart contract. 
+While dabbling with dApps and smart contracts, you may have noticed some contracts with the same  addresses across testnets and mainnets. It provides a good developer experience for developers building with your smart contracts. A clean example is [Uniswap router](https://docs.uniswap.org/protocol/V2/reference/smart-contracts/router-02) smart contract.
 
 [![uniswap router](https://substackcdn.com/image/fetch/w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2Ffbc3eeae-55b4-4ec3-ac94-843cea9a183b_1872x154.png "uniswap")](https://docs.uniswap.org/contracts/v2/reference/smart-contracts/router-02 "uniswap router")
 
@@ -68,4 +68,34 @@ A very quick way to play around with this convention is to use [remix](https://r
 
 We will utilize a single virtual account within the Remix IDE to deploy the contract onto two EVM virtual networks, the Remix VM (London) and Remix VM (Berlin).
 
-w [remix](https://remix.ethereum.org/) IDE. 
+Compile the Storage Contract
+
+[![](https://substackcdn.com/image/fetch/w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Febc3909d-02f1-48a7-8062-78992690446c_564x367.png =564x367)](https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Febc3909d-02f1-48a7-8062-78992690446c_564x367.png)
+
+To deploy our compiled contract onto different virtual machines in the Remix IDE's test environments, we can select one out of the 15 available virtual accounts with 100ETH. However, it's important to take note of the selected account and ensure that it has not been used on the specific Remix VM we plan to deploy the contract to.
+
+### Deployment
+
+Selected account is `0x5B38Da6a701c568545dCfcB03FcB875f56beddC4` 
+
+Remix VM (London)
+
+![](https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F98c9e3fe-7c02-4eff-81dd-287d19de0377_504x473.png)
+
+Resulting Contract address is `0xd9145CCE52D386f254917e481eB44e9943F39138`
+
+Remix VM (Berlin)
+
+![](https://substackcdn.com/image/fetch/w_1456,c_limit,f_webp,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F50929a59-9888-4005-b50d-d6102c14fceb_409x335.png)
+
+and the resulting Contract address remains the same `0xd9145CCE52D386f254917e481eB44e9943F39138`
+
+## Key concepts
+
+* The bytecode was the same (compiled contract did not change)
+* Same Wallet address
+* The nonces was identical across the two VMs. simply 0
+
+## Conclusion 
+
+In real world, keeping track of nonces count can be a bit of a mess, and as result other conventions are employed. One major one is [Create2](https://docs.openzeppelin.com/cli/2.8/deploying-with-create2). It utilizes a  salt (a randomly generated value) instead of a sequential nonce. [Here's a guide to using Create2](https://docs.alchemy.com/docs/create2-an-alternative-to-deriving-contract-addresses)
