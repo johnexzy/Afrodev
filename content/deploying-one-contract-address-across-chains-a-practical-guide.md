@@ -12,3 +12,59 @@ read_time: 5 min
 While dabbling with dApps and smart contracts, you may have noticed some contracts with the same  addresses across testnets and mainnets. It provides a good developer experience for developers building with your smart contracts. A clean example is [Uniswap router](https://docs.uniswap.org/protocol/V2/reference/smart-contracts/router-02) smart contract. 
 
 [![uniswap router](https://substackcdn.com/image/fetch/w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2Ffbc3eeae-55b4-4ec3-ac94-843cea9a183b_1872x154.png "uniswap")](https://docs.uniswap.org/contracts/v2/reference/smart-contracts/router-02 "uniswap router")
+
+In this article, we will deploy a smart contract across evm chains using Remix IDE.
+
+> Remix IDE, is **a no-setup tool with a GUI for developing smart contracts**.
+
+## How are contract addresses generated?
+
+A contract address is derived from these three main components.
+
+* Deployer’s address
+* Deployer’s nonce
+* Contract's bytecode
+
+This ensures that a smart contract deployed to the network has a unique address.
+
+For a contract address to remain the same across the target EVM chains, the contract must be deployed with the same wallet address, the wallet's nonce is equivalent on each network, and the contract’s bytecode remains the same.
+
+### What Is a Nonce?
+
+This is **the (sequential) number of transactions sent from a given address**. In English, a nonce is a number that can only be used once. It helps to keep transactions and transaction ids unique.
+
+## Let’s go down the rabbit hole
+
+Here's a simple Storage contract, 
+
+    // SPDX-License-Identifier: GPL-3.0
+    
+    pragma solidity >=0.8.2 <0.9.0;
+    
+    /**
+     * @title Storage
+     * @dev Store & retrieve value in a variable
+     * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
+     */
+    contract Storage {
+    
+        uint256 number;
+    
+        /**
+         * @dev Store value in variable
+         * @param num value to store
+         */
+        function store(uint256 num) public {
+            number = num;
+        }
+    
+        /**
+         * @dev Return value 
+         * @return value of 'number'
+         */
+        function retrieve() public view returns (uint256){
+            return number;
+        }
+    }
+
+w [remix](https://remix.ethereum.org/) IDE. 
