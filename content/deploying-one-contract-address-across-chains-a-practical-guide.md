@@ -76,7 +76,7 @@ To deploy our compiled contract onto different virtual machines in the Remix IDE
 
 ### Deployment
 
-Selected account is `0x5B38Da6a701c568545dCfcB03FcB875f56beddC4` 
+Selected account is `0x5B38Da6a701c568545dCfcB03FcB875f56beddC4`
 
 Remix VM (London)
 
@@ -96,6 +96,8 @@ and the resulting Contract address remains the same `0xd9145CCE52D386f254917e481
 * Same Wallet address
 * The nonces was identical across the two VMs. simply 0
 
-## Conclusion 
+## Conclusion
 
 In real world, keeping track of nonces count can be a bit of a mess, and as result other conventions are employed. One major one is [Create2](https://docs.openzeppelin.com/cli/2.8/deploying-with-create2). It utilizes a  salt (a randomly generated value) instead of a sequential nonce. [Here's a guide to using Create2](https://docs.alchemy.com/docs/create2-an-alternative-to-deriving-contract-addresses)
+
+Cheers 🍻 
