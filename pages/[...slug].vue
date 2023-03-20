@@ -86,6 +86,7 @@ useServerSeoMeta({
     ogImage: ogImage,
     image: ogImage,
     author: data.value?.author,
+    ogType: 'Article'
     twitterCard: "summary_large_image",
 });
 
