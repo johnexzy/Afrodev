@@ -56,7 +56,7 @@ const { data } = await useAsyncData(`content-${path}`, () => {
 // fetch surrounding articles and remove null values
 const { data: moreArticles } = await useAsyncData(`more-${path}-1`, async () => {
     return (await queryContent('/')
-        .only(['title', 'featured_image', 'description', 'date', 'read_time', 'author', '_path']).limit(3)
+        .only(['title', 'featured_image', 'og_image', 'description', 'date', 'read_time', 'author', '_path']).limit(3)
         .findSurround(path)).filter(x => x !== null)
 });
 
@@ -72,10 +72,10 @@ useHead({
 });
 // add base_url to featured_image
 const ogImage = computed(() => {
-    if (data.value?.featured_image?.startsWith('/') && !data.value?.featured_image.startsWith('//')) {
-        return withBase(data.value?.featured_image, useRuntimeConfig().baseURL)
+    if (data.value?.og_image?.startsWith('/') && !data.value?.og_image.startsWith('//')) {
+        return withBase(data.value?.og_image, useRuntimeConfig().baseURL)
     }
-    return data.value?.featured_image
+    return data.value?.og_image
 })
 
 useServerSeoMeta({
