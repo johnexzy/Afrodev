@@ -18,7 +18,7 @@
             <div class="font-inter mb-4">
                 <p
                     class="w-full whitespace-nowrap overflow-hidden mt-3 text-sm font-semi-bold text-ellipsis dark:text-gray-300">
-                    {{ d.excerpt }}
+                    {{ d.description }}
                 </p>
             </div>
             <div class="justify-center flex group-hover:opacity-75" v-if="!hideImages">

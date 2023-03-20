@@ -47,7 +47,7 @@ const { data } = await useAsyncData(`content-${path}`, () => {
             "featured_image",
             "date",
             "read_time",
-            "excerpt",
+            "description",
             "author",
         ])
         .findOne();
@@ -56,7 +56,7 @@ const { data } = await useAsyncData(`content-${path}`, () => {
 // fetch surrounding articles and remove null values
 const { data: moreArticles } = await useAsyncData(`more-${path}-1`, async () => {
     return (await queryContent('/')
-        .only(['title', 'featured_image', 'excerpt', 'date', 'read_time', 'author', '_path']).limit(3)
+        .only(['title', 'featured_image', 'description', 'date', 'read_time', 'author', '_path']).limit(3)
         .findSurround(path)).filter(x => x !== null)
 });
 
@@ -81,8 +81,8 @@ const ogImage = computed(() => {
 useServerSeoMeta({
     title: data.value?.title,
     ogTitle: data.value?.title,
-    description: data.value?.excerpt,
-    ogDescription: data.value?.excerpt,
+    description: data.value?.description,
+    ogDescription: data.value?.description,
     ogImage: ogImage,
     image: ogImage,
     author: data.value?.author,
