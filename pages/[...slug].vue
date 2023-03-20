@@ -84,6 +84,7 @@ useServerSeoMeta({
     description: data.value?.excerpt,
     ogDescription: data.value?.excerpt,
     ogImage: ogImage,
+    image: ogImage,
     author: data.value?.author,
     twitterCard: "summary_large_image",
 });
