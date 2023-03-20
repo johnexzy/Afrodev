@@ -12,8 +12,8 @@ fields:
   name: draft
   label: draft
 - type: text
-  name: excerpt
-  label: excerpt
+  name: description
+  label: description
 - type: text
   name: author
   label: author
