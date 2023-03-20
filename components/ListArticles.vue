@@ -1,5 +1,5 @@
 <template>
-    <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2">
+    <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 items-baseline">
         <a :href="configureUrl(d._path)" class="group relative" v-for="(d, i) in data" :key="i">
             <div class="flex justify-left">
                 <div class="font-inter">

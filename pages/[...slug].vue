@@ -46,8 +46,10 @@ const { data } = await useAsyncData(`content-${path}`, () => {
             "title",
             "featured_image",
             "date",
+            "og_image",
             "read_time",
             "description",
+        
             "author",
         ])
         .findOne();
@@ -77,7 +79,7 @@ const ogImage = computed(() => {
     }
     return data.value?.og_image
 })
-
+console.log(data.value)
 useServerSeoMeta({
     title: data.value?.title,
     ogTitle: data.value?.title,
@@ -86,9 +88,9 @@ useServerSeoMeta({
     ogImage: ogImage,
     image: ogImage,
     author: data.value?.author,
-    ogType: 'Article',
+    ogType: 'article',
     twitterCard: "summary_large_image",
-});
+} as any);
 
 
 

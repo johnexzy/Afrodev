@@ -75,7 +75,7 @@ const hideImages = ref(true)
 
 
 const data = await queryContent('/')
-  .only(['title', 'featured_image', 'description', 'date', 'read_time', 'author', '_path'])
+  .only(['title', 'featured_image', 'description', 'og_image', 'date', 'read_time', 'author', '_path'])
   .find()
 
 
