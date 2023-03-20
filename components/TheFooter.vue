@@ -5,13 +5,13 @@
                 <Icon name="ic:outline-copyright" /> 2023 AfroDev
             </div>
             <div class="socials">
-                <a href="https://twitter.com/_afrodev" target="_blank">
+                <a href="https://twitter.com/_afrodev" target="_blank" aria-label="twitter link">
                     <Icon name="logos:twitter" class="mx-2  cursor-pointer" />
                 </a>
-                <a href="https://linkedin.com/in/johnoba" target="_blank">
+                <a href="https://linkedin.com/in/johnoba" target="_blank" aria-label="linkedin link">
                     <Icon name="skill-icons:linkedin" class="mx-2  cursor-pointer" />
                 </a>
-                <a href="https://github.com/johnexzy" target="_blank">
+                <a href="https://github.com/johnexzy" target="_blank" aria-label="github link">
                     <Icon name="skill-icons:github-light" class="mx-2  cursor-pointer" />
                 </a>
 
