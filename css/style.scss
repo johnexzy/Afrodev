@@ -5,6 +5,17 @@
 @tailwind components;
 @tailwind utilities;
 
+
+.css-1loq9qg {
+  fill: #f98b4d !important;
+  height: 1.7em;
+  display: block;
+  margin: 0px auto;
+  backface-visibility: hidden;
+}
+.css-10vojt1 {
+  @apply text-black dark:text-white
+}
 @layer base {
   html {
     font-family: 'Raleway', system-ui, sans-serif;
@@ -14,6 +25,9 @@
   body {
     @apply scrollbar-thin scrollbar-thumb-red scrollbar-track-dark scrollbar-thumb-rounded-full scrollbar-track-rounded-full dark:scrollbar-thumb-gray-400
   }
+
+
+  
 
   .text-header {
     @apply text-5xl;
@@ -27,19 +41,28 @@
     }
   }
 
+
+  // like-it
+
+
+  // social icons
+  .socials > a > svg {
+    @apply text-xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-150  duration-300
+  }
+}
+
+@layer components {
+  .prose {
+    color: var(--fg);
+    max-width: 85ch;
+    font-size: 1rem;
+    line-height: 1.75;
+  }
   .prose>p>img {
     @apply shadow-md;
     @apply rounded-md;
 
   }
-
-  .prose {
-    color: var(--fg);
-    max-width: 65ch;
-    font-size: 1rem;
-    line-height: 1.75;
-  }
-
   .prose [class~="lead"] {
     color: inherit;
     font-size: 1.25em;
@@ -646,10 +669,5 @@
 
   .prose-sm> :last-child {
     margin-bottom: 0;
-  }
-
-  // social icons
-  .socials > a > svg {
-    @apply text-xl transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-150  duration-300
   }
 }

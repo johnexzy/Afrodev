@@ -16,6 +16,9 @@
         <article class="mb-6 sm:flex sm:justify-center">
             <ContentDoc class="prose justify-center font-inter dark:text-gray-100" />
         </article>
+        <div class="mx-4 mb-2">
+            <div data-lyket-type="like" :data-lyket-id="path" data-lyket-template="twitter" />
+        </div>
         <div class="comment-section" id="commentSection">
             <comments is-dark class="hidden dark:block"></comments>
             <comments class="dark:hidden"></comments>
@@ -70,6 +73,11 @@ useHead({
       type: "text/javascript",
       async: true,
     },
+    {
+     src: "https://unpkg.com/@lyket/widget@latest/dist/lyket.js?apiKey=pt_b0d91ee87b0df642d88c0b6ada49b8",
+     type: "text/javascript",
+     async: true,
+    }
   ],
 });
 // add base_url to featured_image
@@ -79,7 +87,7 @@ const ogImage = computed(() => {
     }
     return data.value?.og_image
 })
-console.log(data.value)
+
 useServerSeoMeta({
     title: data.value?.title,
     ogTitle: data.value?.title,
