@@ -17,7 +17,10 @@
             <ContentDoc class="prose justify-center font-inter dark:text-gray-100" />
         </article>
         <div class="mx-4 mb-2">
-            <div data-lyket-type="like" :data-lyket-id="path" data-lyket-template="twitter" />
+            <div data-lyket-type="clap"
+  :data-lyket-id="`${path}-content`"
+  data-lyket-namespace="blog"
+  data-lyket-template="medium" />
         </div>
         <div class="comment-section" id="commentSection">
             <comments is-dark class="hidden dark:block"></comments>
@@ -57,6 +60,8 @@ const { data } = await useAsyncData(`content-${path}`, () => {
         ])
         .findOne();
 });
+
+// console.log(data.value)
 
 // fetch surrounding articles and remove null values
 const { data: moreArticles } = await useAsyncData(`more-${path}-1`, async () => {
