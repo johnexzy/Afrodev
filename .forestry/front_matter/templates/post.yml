@@ -1,0 +1,28 @@
+---
+label: Post
+hide_body: false
+fields:
+- type: text
+  name: title
+  label: title
+- type: file
+  name: featured_image
+  label: featured_image
+- type: boolean
+  name: draft
+  label: draft
+- type: file
+  name: og_image
+  label: og_image
+- type: text
+  name: description
+  label: description
+- type: text
+  name: author
+  label: author
+- type: text
+  name: date
+  label: date
+- type: text
+  name: read_time
+  label: read_time
