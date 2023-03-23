@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tinacms/cli": "^1.4.0",
     "@vueuse/core": "^9.13.0",
+    "tinacms": "^1.4.0",
     "ufo": "^1.1.1"
   }
 }
