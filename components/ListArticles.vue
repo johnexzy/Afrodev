@@ -2,7 +2,7 @@
   <div
     class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 items-baseline"
   >
-    <NuxtLink
+    <a
       class="group relative"
       v-for="(d, i) in data"
       :key="i"
@@ -39,7 +39,7 @@
             {{ d.date }} • {{ d.read_time }} read
           </p>
       </div>
-    </NuxtLink>
+    </a>
   </div>
 </template>
 <script setup lang="ts">
