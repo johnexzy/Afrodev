@@ -1,0 +1,18 @@
+---
+title: Practical Guide to Static Site Generation with NextJs
+featured_image: ''
+draft: false
+og_image: ''
+description: Build a low cost blog with NextJs and Wordpress API
+author: John Oba - Afrodev
+date: 24 March, 2023
+read_time: "5"
+
+---
+If you're tired of hearing the term "Jamstack" but still curious about what it means, don't worry! We'll explain it in a simple way.
+
+We'll be creating a basic blog that is affordable to run, fast, and secure. We'll use NextJS to generate the website statically, and we'll get our blog posts from the public API of WordPress.
+
+> A basic understanding of JavaScript and React will be helpful in following along
+
+Server Side Rendering and Static Site Generation are two modern approaches to building web applications that are fast, efficient, and optimized for search engines. By moving some of the workloads from the client's browser to the server, these techniques help to reduce the overall page load time and improve the user experience.
