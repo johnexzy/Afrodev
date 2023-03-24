@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <ListArticles :data="data" :hide-images="!hideImages" />
+      <ListArticles :data="data.reverse()" :hide-images="!hideImages" />
     </div>
     <div class="my-10 h- flex items-center justify-center">
       <div>
