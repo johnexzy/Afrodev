@@ -20,16 +20,21 @@
                 <Icon  name="material-symbols:light-mode" @click="toggleDark()" class=" transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110  duration-300 ... text-gray-500 dark:text-gray-300 cursor-pointer text-2xl hover:dark:text-gray-50 hover:text-gray-900" />
             </div>
             
-            
-            <Icon name="mdi:link-variant" class="text-gray-500 dark:text-gray-300 cursor-pointer text-2xl hover:dark:text-gray-50 hover:text-gray-900" />
+            <span class="copied-text text-gray-400 text-sm" v-if="copied">Copied!</span>
+            <Icon name="mdi:link-variant" @click="copy(link)" class="text-gray-500 dark:text-gray-300 cursor-pointer text-2xl hover:dark:text-gray-50 hover:text-gray-900" />
         </div>
     </header>
 </template>
 <script setup lang="ts">
-import { useDark, useToggle } from '@vueuse/core'
+import { useDark, useClipboard } from '@vueuse/core'
 
+const { copy, copied, text } = useClipboard();
+const link = ref('')
 const isDark = useDark()
 function toggleDark() {
   isDark.value = !isDark.value
 }
+onMounted(() => {
+    link.value = window.location.href
+})
 </script>

@@ -1,6 +1,6 @@
 <template>
     <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 items-baseline">
-        <NuxtLink :to="d.path" class="group relative" v-for="(d, i) in data" :key="i">
+        <NuxtLink  class="group relative" v-for="(d, i) in data" :key="i" :to="d._path">
             <div class="flex justify-left">
                 <div class="font-inter">
                     <h3 class="text-md dark:text-gray-300 font-semibold">
