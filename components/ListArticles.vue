@@ -55,6 +55,5 @@ const props = withDefaults(defineProps<Props>(), {
   hideImages: false,
 });
 
-const configureUrl = (path: string) =>
-  withBase(path, useRuntimeConfig().app.baseURL);
+const configureUrl = (path: string) => withBase(path, useRuntimeConfig().app.baseURL);
 </script>
