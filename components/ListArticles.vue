@@ -6,7 +6,7 @@
       class="group relative"
       v-for="(d, i) in data"
       :key="i"
-      :to="d._path"
+      :link="configureUrl(d._path)"
     >
       <div
         class="justify-center flex group-hover:opacity-75 mb-4"

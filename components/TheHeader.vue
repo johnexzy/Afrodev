@@ -21,20 +21,18 @@
             </div>
             
             <span class="copied-text text-gray-400 text-sm" v-if="copied">Copied!</span>
-            <Icon name="mdi:link-variant" @click="copy(link)" class="text-gray-500 dark:text-gray-300 cursor-pointer text-2xl hover:dark:text-gray-50 hover:text-gray-900" />
+            <Icon name="mdi:link-variant" @click="copy(`${location.href}`)" class="text-gray-500 dark:text-gray-300 cursor-pointer text-2xl hover:dark:text-gray-50 hover:text-gray-900" />
         </div>
     </header>
 </template>
 <script setup lang="ts">
-import { useDark, useClipboard } from '@vueuse/core'
-
+import { useDark, useClipboard, useBrowserLocation} from '@vueuse/core'
 const { copy, copied, text } = useClipboard();
-const link = ref('')
+
 const isDark = useDark()
 function toggleDark() {
   isDark.value = !isDark.value
 }
-onMounted(() => {
-    link.value = window.location.href
-})
+
+const location = useBrowserLocation()
 </script>
