@@ -26,5 +26,3 @@ fields:
 - type: text
   name: read_time
   label: read_time
-pages:
-- content/practical-guide-to-static-site-generation-with-nextjs.md
