@@ -35,7 +35,7 @@
         >
           {{ d.description }}
         </p>
-        <p class="mt-1 text-xs font-semibold font text-gray-500">
+        <p class="mt-1 text-xs font-semibold font text-gray-500 dark:text-gray-400">
             {{ d.date }} • {{ d.read_time }} read
           </p>
       </div>
