@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <ListArticles :data="data.reverse()" :hide-images="!hideImages" />
+      <ListArticles :data="data" :hide-images="!hideImages" />
     </div>
     <div class="my-10 h- flex items-center justify-center">
       <div>
@@ -74,10 +74,10 @@ import { withBase } from 'ufo'
 const hideImages = ref(false)
 
 
-const data = await queryContent('/')
+const data = (await queryContent('/')
   .where({ draft: false})
   .only(['title', 'featured_image', 'description', 'og_image', 'date', 'read_time', 'author', '_path'])
-  .find()
+  .find()).reverse()
 
 
 useServerSeoMeta({
