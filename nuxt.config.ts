@@ -9,6 +9,11 @@ export default defineNuxtConfig({
       theme: "github-dark",
     },
   },
+  colorMode: {
+    preference: 'system',
+    fallback: 'light',
+    classSuffix: '',
+  },
   modules: [
     "nuxt-icon",
     "@nuxtjs/tailwindcss",

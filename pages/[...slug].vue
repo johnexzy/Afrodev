@@ -79,6 +79,7 @@ const { data: moreArticles } = await useAsyncData(
   async () => {
     return (
       await queryContent("/")
+        .where({ draft: false })
         .only([
           "title",
           "featured_image",
@@ -89,8 +90,8 @@ const { data: moreArticles } = await useAsyncData(
           "author",
           "_path",
         ])
-        .limit(3)
-        .findSurround(path)
+        .limit(4)
+        .findSurround(path, { before: 2, after: 2 })
     ).filter((x) => x !== null);
   }
 );
