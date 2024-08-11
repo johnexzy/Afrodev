@@ -15,7 +15,7 @@
     </div>
     <div class="my-10 justify-center flex">
       <nuxt-img
-        class="max-w-72 max-h-80 rounded-md shadow-lg"
+        class=" rounded-md shadow-lg"
         sizes="sm:100vw"
         :src="ogImage"
         alt="Image Banner"
