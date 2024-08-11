@@ -13,7 +13,7 @@
         v-if="!hideImages"
       >
         <nuxt-img
-          class="max-w-72 max-h-80 rounded-md shadow-lg"
+          class=" rounded-md shadow-lg"
           sizes="sm:100vw"
           :src="d.featured_image"
           :alt="d.title"
