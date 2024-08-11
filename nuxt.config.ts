@@ -18,8 +18,9 @@ export default defineNuxtConfig({
     "nuxt-icon",
     "@nuxtjs/tailwindcss",
     "@nuxt/content",
-    "@nuxt/image-edge",
     "@nuxtjs/color-mode",
+    "@nuxt/image",
+    "@nuxtjs/sitemap"
   ],
   tailwindcss: {
     cssPath: "~/css/style.scss",
@@ -44,4 +45,9 @@ export default defineNuxtConfig({
       ]
     },
   },
-});
+  sitemap: {
+    sources: [
+      '/api/__sitemap__/urls',
+    ]
+  }
+} as any);
