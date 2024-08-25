@@ -70,6 +70,7 @@
   .prose>p>img {
     @apply shadow-md;
     @apply rounded-md;
+    @apply flex justify-center;
 
   }
   .prose [class~="lead"] {
@@ -325,6 +326,8 @@
   .prose p {
     margin-top: 1.25em;
     margin-bottom: 1.25em;
+    display: flex;
+    justify-content: center;
   }
 
   .prose img {
