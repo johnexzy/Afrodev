@@ -4,16 +4,19 @@ export default defineNuxtConfig({
     baseURL:
       process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://afrodev.space",
   },
+
   content: {
     highlight: {
       theme: "github-dark",
     },
   },
+
   colorMode: {
     preference: 'system',
     fallback: 'light',
     classSuffix: '',
   },
+
   modules: [
     "nuxt-icon",
     "@nuxtjs/tailwindcss",
@@ -22,10 +25,12 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxtjs/sitemap"
   ],
+
   tailwindcss: {
     cssPath: "~/css/style.scss",
     configPath: "tailwind.config",
   },
+
   app: {
     head: {
       htmlAttrs: {
@@ -45,9 +50,12 @@ export default defineNuxtConfig({
       ]
     },
   },
+
   sitemap: {
     sources: [
       '/api/__sitemap__/urls',
     ]
-  }
+  },
+
+  compatibilityDate: "2024-08-25"
 } as any);
