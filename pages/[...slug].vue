@@ -53,6 +53,7 @@
 </template>
 <script setup lang="ts">
 import { withBase } from "ufo";
+
 const { path } = useRoute();
 
 const { data } = await useAsyncData(`content-${path}`, () => {
