@@ -2,7 +2,7 @@
   <main class="mx-auto">
     <div class="text-center my-10">
       <h1 class="text-header dark:text-white font-semibold">
-        <span class="text-red">Code Chronicles: </span> Tales from a Software Developer
+        <span class="text-red">The Afrodev - </span> Welcome to my space
       </h1>
     </div>
     <div class="my-10 justify-center flex">
