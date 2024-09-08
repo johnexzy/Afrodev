@@ -1,6 +1,6 @@
 <template>
   <div
-    class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 items-baseline"
+    class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6  items-baseline"
   >
     <a
       class="group relative"
