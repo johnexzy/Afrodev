@@ -5,7 +5,11 @@
         <span class="text-red-500">Dev stories by John Oba</span>
       </h1>
     </div>
-
+    <!-- <div class="my-12 relative">
+      <nuxt-img class="w-full h-64 object-cover rounded-lg shadow-lg" sizes="sm:100vw" src="/banner1.png" alt="Image Banner"
+        format="webp" />
+      <div class="absolute inset-0 bg-gradient-to-r from-red/50 to-blue-500/50 rounded-lg mix-blend-overlay"></div>
+    </div> -->
 
     <div class="my-16">
       <div class="flex justify-between items-center mb-8">
