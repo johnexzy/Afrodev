@@ -15,10 +15,9 @@
     </div>
     <div class="my-10 justify-center flex">
       <nuxt-img
-        class=" rounded-md shadow-lg"
-        sizes="100vw"
-        :src="ogImage"
-        alt="Image Banner"
+        class="rounded-md shadow-lg"
+        :src="data.featured_image"
+        :alt="data.title"
         format="webp"
       />
     </div>
@@ -93,7 +92,7 @@ const { data: moreArticles } = await useAsyncData(
         ])
         .limit(4)
         .findSurround(path, { before: 2, after: 2 })
-    ).filter((x) => x !== null);
+    ).filter((x: any) => x !== null);
   }
 );
 
