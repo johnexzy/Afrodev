@@ -15,7 +15,7 @@ onMounted(async () => {
 
     const sketch = (p) => {
       let branches = [];
-      let maxBranches = 3000;
+      let maxBranches = 1000;
 
       class Branch {
         constructor(start, angle, length, generation = 0) {
@@ -25,10 +25,11 @@ onMounted(async () => {
           this.generation = generation;
           this.growing = true;
           this.growthProgress = 0;
-          this.growthSpeed = p.random(0.005, 0.006);
-          // Reduced thickness values for all generations
-          this.thickness = p.map(generation, 0, 2.5, 1, 0.1);
-          this.alpha = p.map(generation, 0, 8, 0.7, 0.3);
+          this.growthSpeed = p.random(0.01, 0.02);
+          // Reduced thickness for more subtlety
+          this.thickness = p.map(generation, 0, 8, 1.2, 0.15);
+          // Reduced alpha values for both light and dark modes
+          this.alpha = p.map(generation, 0, 8, 0.4, 0.15);
 
           this.end = {
             x: this.start.x + p.cos(angle) * length,
@@ -68,22 +69,29 @@ onMounted(async () => {
             if (p.random() < branchProbability) {
               const numNewBranches =
                 this.generation < 3
-                  ? p.floor(p.random(2, 4))
-                  : p.floor(p.random(1, 3));
+                  ? p.floor(p.random(2, 3))
+                  : p.floor(p.random(1, 2));
 
               for (let i = 0; i < numNewBranches; i++) {
                 let baseAngle = this.angle;
 
                 if (this.generation < 3) {
-                  const upwardBias = p.map(this.end.y, p.height, 0, -0.8, -0.2);
-                  baseAngle += p.random(-0.4, 0.4) + upwardBias;
+                  const centerX = p.width / 2;
+                  const centerY = p.height / 2;
+                  const angleToCenter = p.atan2(
+                    centerY - this.end.y,
+                    centerX - this.end.x
+                  );
+                  const centerBias = p.map(this.generation, 0, 3, 0.5, 0.2);
+                  baseAngle = p.lerp(baseAngle, angleToCenter, centerBias);
+                  baseAngle += p.random(-0.3, 0.3);
                 } else {
                   baseAngle += p.random(-0.8, 0.8);
                 }
 
                 const newLength =
                   this.generation < 3
-                    ? p.random(p.height / 4, p.height / 3)
+                    ? p.random(p.height / 5, p.height / 4)
                     : this.length * p.random(0.6, 0.8);
 
                 const estimatedEndX = this.end.x + p.cos(baseAngle) * newLength;
@@ -111,7 +119,14 @@ onMounted(async () => {
 
         display() {
           if (this.growthProgress > 0) {
-            p.stroke(200, 200, 255, this.alpha * 255);
+            // Adjusted stroke color based on dark mode
+            if (isDark.value) {
+              // Darker mode: more subtle, slightly bluish-gray
+              p.stroke(160, 160, 200, this.alpha * 150);
+            } else {
+              // Light mode: light blue with reduced opacity
+              p.stroke(200, 200, 255, this.alpha * 200);
+            }
             p.strokeWeight(this.thickness);
             p.noFill();
 
@@ -143,21 +158,42 @@ onMounted(async () => {
         p.createCanvas(p.windowWidth, p.windowHeight);
         p.noFill();
 
-        const startX = p.width + 20;
-        const startY = p.height + 20;
-        const numInitialBranches = 5;
+        const createCornerBranches = (x, y, angleRanges) => {
+          const branchesPerRange = 3;
+          angleRanges.forEach(([minAngle, maxAngle]) => {
+            for (let i = 0; i < branchesPerRange; i++) {
+              const angle =
+                p.lerp(minAngle, maxAngle, i / (branchesPerRange - 1)) +
+                p.random(-0.1, 0.1);
+              const length = p.random(p.height / 5, p.height / 4);
+              branches.push(new Branch({ x, y }, angle, length));
+            }
+          });
+        };
 
-        for (let i = 0; i < numInitialBranches; i++) {
-          const angle = p.map(
-            i,
-            0,
-            numInitialBranches - 1,
-            (-2 * p.PI) / 3,
-            (-5 * p.PI) / 6
-          );
-          const length = p.random(p.height / 3, p.height / 2);
-          branches.push(new Branch({ x: startX, y: startY }, angle, length));
-        }
+        // Top-left corner
+        createCornerBranches(-20, -20, [
+          [0, p.PI / 4],
+          [p.PI / 4, p.PI / 2],
+        ]);
+
+        // Top-right corner
+        createCornerBranches(p.width + 20, -20, [
+          [p.PI / 2, (3 * p.PI) / 4],
+          [(3 * p.PI) / 4, p.PI],
+        ]);
+
+        // Bottom-left corner
+        createCornerBranches(-20, p.height + 20, [
+          [-p.PI / 2, -p.PI / 4],
+          [-p.PI / 4, 0],
+        ]);
+
+        // Bottom-right corner
+        createCornerBranches(p.width + 20, p.height + 20, [
+          [-p.PI, (-3 * p.PI) / 4],
+          [(-3 * p.PI) / 4, -p.PI / 2],
+        ]);
       };
 
       p.draw = () => {
