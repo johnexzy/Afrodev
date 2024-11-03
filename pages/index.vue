@@ -1,6 +1,6 @@
 <template>
   <main class="max-w-4xl px-4 sm:px-6 lg:px-8">
-    <div class="my-16">
+    <div class="my-16 slide-enter-content">
       <h1
         class="text-4xl md:text-5xl font-bold dark:text-gray-200 text-gray-700"
       >

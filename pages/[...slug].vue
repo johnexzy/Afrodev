@@ -21,7 +21,7 @@
         format="webp"
       />
     </div>
-    <article class="mb-6 sm:flex sm:justify-center">
+    <article class="mb-6 sm:flex sm:justify-center slide-enter-content">
       <ContentDoc class="prose justify-center font-inter dark:text-gray-100" />
     </article>
     <div class="mx-4 mb-2">
