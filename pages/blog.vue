@@ -11,7 +11,7 @@
         <div class="absolute inset-0 bg-gradient-to-r from-red/50 to-blue-500/50 rounded-lg mix-blend-overlay"></div>
       </div> -->
   
-      <div class="my-16">
+      <div class="my-16 slide-enter-content">
         <div class="flex justify-between items-center mb-8">
           <h2 class="font-bold text-3xl md:text-4xl text-gray-900 dark:text-gray-300">Posts</h2>
           <label class="relative inline-flex items-center cursor-pointer group">
