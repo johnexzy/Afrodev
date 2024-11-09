@@ -304,6 +304,7 @@
     padding-right: 0.5714286em;
     padding-bottom: 0.5714286em;
     padding-left: 0.5714286em;
+    @apply dark:!text-gray-200;
   }
 
   .prose tbody tr {
@@ -651,6 +652,7 @@
     padding-right: 1em;
     padding-bottom: 0.6666667em;
     padding-left: 1em;
+    @apply dark:!text-gray-200;
   }
 
   .prose-sm thead th:first-child {

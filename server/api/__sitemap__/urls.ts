@@ -44,5 +44,9 @@ export default defineEventHandler(() => {
       loc: "/building-smart-recommendation-system-with-embeddings",
       _sitemap: "pages",
     },
+    {
+      loc: "/stateful-pitfalls-in-nextjs-building-secure-stateless-api-requests-with-axios",
+      _sitemap: "pages",
+    },
   ];
 });
