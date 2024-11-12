@@ -83,7 +83,7 @@
 
   .prose a {
     color: var(--fg-deeper);
-    text-decoration: none;
+    text-decoration: underline !important;
     font-weight: 500;
   }
 

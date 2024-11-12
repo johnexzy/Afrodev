@@ -69,7 +69,7 @@
 
     <section class="my-12">
       <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
-        Featured Articles
+        Latest Articles
       </h2>
       <div
         v-if="!hideImages"
@@ -82,7 +82,7 @@
         >
           <img
             :src="configureUrl(item.featured_image)"
-            alt="featured image"
+            :alt="item.title"
             class="w-full h-48 object-cover"
           />
           <div class="p-6">
@@ -90,7 +90,7 @@
               {{ item.title }}
             </h3>
             <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
-              {{ item.description }}
+              {{ truncateText(item.description) }}
             </p>
             <p class="mt-2 text-xs text-gray-600 dark:text-gray-400">
               {{ item.date }} • {{ item.read_time }} read
@@ -133,7 +133,7 @@ const data = (
       "author",
       "_path",
     ])
-    .sort({ date: -1 })
+    .sort({ date: 1 })
     .limit(4)
     .find()
 ).reverse();
@@ -150,6 +150,12 @@ useServerSeoMeta({
 
 const configureUrl = (path: string) =>
   withBase(path, useRuntimeConfig().app.baseURL);
+
+const truncateText = (text: string, maxLength: number = 100) => {
+  return text.length > maxLength
+    ? text.substring(0, maxLength) + "..."
+    : text;
+};
 </script>
 
 <style>
