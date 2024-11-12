@@ -136,7 +136,7 @@ const data = (
     .sort({ date: 1 })
     .limit(4)
     .find()
-).reverse();
+);
 
 useServerSeoMeta({
   title: "Afrodev",
