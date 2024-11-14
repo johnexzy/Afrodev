@@ -2,7 +2,7 @@
     <main class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
       <div class="text-center my-16">
         <h1 class="text-4xl md:text-5xl font-bold text-gradient">
-          <span class="text-red-500">Dev stories by John Oba</span>
+          <span class="">Articles by John Oba</span>
         </h1>
       </div>
       <!-- <div class="my-12 relative">
@@ -34,7 +34,7 @@
   
   const data = (await queryContent('/')
     .where({ draft: false})
-    .only(['title', 'featured_image', 'description', 'og_image', 'date', 'read_time', 'author', '_path'])
+    .only(['title', 'featured_image', 'description', 'og_image', 'date', 'read_time', 'author', '_path', 'category'])
     .find()).reverse()
   
   

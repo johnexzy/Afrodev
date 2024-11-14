@@ -39,6 +39,21 @@
             {{ d.date }} • {{ d.read_time }} read
           </p>
       </div>
+      <div class="flex flex-wrap gap-2 mt-3">
+        <span 
+          v-for="category in d.category?.split(', ')" 
+          :key="category"
+          class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full 
+          bg-gradient-to-r from-red-50 to-red-200 text-red 
+          dark:from-red-300/20 dark:to-red-500/20 dark:text-red-400
+          border border-red-200 dark:border-red-800/30
+          shadow-sm transition-all duration-200
+          hover:shadow-md hover:scale-105 hover:from-red-100 hover:to-red-200
+          dark:hover:from-red-900/30 dark:hover:to-red-800/30"
+        >
+          {{ category }}
+        </span>
+      </div>
     </a>
   </div>
 </template>
