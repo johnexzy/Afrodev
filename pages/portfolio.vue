@@ -74,128 +74,83 @@
     </nav>
 
     <main class="max-w-4xl px-6 sm:px-8">
-      <!-- Hero Section -->
-      <div id="overview" class="my-24 slide-enter-content">
-        <div class="mb-20">
-          <h1
-            class="text-5xl md:text-6xl font-light text-gray-900 dark:text-gray-100 mb-8 tracking-tight"
-          >
-            Portfolio
-          </h1>
-          <p
-            class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl leading-relaxed font-light"
-          >
-            7+ years crafting intelligent systems, real-time experiences, and
-            scalable products.
-          </p>
+             <!-- Hero Section -->
+       <div id="overview" class="relative my-32 overflow-hidden">
+         <!-- Subtle Background Elements -->
+         <div class="absolute inset-0 -z-10">
+           <div class="absolute top-20 right-20 w-72 h-72 bg-gradient-to-br from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/20 rounded-full blur-3xl opacity-30 animate-float"></div>
+           <div class="absolute top-40 left-10 w-96 h-96 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-full blur-3xl opacity-20 animate-float-delayed"></div>
+         </div>
 
-          <!-- PDF Export Button - Client Side Only -->
-          <ClientOnly>
-            <div class="mt-8 export-button">
-              <button
-                @click="exportToPDF"
-                :disabled="isExporting"
-                class="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <svg
-                  v-if="!isExporting"
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  ></path>
-                </svg>
-                <svg
-                  v-else
-                  class="w-4 h-4 animate-spin"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    class="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    class="opacity-75"
-                    fill="currentColor"
-                    d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                {{ isExporting ? "Exporting..." : "Export to PDF" }}
-              </button>
-            </div>
-            <template #fallback>
-              <div class="mt-8 text-sm text-gray-500 dark:text-gray-400">
-                Loading export functionality...
-              </div>
-            </template>
-          </ClientOnly>
-        </div>
+         <div class="relative z-10">
+           <!-- Main Content -->
+           <div class="mb-16 hero-content">
+             <div class="mb-8 overflow-hidden">
+               <h1 class="text-6xl md:text-7xl lg:text-8xl font-extralight text-gray-900 dark:text-gray-100 tracking-tight leading-none animate-slide-up">
+                 Portfolio
+               </h1>
+             </div>
+             
+             <div class="mb-12 overflow-hidden">
+               <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-400 max-w-3xl leading-relaxed font-light animate-slide-up-delayed">
+                 7+ years crafting intelligent systems, real-time experiences, and scalable products that impact millions.
+               </p>
+             </div>
 
-        <!-- Quick Stats -->
-        <div
-          class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-24 py-12 border-t border-b border-gray-200 dark:border-gray-700"
-        >
-          <div class="text-center">
-            <div
-              class="text-3xl font-light text-gray-900 dark:text-gray-100 mb-2"
-            >
-              7+
-            </div>
-            <div
-              class="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-            >
-              Years
-            </div>
-          </div>
-          <div class="text-center">
-            <div
-              class="text-3xl font-light text-gray-900 dark:text-gray-100 mb-2"
-            >
-              15+
-            </div>
-            <div
-              class="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-            >
-              Projects
-            </div>
-          </div>
-          <div class="text-center">
-            <div
-              class="text-3xl font-light text-gray-900 dark:text-gray-100 mb-2"
-            >
-              10M+
-            </div>
-            <div
-              class="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-            >
-              Users
-            </div>
-          </div>
-          <div class="text-center">
-            <div
-              class="text-3xl font-light text-gray-900 dark:text-gray-100 mb-2"
-            >
-              300%
-            </div>
-            <div
-              class="text-sm text-gray-500 dark:text-gray-400 uppercase tracking-wide"
-            >
-              Growth
-            </div>
-          </div>
-        </div>
-      </div>
+             <!-- Action Buttons -->
+             <div class="flex flex-col sm:flex-row gap-4 animate-fade-in-up">
+               <a
+                 href="https://docs.google.com/document/d/1nhlf5X-M4HKSYbJ-e0UEuBLLmFAcIyYSc5T9wdHnazg/edit?usp=sharing"
+                 target="_blank"
+                 class="group inline-flex items-center gap-3 px-8 py-4 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-2xl hover:bg-gray-800 dark:hover:bg-gray-200 transition-all duration-300 hover:scale-105 hover:shadow-lg font-medium"
+               >
+                 <span>View Resume</span>
+                 <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                 </svg>
+               </a>
+               
+               <!-- PDF Export Button - Client Side Only -->
+               <ClientOnly>
+                 <div class="export-button">
+                   <button
+                     @click="exportToPDF"
+                     :disabled="isExporting"
+                     class="group inline-flex items-center gap-3 px-8 py-4 text-gray-900 dark:text-gray-100 border-2 border-gray-200 dark:border-gray-700 rounded-2xl hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                   >
+                     <svg
+                       v-if="!isExporting"
+                       class="w-4 h-4 transition-transform duration-300 group-hover:translate-y-[-2px]"
+                       fill="none"
+                       stroke="currentColor"
+                       viewBox="0 0 24 24"
+                     >
+                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                     </svg>
+                     <svg
+                       v-else
+                       class="w-4 h-4 animate-spin"
+                       fill="none"
+                       viewBox="0 0 24 24"
+                     >
+                       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                       <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                     </svg>
+                     <span>{{ isExporting ? "Exporting..." : "Export PDF" }}</span>
+                   </button>
+                 </div>
+                 <template #fallback>
+                   <div class="text-sm text-gray-500 dark:text-gray-400">
+                     Loading...
+                   </div>
+                 </template>
+               </ClientOnly>
+             </div>
+           </div>
+
+
+         </div>
+       </div>
 
       <!-- Featured Projects -->
       <section id="work" class="mb-32">
@@ -231,9 +186,36 @@
               link: 'https://startuplist.africa',
               featured: true,
             }"
-          />
+                     />
 
-          <!-- Niyo Labs -->
+           <!-- Box.tools -->
+           <ProjectCard
+             :project="{
+               title: 'Box.tools',
+               subtitle: 'Digital Productivity Platform',
+               description:
+                 'Built a comprehensive digital productivity toolbox that streamlines workflows for modern teams. Designed for efficiency and scalability with a focus on user experience and performance.',
+               technologies: [
+                 'Next.js',
+                 'TypeScript',
+                 'PostgreSQL',
+                 'FastAPI',
+                 'TailwindCSS',
+               ],
+               highlights: [
+                 'Full-stack productivity platform with modern architecture',
+                 'Streamlined workflows for enhanced team productivity',
+                 'Scalable backend with FastAPI and PostgreSQL',
+                 'Responsive design with optimized user experience',
+                 'Production-ready with continuous deployment pipeline',
+               ],
+               status: 'Production',
+               link: 'https://box.tools',
+               featured: true,
+             }"
+           />
+
+           <!-- Niyo Labs -->
           <ProjectCard
             :project="{
               title: 'Niyo Labs EdTech Platform',
@@ -254,13 +236,69 @@
                 'AI-powered video transcription with Whisper integration',
                 '40% increase in session engagement through collaborative features',
                 'Vector-based recommendation engine for personalized learning',
-              ],
-              status: 'Production',
-              featured: true,
-            }"
-          />
+                             ],
+               status: 'Production',
+               link: 'https://www.niyolabs.com',
+               featured: true,
+             }"
+           />
 
-          <!-- Oystack -->
+           <!-- BonBonPay -->
+           <ProjectCard
+             :project="{
+               title: 'BonBonPay',
+               subtitle: 'Complete Payment Platform',
+               description:
+                 'Developed a comprehensive fintech payment solution including web platform, mobile application, and super admin dashboard. Full-stack development covering user experience, payment processing, and administrative controls.',
+               technologies: [
+                 'React Native',
+                 'Next.js',
+                 'Node.js',
+                 'PostgreSQL',
+                 'Payment APIs',
+                 'Mobile Development',
+               ],
+               highlights: [
+                 'Complete payment ecosystem with web and mobile interfaces',
+                 'Cross-platform mobile app for seamless user experience',
+                 'Comprehensive super admin dashboard for platform management',
+                 'Secure payment processing with modern fintech standards',
+                 'End-to-end client solution delivery',
+               ],
+               status: 'Production',
+               link: 'https://www.bonbonpay.com',
+               featured: true,
+             }"
+           />
+
+           <!-- Victor Onazi Portfolio -->
+           <ProjectCard
+             :project="{
+               title: 'Victor Onazi Portfolio',
+               subtitle: 'Designer Portfolio & Personal Brand',
+               description:
+                 'Developed a sophisticated portfolio website for product designer Victor Onazi that directly contributed to securing a senior designer position. Clean, professional design showcasing 5+ years of UX work with seamless user experience.',
+               technologies: [
+                 'Next.js',
+                 'TypeScript',
+                 'TailwindCSS',
+                 'Framer Motion',
+                 'Responsive Design',
+               ],
+               highlights: [
+                 'Portfolio directly helped client secure senior designer role',
+                 'Clean, professional design reflecting modern design standards',
+                 'Optimized user journey showcasing 5+ years of design work',
+                 'Responsive across all devices with smooth animations',
+                 'Strategic personal branding that converts visitors to opportunities',
+               ],
+               status: 'Production',
+               link: 'https://www.victoronazi.com',
+               featured: true,
+             }"
+           />
+
+           <!-- Oystack -->
           <ProjectCard
             :project="{
               title: 'Oystack',
@@ -283,13 +321,14 @@
                 'Chrome extension for seamless workflow integration',
                 'Vector database for intelligent document processing',
                 'Microservices architecture with AI pipelines',
-              ],
-              status: 'In Development',
-              featured: true,
-            }"
-          />
+                             ],
+               status: 'In Development',
+               link: 'https://oystack.com',
+               featured: true,
+             }"
+           />
 
-          <!-- KP Astro -->
+           <!-- KP Astro -->
           <ProjectCard
             :project="{
               title: 'KP Astro',
@@ -616,22 +655,14 @@
               proven expertise?
             </p>
 
-            <div class="flex flex-col sm:flex-row gap-6">
-              <a
-                href="mailto:obajohn75@gmail.com"
-                class="inline-flex items-center text-gray-900 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-              >
-                obajohn75@gmail.com
-              </a>
-
-              <a
-                href="https://docs.google.com/document/d/1nhlf5X-M4HKSYbJ-e0UEuBLLmFAcIyYSc5T9wdHnazg/edit?usp=sharing"
-                target="_blank"
-                class="inline-flex items-center text-gray-900 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-              >
-                View Resume →
-              </a>
-            </div>
+                         <div class="flex flex-col sm:flex-row gap-6">
+               <a
+                 href="mailto:obajohn75@gmail.com"
+                 class="inline-flex items-center text-gray-900 dark:text-gray-100 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+               >
+                 obajohn75@gmail.com
+               </a>
+             </div>
 
             <div class="flex gap-8 pt-4">
               <a
@@ -773,6 +804,8 @@ const sections = [
 // Reactive state
 const activeSection = ref("overview");
 const scrollProgress = ref(0);
+
+
 
 // Elegant scroll to section with refined easing
 const scrollToSection = (sectionId: string) => {
@@ -1079,4 +1112,82 @@ const indieProjects = [
     transform: translateY(0);
   }
 }
+
+/* Enhanced Hero Animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(1deg);
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(-1deg);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up-delayed {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 10s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 1s ease-out forwards;
+}
+
+.animate-slide-up-delayed {
+  animation: slide-up-delayed 1s ease-out 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 1s ease-out 0.4s forwards;
+  opacity: 0;
+}
+
+
 </style>
