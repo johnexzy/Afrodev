@@ -2,6 +2,11 @@
 export default defineEventHandler(() => {
   return [
     {
+      loc: "/portfolio",
+      // will end up in the pages sitemap
+      _sitemap: "pages",
+    },
+    {
       loc: "/building-real-time-collaborative-systems",
       // will end up in the pages sitemap
       _sitemap: "pages",

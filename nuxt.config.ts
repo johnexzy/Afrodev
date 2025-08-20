@@ -12,8 +12,8 @@ export default defineNuxtConfig({
   },
 
   colorMode: {
-    preference: 'system',
-    fallback: 'light',
+    preference: 'dark',
+    fallback: 'dark',
     classSuffix: '',
   },
 
@@ -29,6 +29,25 @@ export default defineNuxtConfig({
   tailwindcss: {
     cssPath: "~/css/style.scss",
     configPath: "tailwind.config",
+  },
+
+  // Vite configuration for client-side libraries
+  vite: {
+    optimizeDeps: {
+      include: ['html2pdf.js']
+    },
+    ssr: {
+      noExternal: []
+    }
+  },
+
+
+
+  // Static Site Generation Configuration
+  nitro: {
+    prerender: {
+      routes: ['/portfolio', '/blog']
+    }
   },
 
   app: {
@@ -49,6 +68,7 @@ export default defineNuxtConfig({
         } as any
       ]
     },
+    baseURL: process.env.NODE_ENV === 'production' ? '/' : '/'
   },
 
   sitemap: {

@@ -15,7 +15,7 @@ onMounted(async () => {
 
     const sketch = (p) => {
       let branches = [];
-      let maxBranches = 1000;
+      let maxBranches = 600;
 
       class Branch {
         constructor(start, angle, length, generation = 0) {
@@ -26,20 +26,21 @@ onMounted(async () => {
           this.growing = true;
           this.growthProgress = 0;
           this.growthSpeed = p.random(0.01, 0.02);
-          // Reduced thickness for more subtlety
-          this.thickness = p.map(generation, 0, 8, 1.2, 0.15);
-          // Reduced alpha values for both light and dark modes
-          this.alpha = p.map(generation, 0, 8, 0.4, 0.15);
+          // Slightly more visible thickness
+          this.thickness = p.map(generation, 0, 8, 1.0, 0.15);
+          // More noticeable but still subtle alpha values
+          this.alpha = p.map(generation, 0, 8, 0.3, 0.1);
 
           this.end = {
             x: this.start.x + p.cos(angle) * length,
             y: this.start.y + p.sin(angle) * length,
           };
 
-          const ctrl1Dist = length * p.random(0.3, 0.5);
-          const ctrl2Dist = length * p.random(0.5, 0.7);
-          const ctrl1Angle = angle + p.random(-0.3, 0.3);
-          const ctrl2Angle = angle + p.random(-0.3, 0.3);
+          // Fluid organic curves - like ink in water
+          const ctrl1Dist = length * p.random(0.4, 0.9);
+          const ctrl2Dist = length * p.random(0.5, 1.0);
+          const ctrl1Angle = angle + p.random(-0.8, 0.8);
+          const ctrl2Angle = angle + p.random(-1.0, 1.0);
 
           this.control1 = {
             x: this.start.x + p.cos(ctrl1Angle) * ctrl1Dist,
@@ -64,12 +65,16 @@ onMounted(async () => {
 
         tryBranching() {
           if (this.generation < 8 && branches.length < maxBranches) {
-            const branchProbability = p.map(this.generation, 0, 8, 0.9, 0.3);
+            // More organic, flowing branching probability
+            const branchProbability = p.map(this.generation, 0, 8, 0.8, 0.3);
 
             if (p.random() < branchProbability) {
+              // More fluid, organic branching
               const numNewBranches =
-                this.generation < 3
-                  ? p.floor(p.random(2, 3))
+                this.generation < 2
+                  ? p.floor(p.random(2, 4))
+                  : this.generation < 5
+                  ? p.floor(p.random(1, 3))
                   : p.floor(p.random(1, 2));
 
               for (let i = 0; i < numNewBranches; i++) {
@@ -83,10 +88,13 @@ onMounted(async () => {
                     centerX - this.end.x
                   );
                   const centerBias = p.map(this.generation, 0, 3, 0.5, 0.2);
-                  baseAngle = p.lerp(baseAngle, angleToCenter, centerBias);
-                  baseAngle += p.random(-0.3, 0.3);
-                } else {
+                  // Fluid flow towards center like liquid
+                  const flowInfluence = p.random(0.3, 0.8);
+                  baseAngle = p.lerp(baseAngle, angleToCenter, flowInfluence);
                   baseAngle += p.random(-0.8, 0.8);
+                } else {
+                  // More organic, flowing branching
+                  baseAngle += p.random(-1.5, 1.5);
                 }
 
                 const newLength =
@@ -119,20 +127,21 @@ onMounted(async () => {
 
         display() {
           if (this.growthProgress > 0) {
-            // Adjusted stroke color based on dark mode
+            // Slightly more visible stroke colors
             if (isDark.value) {
-              // Darker mode: more subtle, slightly bluish-gray
-              p.stroke(160, 160, 200, this.alpha * 150);
+              // Dark mode: soft bluish-gray
+              p.stroke(150, 150, 170, this.alpha * 80);
             } else {
-              // Light mode: light blue with reduced opacity
-              p.stroke(200, 200, 255, this.alpha * 200);
+              // Light mode: gentle gray
+              p.stroke(160, 160, 170, this.alpha * 140);
             }
             p.strokeWeight(this.thickness);
             p.noFill();
 
             p.beginShape();
             const t = this.growthProgress;
-            for (let i = 0; i <= t; i += 0.01) {
+            // Add more organic irregularity to thread path
+            for (let i = 0; i <= t; i += 0.02) {
               const x = p.bezierPoint(
                 this.start.x,
                 this.control1.x,
@@ -147,7 +156,15 @@ onMounted(async () => {
                 this.end.y,
                 i
               );
-              p.vertex(x, y);
+              
+              // Fluid organic flow - like liquid movement
+              const flowStrength = this.thickness * 3;
+              const flowFreq1 = 15 + this.generation * 3;
+              const flowFreq2 = 12 + this.generation * 2;
+              const wobbleX = x + p.sin(i * flowFreq1 + this.generation * 5) * flowStrength * p.random(0.8, 2.0);
+              const wobbleY = y + p.cos(i * flowFreq2 + this.generation * 7) * flowStrength * p.random(0.8, 2.0);
+              
+              p.vertex(wobbleX, wobbleY);
             }
             p.endShape();
           }
@@ -159,12 +176,12 @@ onMounted(async () => {
         p.noFill();
 
         const createCornerBranches = (x, y, angleRanges) => {
-          const branchesPerRange = 3;
+          const branchesPerRange = 4;
           angleRanges.forEach(([minAngle, maxAngle]) => {
             for (let i = 0; i < branchesPerRange; i++) {
               const angle =
                 p.lerp(minAngle, maxAngle, i / (branchesPerRange - 1)) +
-                p.random(-0.1, 0.1);
+                p.random(-0.2, 0.2);
               const length = p.random(p.height / 5, p.height / 4);
               branches.push(new Branch({ x, y }, angle, length));
             }

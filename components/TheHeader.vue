@@ -20,6 +20,15 @@
     <div class="px-2 h-9 items-center flex gap-5">
       <div>
         <a
+          href="/portfolio"
+          class="text-sm font-medium text-gray-900 dark:text-gray-300 group-hover:text-red-500 cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
+        >
+          Portfolio
+        </a>
+      </div>
+      
+      <div>
+        <a
           href="/blog"
           class="text-sm font-medium text-gray-900 dark:text-gray-300 group-hover:text-red-500 cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
         >

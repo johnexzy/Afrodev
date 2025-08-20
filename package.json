@@ -4,7 +4,10 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "export": "nuxt generate",
+    "export:portfolio": "nuxt generate --output-dir portfolio-export",
     "preview": "nuxt preview",
+    "preview:export": "npx serve portfolio-export",
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
@@ -24,6 +27,7 @@
   "dependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@vueuse/core": "^9.13.0",
+    "html2pdf.js": "^0.10.3",
     "p5": "^1.11.1",
     "ufo": "^1.1.1"
   }
