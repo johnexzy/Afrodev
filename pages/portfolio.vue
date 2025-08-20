@@ -298,6 +298,60 @@
              }"
            />
 
+           <!-- Kwara SAPZ Government Portal -->
+           <ProjectCard
+             :project="{
+               title: 'Kwara SAPZ Government Portal',
+               subtitle: 'State Government Agricultural Platform',
+               description:
+                 'Developed the official government portal for Kwara State SAPZ (Special Agro-Industrial Processing Zones), transforming agricultural development through modern agro-processing infrastructure. Platform supports farmer training, value chain development, and agricultural transformation initiatives.',
+               technologies: [
+                 'Modern Web Development',
+                 'Government Standards',
+                 'CMS Architecture',
+                 'Mobile Responsive',
+                 'Multi-Language Support',
+               ],
+               highlights: [
+                 'Official Kwara State Government contract',
+                 'Agricultural transformation platform for economic prosperity',
+                 'Supports farmer training and agribusiness development',
+                 'Partnership with Islamic Development Bank',
+                 'Comprehensive activities and events management system',
+               ],
+               status: 'Production',
+               link: 'https://kw.sapz.gov.ng',
+               featured: true,
+             }"
+           />
+
+           <!-- Saphir Restaurant -->
+           <ProjectCard
+             :project="{
+               title: 'Saphir Restaurant',
+               subtitle: 'Fine Dining Experience Platform',
+               description:
+                 'Created an elegant coming-soon website for Saphir, a premium fine dining restaurant in Ilorin. Features sophisticated waitlist management, early access reservations, and strategic pre-launch marketing to build anticipation.',
+               technologies: [
+                 'Next.js',
+                 'TypeScript',
+                 'TailwindCSS',
+                 'Waitlist Management',
+                 'Email Integration',
+               ],
+               highlights: [
+                 'Elegant pre-launch marketing strategy implementation',
+                 'Sophisticated waitlist management system',
+                 'Premium brand positioning with refined visual design',
+                 'Early access reservation system for VIP customers',
+                 'Social media integration for maximum reach',
+               ],
+               status: 'Production',
+               link: 'https://www.saphirrestaurant.com',
+               featured: true,
+             }"
+           />
+
            <!-- Oystack -->
           <ProjectCard
             :project="{
@@ -1069,30 +1123,35 @@ const indieProjects = [
     description: "Real-time video watching platform for distributed users",
     technologies: ["Next.js", "WebRTC", "PostgreSQL", "WebSockets"],
     status: "Production",
+    link: "https://peerplay.space",
   },
   {
     title: "Web3Bot",
     description: "Discord bot for wallet integration & crypto transactions",
     technologies: ["Discord.js", "Ethers.js", "Nuxt3", "Docker"],
     status: "Production",
+    link: "http://web3bot-ui.web.app/",
   },
   {
     title: "SendUSDC",
     description: "Gasless USDC transfers using EIP-3009",
     technologies: ["Solidity", "Web3.js", "React", "Circle API"],
-    status: "Production",
+    status: "Research",
+    link: "https://github.com/johnexzy/SendUSDC",
   },
   {
     title: "TokenPass",
     description: "Token-gated content monetization platform",
     technologies: ["Vue.js", "Solidity", "Web3.js", "IPFS"],
     status: "Beta",
+    link: "https://github.com/johnexzy/TokenPass",
   },
   {
     title: "MachoMara",
     description: "Blockchain donations with USSD & M-Pesa integration",
     technologies: ["Vue 3", "Solidity", "Ethers.js", "AdonisJS"],
-    status: "Production",
+    status: "Stale",
+    link: "https://github.com/johnexzy/MachoMara",
   },
 ];
 </script>
