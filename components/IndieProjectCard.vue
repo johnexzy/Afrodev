@@ -10,7 +10,9 @@
             'w-2 h-2 rounded-full': true,
             'bg-green-500': project.status === 'Production',
             'bg-yellow-500': project.status === 'In Development',
-            'bg-blue-500': project.status === 'Beta'
+            'bg-blue-500': project.status === 'Beta',
+            'bg-purple-500': project.status === 'Research',
+            'bg-gray-500': project.status === 'Stale'
           }"
         ></div>
         <a 
@@ -36,13 +38,7 @@
 </template>
 
 <script setup lang="ts">
-interface IndieProject {
-  title: string;
-  description: string;
-  technologies: string[];
-  status: 'Production' | 'In Development' | 'Beta';
-  link?: string;
-}
+import type { IndieProject } from '~/data/projects';
 
 defineProps<{
   project: IndieProject;

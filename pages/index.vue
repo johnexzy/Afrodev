@@ -8,28 +8,27 @@
       </h1>
 
       <p class="mt-4 text-md leading-7 text-gray-600 dark:text-gray-300">
-        I'm a software engineer and a tech leader driven by passion for building
-        impactful products.
+        I'm a software engineer and tech leader driven by principle and processes, with my focus every day being to create meaningful impact and lasting value on both the projects I build and the people I work alongside.
         <br />
-        Currently at
-        <a href="https://www.niyo.co" target="_blank" class="font-bold"
-          >Niyo Group</a
-        >, I focus on creating AI-powered platforms, intelligent recommendation
-        systems, and seamless real-time experiences.
+        <br />
+        Currently Engineering at
+        <a href="https://www.alveum.com" target="_blank" class="font-bold"
+          >Alveum</a
+        >, I focus on building AI-powered platforms, intelligent recommendation
+        systems, and seamless real-time experiences. I thrive at the intersection of
+        people and systems, strategy and execution.
         <br />
         <br />
         I also co-founded
         <a href="https://startuplist.africa" target="_blank" class="font-bold"
           >Startuplist Africa</a
-        >, a platform dedicated to empowering African startups by connecting
-        data with innovation. I enjoy blending backend and frontend artistry,
+        >, scaling it to Africa's No. 1 Startup Intelligence System with 300K+ users. I enjoy blending backend and frontend artistry,
         from robust data architectures to interactive UI design.
         <br />
         <br />
         Through my blog, Afrodev, I share insights on software development,
         developer experience, and tech trends to inspire and empower fellow
-        developers. Outside of work, you’ll find me exploring new tech, playing
-        football, or capturing moments through photography.
+        developers. You'll most find me in the gym, and a lover of table tennis.
       </p>
       <div class="mt-6">
         <div class="socials">
@@ -69,7 +68,7 @@
 
     <section class="my-12">
       <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
-        Latest Articles
+        Featured Articles
       </h2>
       <div
         v-if="!hideImages"
@@ -120,23 +119,33 @@
 import { withBase } from "ufo";
 const hideImages = ref(false);
 
-const data = (
-  await queryContent("/")
-    .where({ draft: false })
-    .only([
-      "title",
-      "featured_image",
-      "description",
-      "og_image",
-      "date",
-      "read_time",
-      "author",
-      "_path",
-    ])
-    .sort({ date: 1 })
-    .limit(4)
-    .find()
-);
+// Featured articles we want to showcase
+const featuredPaths = [
+  "/building-smart-recommendation-system-with-embeddings",
+  "/rediscovering-ai-assisted-coding", 
+  "/building-real-time-collaborative-systems",
+  "/evolving-engineering-everything-hard-is-now-easy"
+];
+
+// Get all articles first
+const allArticles = await queryContent("/")
+  .where({ draft: false })
+  .only([
+    "title",
+    "featured_image",
+    "description",
+    "og_image",
+    "date", 
+    "read_time",
+    "author",
+    "_path",
+  ])
+  .find();
+
+// Filter to our featured articles and maintain order
+const data = featuredPaths
+  .map(path => allArticles.find(article => article._path === path))
+  .filter((article): article is NonNullable<typeof article> => article !== undefined);
 
 useServerSeoMeta({
   title: "Afrodev",

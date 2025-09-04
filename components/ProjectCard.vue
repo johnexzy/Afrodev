@@ -62,16 +62,7 @@
 </template>
 
 <script setup lang="ts">
-interface Project {
-  title: string;
-  subtitle: string;
-  description: string;
-  technologies: string[];
-  highlights: string[];
-  status: 'Production' | 'In Development' | 'Beta';
-  link?: string;
-  featured?: boolean;
-}
+import type { Project } from '~/data/projects';
 
 defineProps<{
   project: Project;
