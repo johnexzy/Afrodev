@@ -63,8 +63,8 @@ The project uses a centralized data management approach:
 
 ### Prerequisites
 
-- Node.js 18+ 
-- pnpm (recommended) or npm
+- Node.js 22+ 
+- pnpm 8+ (recommended) or npm
 
 ### Installation
 
