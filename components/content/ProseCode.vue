@@ -1,7 +1,6 @@
 <template>
-  <div class="container">
-    
-
+  <Mermaid v-if="props.language === 'mermaid'" :code="props.code" />
+  <div v-else class="container">
     <slot />
     <div class="bottom-container">
       <div class="copy-container pr-1 pb-1">
@@ -14,6 +13,7 @@
 
 <script setup lang="ts">
 import { useClipboard } from "@vueuse/core";
+import Mermaid from "~/components/Mermaid.client.vue";
 
 const { copy, copied, text } = useClipboard();
 
@@ -24,7 +24,7 @@ const props = withDefaults(
     filename?: string | null;
     highlights?: Array<number>;
   }>(),
-  { code: "", language: null, filename: null, highlights: [] }
+  { code: "", language: null, filename: null, highlights: () => [] }
 );
 
 </script>
