@@ -233,7 +233,7 @@ export const indieProjects: IndieProject[] = [
 export const experiences: Experience[] = [
   {
     period: "Nov 2024 – Present",
-    title: "Senior Software",
+    title: "Senior Software Engineer",
     company: "Alveum",
     department: "Research & AI",
     description: "Leading research team on Astro Finance platform with ML models powered by Swiss Ephemeris Engine.",
