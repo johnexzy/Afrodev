@@ -233,7 +233,7 @@ export const indieProjects: IndieProject[] = [
 export const experiences: Experience[] = [
   {
     period: "Nov 2024 – Present",
-    title: "Engineering Lead",
+    title: "Senior Software",
     company: "Alveum",
     department: "Research & AI",
     description: "Leading research team on Astro Finance platform with ML models powered by Swiss Ephemeris Engine.",
@@ -245,7 +245,7 @@ export const experiences: Experience[] = [
   },
   {
     period: "Nov 2023 – Nov 2024",
-    title: "Technical Lead",
+    title: "Senior Software Engineer & Technical Lead",
     company: "Niyo Group",
     department: "EdTech",
     description: "Spearheaded development of scalable EdTech platform with real-time collaboration features (\"Learn with a Friend\"). Integrated AI-powered video transcription and streaming infrastructure.",
@@ -257,7 +257,7 @@ export const experiences: Experience[] = [
     ],
   },
   {
-    period: "Feb 2023 – Oct 2023 (8 months)",
+    period: "Jan 2023 – Nov 2023",
     title: "Senior Frontend Developer",
     company: "Nomba (formerly Kudi)",
     department: "Fintech",
