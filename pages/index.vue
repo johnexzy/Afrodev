@@ -7,29 +7,24 @@
         <span class="">John Oba</span>
       </h1>
 
-      <p class="mt-4 text-md leading-7 text-gray-600 dark:text-gray-300">
-        I'm a software engineer and tech leader driven by principle and processes, with my focus every day being to create meaningful impact and lasting value on both the projects I build and the people I work alongside.
-        <br />
-        <br />
-        Currently Engineering at
-        <a href="https://www.alveum.com" target="_blank" class="font-bold"
-          >Alveum</a
-        >, I focus on building AI-powered platforms, intelligent recommendation
-        systems, and seamless real-time experiences. I thrive at the intersection of
-        people and systems, strategy and execution.
-        <br />
-        <br />
-        I also co-founded
-        <a href="https://startuplist.africa" target="_blank" class="font-bold"
-          >Startuplist Africa</a
-        >, scaling it to Africa's No. 1 Startup Intelligence System with 300K+ users. I enjoy blending backend and frontend artistry,
-        from robust data architectures to interactive UI design.
-        <br />
-        <br />
-        Through my blog, Afrodev, I share insights on software development,
-        developer experience, and tech trends to inspire and empower fellow
-        developers. You'll most find me in the gym, and a lover of table tennis.
-      </p>
+    <p class="mt-4 text-md leading-7 text-gray-600 dark:text-gray-300">
+  I build products.
+  <br />
+  <br />
+  Over the past 7+ years, I’ve worked across frontend, backend, and real-time systems, shipping things people actually use. I focus on performance, system design, and building architectures that scale without becoming fragile.
+  <br />
+  <br />
+  I’m the co-founder of
+  <a href="https://startuplist.africa" target="_blank" class="font-bold">
+    Startuplist Africa</a
+  >, which has grown into one of the most widely used startup data platforms on the continent, with 300K+ users.
+  <br />
+  <br />
+  I enjoy working across the stack, from data systems and APIs to frontend experiences that feel fast and intuitive.
+  <br />
+  <br />
+  I write sometimes. I ship often.
+</p>
       <div class="mt-6">
         <div class="socials">
           <a
