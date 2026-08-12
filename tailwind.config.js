@@ -20,9 +20,7 @@ module.exports = {
       },
 
       fontFamily: {
-        'sans': ['Raleway', 'sans-serif'],
-        // Montserrat: ['Montserrat', 'sans-serif'],
-        Raleway: ['Raleway', 'sans-serif'],
+        'sans': ['Inter', 'sans-serif'],
         inter: ['Inter', 'sans-serif']
       }, //end of fontFamily
     },

@@ -1,5 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  devtools: {
+    enabled: false,
+  },
+
+  site: {
+    url: "https://afrodev.space",
+  },
+
   runtimeConfig: {
     baseURL:
       process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://afrodev.space",
@@ -15,8 +23,8 @@ export default defineNuxtConfig({
   },
 
   colorMode: {
-    preference: 'dark',
-    fallback: 'dark',
+    preference: 'system',
+    fallback: 'light',
     classSuffix: '',
   },
 
@@ -33,18 +41,6 @@ export default defineNuxtConfig({
     cssPath: "~/css/style.scss",
     configPath: "tailwind.config",
   },
-
-  // Vite configuration for client-side libraries
-  vite: {
-    optimizeDeps: {
-      include: ['html2pdf.js']
-    },
-    ssr: {
-      noExternal: []
-    }
-  },
-
-
 
   // Static Site Generation Configuration
   nitro: {

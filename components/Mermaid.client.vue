@@ -5,7 +5,6 @@
 <script setup lang="ts">
 import mermaid from 'mermaid'
 import { onMounted, ref, watch, toRef, computed } from 'vue'
-import { useDark } from "@vueuse/core";
 
 const props = defineProps<{ code: string }>()
 const code = toRef(props, 'code')
@@ -13,11 +12,11 @@ const el = ref<HTMLElement | null>(null)
 
 
 
-const isDark = useDark();
+const colorMode = useColorMode()
 
 // Determine Mermaid theme based on color mode
 const mermaidTheme = computed(() => {
-  return isDark.value ? 'dark' : 'default'
+  return colorMode.value === 'dark' ? 'dark' : 'default'
 })
 
 // Re-render when theme changes
@@ -84,6 +83,6 @@ watch(code, render)
 
 /* Smooth transitions */
 .mermaid-container svg * {
-  transition: all 0.2s ease;
+  transition: color 160ms ease, fill 160ms ease, stroke 160ms ease;
 }
 </style>
