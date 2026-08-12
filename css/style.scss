@@ -17,6 +17,7 @@
   --border: rgba(120, 120, 120, 0.22);
   --border-subtle: rgba(120, 120, 120, 0.14);
   --code: #f1f1ef;
+  --code-border: rgba(32, 32, 32, 0.16);
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --fg: #555;
   --fg-deep: #282828;
@@ -36,6 +37,7 @@
   --border: rgba(255, 255, 255, 0.18);
   --border-subtle: rgba(255, 255, 255, 0.11);
   --code: #101010;
+  --code-border: rgba(255, 255, 255, 0.15);
   --fg: #b8b8b8;
   --fg-deep: #ddd;
   --fg-deeper: #fff;
@@ -345,9 +347,10 @@
   margin: 1.5em 0;
   padding: 1rem 1.15rem;
   overflow-x: auto;
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--code-border);
   border-radius: 0.45rem;
   background: var(--code) !important;
+  color: var(--fg-deep);
   font-family: 'DM Mono', ui-monospace, monospace;
   font-size: 0.82em;
   line-height: 1.6;
@@ -377,6 +380,19 @@
   padding: 0.6rem;
   border-bottom: 1px solid var(--border-subtle);
   text-align: left;
+}
+
+@media (max-width: 560px) {
+  .prose table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  .prose th,
+  .prose td {
+    white-space: nowrap;
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {

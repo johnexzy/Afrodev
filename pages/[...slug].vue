@@ -54,6 +54,7 @@
 import { withBase } from "ufo";
 
 const { path } = useRoute();
+const { baseURL } = useRuntimeConfig();
 
 const { data } = await useAsyncData(`content-${path}`, () =>
   queryContent()
@@ -98,7 +99,7 @@ useHead({
 
 const ogImage = computed(() => {
   if (data.value?.og_image?.startsWith("/") && !data.value.og_image.startsWith("//")) {
-    return withBase(data.value.og_image, useRuntimeConfig().baseURL);
+    return withBase(data.value.og_image, baseURL);
   }
   return data.value?.og_image;
 });
