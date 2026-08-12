@@ -1,169 +1,292 @@
 <template>
-  <main class="max-w-4xl px-4 sm:px-6 lg:px-8">
-    <div class="my-16 slide-enter-content">
-      <h1
-        class="text-4xl md:text-5xl font-bold dark:text-gray-200 text-gray-700"
-      >
-        <span class="">John Oba</span>
+  <main class="home-page reading-column">
+    <section class="home-intro reveal">
+      <p class="home-intro__hello">Hey! I’m John Oba.</p>
+      <h1>
+        I build software for the web, with a focus on
+        <em>AI and real-time systems.</em>
       </h1>
 
-    <p class="mt-4 text-md leading-7 text-gray-600 dark:text-gray-300">
-  I build products.
-  <br />
-  <br />
-  Over the past 7+ years, I’ve worked across frontend, backend, and real-time systems, shipping things people actually use. I focus on performance, system design, and building architectures that scale without becoming fragile.
-  <br />
-  <br />
-  I’m the co-founder of
-  <a href="https://startuplist.africa" target="_blank" class="font-bold">
-    Startuplist Africa</a
-  >, which has grown into one of the most widely used startup data platforms on the continent, with 300K+ users.
-  <br />
-  <br />
-  I enjoy working across the stack, from data systems and APIs to frontend experiences that feel fast and intuitive.
-  <br />
-  <br />
-  I write sometimes. I ship often.
-</p>
-      <div class="mt-6">
-        <div class="socials">
-          <a
-            href="https://twitter.com/_afrodev"
-            target="_blank"
-            aria-label="twitter link"
-          >
-            <Icon
-              name="carbon:logo-x"
-              class="mx-2 cursor-pointer dark:text-white"
-            />
-          </a>
-          <a
-            href="https://linkedin.com/in/johnoba"
-            target="_blank"
-            aria-label="linkedin link"
-          >
-            <Icon
-              name="carbon:logo-linkedin"
-              class="mx-2 cursor-pointer dark:text-white"
-            />
-          </a>
-          <a
-            href="https://github.com/johnexzy"
-            target="_blank"
-            aria-label="github link"
-          >
-            <Icon
-              name="carbon:logo-github"
-              class="mx-2 cursor-pointer dark:text-white"
-            />
-          </a>
-        </div>
+      <div class="home-intro__prose">
+        <p>
+          I work across frontend, backend, and infrastructure. I like small teams,
+          clear interfaces, and systems that are easy to understand.
+        </p>
+        <p>
+          I co-founded
+          <a href="https://startuplist.africa" target="_blank" rel="noreferrer">Startuplist Africa</a>,
+          a database of African startups and funding rounds used by more than 300,000
+          people. Lately, I’ve been working on AI products and distributed systems.
+        </p>
       </div>
-    </div>
 
-    <section class="my-12">
-      <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">
-        Featured Articles
-      </h2>
-      <div
-        v-if="!hideImages"
-        class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8"
-      >
-        <div
+      <div class="home-intro__now">
+        <span>Currently</span>
+        <p>Working on AI products · learning more about distributed systems · writing occasionally</p>
+      </div>
+
+      <div class="home-intro__links">
+        <NuxtLink to="/portfolio">Projects <Icon name="ph:arrow-up-right" /></NuxtLink>
+        <NuxtLink to="/blog">Writing <Icon name="ph:arrow-right" /></NuxtLink>
+        <a href="mailto:obajohn75@gmail.com">Email <Icon name="ph:paper-plane-tilt" /></a>
+      </div>
+    </section>
+
+    <section class="home-notes">
+      <div class="home-section-title">
+        <h2>Selected writing</h2>
+        <NuxtLink to="/blog">All posts</NuxtLink>
+      </div>
+
+      <div class="home-note-list">
+        <NuxtLink
           v-for="item in data"
           :key="item._path"
-          class="bg-white dark:bg-gray-900 shadow-lg rounded-lg overflow-hidden"
+          :to="item._path"
+          class="home-note"
         >
-          <img
-            :src="configureUrl(item.featured_image)"
-            :alt="item.title"
-            class="w-full h-48 object-cover"
-          />
-          <div class="p-6">
-            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
-              {{ item.title }}
-            </h3>
-            <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">
-              {{ truncateText(item.description) }}
-            </p>
-            <p class="mt-2 text-xs text-gray-600 dark:text-gray-400">
-              {{ item.date }} • {{ item.read_time }} read
-            </p>
-            <a
-              :href="item._path"
-              class="mt-4 inline-block text-red hover:!underline"
-              >Read more</a
-            >
-          </div>
-        </div>
+          <span>{{ item.title }}</span>
+          <time>{{ formatDate(item.date) }}</time>
+        </NuxtLink>
       </div>
+    </section>
 
-      <div class="mx-auto text-center my-10">
-        <a
-          href="/blog"
-          class="inline-flex items-center px-4 py-2 ml-4 font-semibold text-white bg-red rounded"
-        >
-          See all
-        </a>
+    <section class="home-find">
+      <p>Find me on</p>
+      <div>
+        <a href="https://github.com/johnexzy" target="_blank" rel="noreferrer"><Icon name="ph:github-logo" /> GitHub</a>
+        <a href="https://linkedin.com/in/johnoba" target="_blank" rel="noreferrer"><Icon name="ph:linkedin-logo" /> LinkedIn</a>
+        <a href="https://twitter.com/_afrodev" target="_blank" rel="noreferrer"><Icon name="ph:x-logo" /> Twitter</a>
       </div>
+      <p class="home-find__mail">Or mail me at <a href="mailto:obajohn75@gmail.com">obajohn75<span aria-hidden="true">[at]</span>gmail.com</a></p>
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
-import { withBase } from "ufo";
-const hideImages = ref(false);
-
-// Featured articles we want to showcase
 const featuredPaths = [
   "/building-smart-recommendation-system-with-embeddings",
-  "/rediscovering-ai-assisted-coding", 
+  "/rediscovering-ai-assisted-coding",
   "/building-real-time-collaborative-systems",
-  "/evolving-engineering-everything-hard-is-now-easy"
+  "/evolving-engineering-everything-hard-is-now-easy",
 ];
 
-// Get all articles first
 const allArticles = await queryContent("/")
   .where({ draft: false })
-  .only([
-    "title",
-    "featured_image",
-    "description",
-    "og_image",
-    "date", 
-    "read_time",
-    "author",
-    "_path",
-  ])
+  .only(["title", "date", "_path"])
   .find();
 
-// Filter to our featured articles and maintain order
 const data = featuredPaths
-  .map(path => allArticles.find(article => article._path === path))
+  .map((path) => allArticles.find((article) => article._path === path))
   .filter((article): article is NonNullable<typeof article> => article !== undefined);
 
+const formatDate = (date?: string) => {
+  const parsed = date ? new Date(date) : new Date();
+  if (Number.isNaN(parsed.getTime())) return date || "";
+  return new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(parsed);
+};
+
 useServerSeoMeta({
-  title: "Afrodev",
-  ogTitle: "Afrodev - Blog",
-  description: "Coding Chronicles: Practical Software Development Stories",
-  ogDescription: "Coding Chronicles: Practical Software Development Stories",
-  ogImage:
-    "https://res.cloudinary.com/dpq6dieap/image/upload/v1678755812/meta_en37in.png",
+  title: "John Oba — Product Engineer",
+  ogTitle: "John Oba — Product Engineer",
+  description: "Product engineer building AI, real-time systems, and useful web products.",
+  ogDescription: "Product engineer building AI, real-time systems, and useful web products.",
+  ogImage: "https://res.cloudinary.com/dpq6dieap/image/upload/v1678755812/meta_en37in.png",
   twitterCard: "summary_large_image",
 });
-
-const configureUrl = (path: string) =>
-  withBase(path, useRuntimeConfig().app.baseURL);
-
-const truncateText = (text: string, maxLength: number = 100) => {
-  return text.length > maxLength
-    ? text.substring(0, maxLength) + "..."
-    : text;
-};
 </script>
 
-<style>
-.text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-red/50 to-blue-500;
+<style scoped>
+.home-page {
+  padding: 2rem 0 3rem;
+}
+
+.home-intro__hello {
+  margin: 0 0 1.3rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.home-intro h1 {
+  max-width: 19ch;
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  font-weight: 500;
+  letter-spacing: -0.052em;
+  line-height: 1.12;
+}
+
+.home-intro h1 em {
+  color: var(--muted);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+}
+
+.home-intro__prose {
+  margin-top: 2.25rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.home-intro__prose p {
+  margin: 1.1rem 0;
+}
+
+.home-intro__prose a,
+.home-find a {
+  color: var(--foreground);
+  border-bottom: 1px solid var(--border);
+}
+
+.home-intro__now {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding: 1rem 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  font-size: 0.75rem;
+  line-height: 1.6;
+}
+
+.home-intro__now span {
+  color: var(--faint);
+  font-family: 'DM Mono', ui-monospace, monospace;
+}
+
+.home-intro__now p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.home-intro__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.home-intro__links a,
+.home-section-title a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--foreground);
+  font-size: 0.8rem;
+  opacity: 0.78;
+  transition: opacity 160ms ease, transform 140ms var(--ease-out);
+}
+
+.home-notes,
+.home-find {
+  margin-top: 6rem;
+}
+
+.home-section-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.home-section-title h2 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.home-section-title a {
+  color: var(--faint);
+  font-size: 0.72rem;
+  opacity: 1;
+}
+
+.home-note-list {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.home-note {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  padding: 0.9rem 0.2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--muted);
+  font-size: 0.82rem;
+  transition: opacity 160ms ease, padding 180ms var(--ease-out);
+}
+
+.home-note time {
+  color: var(--faint);
+  font-family: 'DM Mono', ui-monospace, monospace;
+  font-size: 0.66rem;
+}
+
+.home-find > p:first-child {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.home-find > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.home-find > div a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+}
+
+.home-find__mail {
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.home-find__mail a {
+  font-family: 'DM Mono', ui-monospace, monospace;
+}
+
+.home-find__mail span {
+  padding-inline: 0.2em;
+  color: var(--faint);
+  font-family: inherit;
+  font-size: 0.9em;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-intro__links a:hover,
+  .home-section-title a:hover,
+  .home-note:hover {
+    opacity: 1;
+  }
+
+  .home-note:hover {
+    padding-inline: 0.5rem;
+    color: var(--foreground);
+  }
+
+  .home-intro__prose a:hover,
+  .home-find a:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+}
+
+@media (max-width: 560px) {
+  .home-page {
+    padding-top: 0;
+  }
+
+  .home-note {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
 }
 </style>

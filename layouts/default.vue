@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="site-shell">
     <CobwebBackground />
-    <div class="container py-5 sm:py-6 px-3 mx-auto max-w-5xl">
+    <div class="site-frame">
       <the-header />
       <slot />
     </div>

@@ -1,250 +1,302 @@
 <template>
-  <div ref="p5Container" class="cobweb-background"></div>
+  <div class="paper-canvas" aria-hidden="true">
+    <canvas ref="canvas" />
+  </div>
 </template>
 
-<script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import { useDark } from "@vueuse/core";
+<script setup lang="ts">
+interface Walker {
+  x: number;
+  y: number;
+  angle: number;
+  age: number;
+  depth: number;
+  life: number;
+  phase: number;
+}
 
-const isDark = useDark();
-const p5Container = ref(null);
+const canvas = ref<HTMLCanvasElement | null>(null);
 
-onMounted(async () => {
-  if (process.client) {
-    const p5 = await import("p5");
+let context: CanvasRenderingContext2D | null = null;
+let frameId = 0;
+let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+let themeObserver: MutationObserver | undefined;
+let motionPreference: MediaQueryList | undefined;
+let width = 0;
+let height = 0;
+let segmentCount = 0;
+let segmentLimit = 0;
+let walkers: Walker[] = [];
+let lastFrame = 0;
 
-    const sketch = (p) => {
-      let branches = [];
-      let maxBranches = 600;
+const randomBetween = (min: number, max: number) => min + Math.random() * (max - min);
 
-      class Branch {
-        constructor(start, angle, length, generation = 0) {
-          this.start = start;
-          this.angle = angle;
-          this.length = length;
-          this.generation = generation;
-          this.growing = true;
-          this.growthProgress = 0;
-          this.growthSpeed = p.random(0.01, 0.02);
-          // Slightly more visible thickness
-          this.thickness = p.map(generation, 0, 8, 1.0, 0.15);
-          // More noticeable but still subtle alpha values
-          this.alpha = p.map(generation, 0, 8, 0.3, 0.1);
+const createWalker = (x: number, y: number, angle: number, depth = 0): Walker => ({
+  x,
+  y,
+  angle,
+  age: 0,
+  depth,
+  life: Math.round(randomBetween(depth ? 34 : 82, depth ? 76 : 138)),
+  phase: randomBetween(0, Math.PI * 2),
+});
 
-          this.end = {
-            x: this.start.x + p.cos(angle) * length,
-            y: this.start.y + p.sin(angle) * length,
-          };
+const seedWalkers = () => {
+  const jitter = () => randomBetween(-0.22, 0.22);
+  const seeds = [
+    createWalker(randomBetween(width * 0.16, width * 0.84), -8, Math.PI / 2 + jitter()),
+    createWalker(randomBetween(width * 0.16, width * 0.84), height + 8, -Math.PI / 2 + jitter()),
+  ];
 
-          // Fluid organic curves - like ink in water
-          const ctrl1Dist = length * p.random(0.4, 0.9);
-          const ctrl2Dist = length * p.random(0.5, 1.0);
-          const ctrl1Angle = angle + p.random(-0.8, 0.8);
-          const ctrl2Angle = angle + p.random(-1.0, 1.0);
-
-          this.control1 = {
-            x: this.start.x + p.cos(ctrl1Angle) * ctrl1Dist,
-            y: this.start.y + p.sin(ctrl1Angle) * ctrl1Dist,
-          };
-
-          this.control2 = {
-            x: this.start.x + p.cos(ctrl2Angle) * ctrl2Dist,
-            y: this.start.y + p.sin(ctrl2Angle) * ctrl2Dist,
-          };
-        }
-
-        grow() {
-          if (this.growing) {
-            this.growthProgress += this.growthSpeed;
-            if (this.growthProgress >= 1) {
-              this.growing = false;
-              this.tryBranching();
-            }
-          }
-        }
-
-        tryBranching() {
-          if (this.generation < 8 && branches.length < maxBranches) {
-            // More organic, flowing branching probability
-            const branchProbability = p.map(this.generation, 0, 8, 0.8, 0.3);
-
-            if (p.random() < branchProbability) {
-              // More fluid, organic branching
-              const numNewBranches =
-                this.generation < 2
-                  ? p.floor(p.random(2, 4))
-                  : this.generation < 5
-                  ? p.floor(p.random(1, 3))
-                  : p.floor(p.random(1, 2));
-
-              for (let i = 0; i < numNewBranches; i++) {
-                let baseAngle = this.angle;
-
-                if (this.generation < 3) {
-                  const centerX = p.width / 2;
-                  const centerY = p.height / 2;
-                  const angleToCenter = p.atan2(
-                    centerY - this.end.y,
-                    centerX - this.end.x
-                  );
-                  const centerBias = p.map(this.generation, 0, 3, 0.5, 0.2);
-                  // Fluid flow towards center like liquid
-                  const flowInfluence = p.random(0.3, 0.8);
-                  baseAngle = p.lerp(baseAngle, angleToCenter, flowInfluence);
-                  baseAngle += p.random(-0.8, 0.8);
-                } else {
-                  // More organic, flowing branching
-                  baseAngle += p.random(-1.5, 1.5);
-                }
-
-                const newLength =
-                  this.generation < 3
-                    ? p.random(p.height / 5, p.height / 4)
-                    : this.length * p.random(0.6, 0.8);
-
-                const estimatedEndX = this.end.x + p.cos(baseAngle) * newLength;
-                const estimatedEndY = this.end.y + p.sin(baseAngle) * newLength;
-
-                if (
-                  estimatedEndX > -p.width / 4 &&
-                  estimatedEndX < p.width * 1.25 &&
-                  estimatedEndY > -p.height / 4 &&
-                  estimatedEndY < p.height * 1.25
-                ) {
-                  branches.push(
-                    new Branch(
-                      this.end,
-                      baseAngle,
-                      newLength,
-                      this.generation + 1
-                    )
-                  );
-                }
-              }
-            }
-          }
-        }
-
-        display() {
-          if (this.growthProgress > 0) {
-            // Slightly more visible stroke colors
-            if (isDark.value) {
-              // Dark mode: soft bluish-gray
-              p.stroke(150, 150, 170, this.alpha * 80);
-            } else {
-              // Light mode: gentle gray
-              p.stroke(160, 160, 170, this.alpha * 140);
-            }
-            p.strokeWeight(this.thickness);
-            p.noFill();
-
-            p.beginShape();
-            const t = this.growthProgress;
-            // Add more organic irregularity to thread path
-            for (let i = 0; i <= t; i += 0.02) {
-              const x = p.bezierPoint(
-                this.start.x,
-                this.control1.x,
-                this.control2.x,
-                this.end.x,
-                i
-              );
-              const y = p.bezierPoint(
-                this.start.y,
-                this.control1.y,
-                this.control2.y,
-                this.end.y,
-                i
-              );
-              
-              // Fluid organic flow - like liquid movement
-              const flowStrength = this.thickness * 3;
-              const flowFreq1 = 15 + this.generation * 3;
-              const flowFreq2 = 12 + this.generation * 2;
-              const wobbleX = x + p.sin(i * flowFreq1 + this.generation * 5) * flowStrength * p.random(0.8, 2.0);
-              const wobbleY = y + p.cos(i * flowFreq2 + this.generation * 7) * flowStrength * p.random(0.8, 2.0);
-              
-              p.vertex(wobbleX, wobbleY);
-            }
-            p.endShape();
-          }
-        }
-      }
-
-      p.setup = () => {
-        p.createCanvas(p.windowWidth, p.windowHeight);
-        p.noFill();
-
-        const createCornerBranches = (x, y, angleRanges) => {
-          const branchesPerRange = 4;
-          angleRanges.forEach(([minAngle, maxAngle]) => {
-            for (let i = 0; i < branchesPerRange; i++) {
-              const angle =
-                p.lerp(minAngle, maxAngle, i / (branchesPerRange - 1)) +
-                p.random(-0.2, 0.2);
-              const length = p.random(p.height / 5, p.height / 4);
-              branches.push(new Branch({ x, y }, angle, length));
-            }
-          });
-        };
-
-        // Top-left corner
-        createCornerBranches(-20, -20, [
-          [0, p.PI / 4],
-          [p.PI / 4, p.PI / 2],
-        ]);
-
-        // Top-right corner
-        createCornerBranches(p.width + 20, -20, [
-          [p.PI / 2, (3 * p.PI) / 4],
-          [(3 * p.PI) / 4, p.PI],
-        ]);
-
-        // Bottom-left corner
-        createCornerBranches(-20, p.height + 20, [
-          [-p.PI / 2, -p.PI / 4],
-          [-p.PI / 4, 0],
-        ]);
-
-        // Bottom-right corner
-        createCornerBranches(p.width + 20, p.height + 20, [
-          [-p.PI, (-3 * p.PI) / 4],
-          [(-3 * p.PI) / 4, -p.PI / 2],
-        ]);
-      };
-
-      p.draw = () => {
-        p.clear();
-
-        if (isDark.value) {
-          p.background(17, 18, 22);
-        }
-
-        branches.forEach((branch) => {
-          branch.grow();
-          branch.display();
-        });
-      };
-
-      p.windowResized = () => {
-        p.resizeCanvas(p.windowWidth, p.windowHeight);
-      };
-    };
-
-    const p5Instance = new p5.default(sketch, p5Container.value);
-    onUnmounted(() => p5Instance.remove());
+  if (width >= 560) {
+    seeds.push(
+      createWalker(-8, randomBetween(height * 0.2, height * 0.8), jitter()),
+      createWalker(width + 8, randomBetween(height * 0.2, height * 0.8), Math.PI + jitter()),
+    );
   }
+
+  walkers = seeds;
+};
+
+const drawThread = (walker: Walker, nextX: number, nextY: number) => {
+  if (!context) return;
+
+  const dark = document.documentElement.classList.contains("dark");
+  const ink = dark ? "228, 228, 228" : "40, 40, 40";
+  const alpha = Math.max(0.035, 0.115 - walker.depth * 0.014);
+  const midpointX = (walker.x + nextX) / 2;
+  const midpointY = (walker.y + nextY) / 2;
+  const normalX = -Math.sin(walker.angle);
+  const normalY = Math.cos(walker.angle);
+  const bend = Math.sin(walker.age * 0.48 + walker.phase) * 1.4;
+
+  context.beginPath();
+  context.moveTo(walker.x, walker.y);
+  context.quadraticCurveTo(
+    midpointX + normalX * bend,
+    midpointY + normalY * bend,
+    nextX,
+    nextY,
+  );
+  context.strokeStyle = `rgba(${ink}, ${alpha})`;
+  context.lineWidth = Math.max(0.36, 0.82 - walker.depth * 0.075);
+  context.stroke();
+};
+
+const drawCrossThread = (walker: Walker, candidates: Walker[]) => {
+  if (!context || Math.random() > 0.055) return;
+
+  let nearest: Walker | undefined;
+  let nearestDistance = 92;
+
+  for (const candidate of candidates) {
+    if (candidate === walker) continue;
+    const distance = Math.hypot(candidate.x - walker.x, candidate.y - walker.y);
+    if (distance > 28 && distance < nearestDistance) {
+      nearest = candidate;
+      nearestDistance = distance;
+    }
+  }
+
+  if (!nearest) return;
+
+  const dark = document.documentElement.classList.contains("dark");
+  const ink = dark ? "228, 228, 228" : "40, 40, 40";
+  context.beginPath();
+  context.moveTo(walker.x, walker.y);
+  context.lineTo(nearest.x, nearest.y);
+  context.strokeStyle = `rgba(${ink}, 0.026)`;
+  context.lineWidth = 0.42;
+  context.stroke();
+};
+
+const advance = () => {
+  if (!context || !walkers.length || segmentCount >= segmentLimit) {
+    walkers = [];
+    return;
+  }
+
+  const currentWalkers = walkers;
+  const nextWalkers: Walker[] = [];
+
+  for (const walker of currentWalkers) {
+    walker.age += 1;
+    walker.angle += randomBetween(-0.045, 0.045);
+
+    const step = randomBetween(4.2, 7.4);
+    const nextX = walker.x + Math.cos(walker.angle) * step;
+    const nextY = walker.y + Math.sin(walker.angle) * step;
+
+    drawThread(walker, nextX, nextY);
+    drawCrossThread(walker, currentWalkers);
+    segmentCount += 1;
+
+    walker.x = nextX;
+    walker.y = nextY;
+
+    const withinBounds =
+      nextX > -90 &&
+      nextX < width + 90 &&
+      nextY > -90 &&
+      nextY < height + 90;
+
+    if (withinBounds && walker.age < walker.life) nextWalkers.push(walker);
+
+    const mayBranch =
+      walker.depth < 5 &&
+      walker.age > 14 &&
+      nextWalkers.length < 88 &&
+      Math.random() < (walker.depth < 2 ? 0.022 : 0.012);
+
+    if (mayBranch) {
+      const direction = Math.random() > 0.5 ? 1 : -1;
+      nextWalkers.push(
+        createWalker(
+          nextX,
+          nextY,
+          walker.angle + direction * randomBetween(0.28, 0.66),
+          walker.depth + 1,
+        ),
+      );
+    }
+  }
+
+  walkers = nextWalkers;
+};
+
+const animate = (time: number) => {
+  if (time - lastFrame < 1000 / 32) {
+    frameId = requestAnimationFrame(animate);
+    return;
+  }
+
+  lastFrame = time;
+  advance();
+
+  if (walkers.length) frameId = requestAnimationFrame(animate);
+  else frameId = 0;
+};
+
+const start = () => {
+  if (!walkers.length || frameId || document.hidden) return;
+  lastFrame = 0;
+  frameId = requestAnimationFrame(animate);
+};
+
+const render = () => {
+  const element = canvas.value;
+  if (!element) return;
+
+  cancelAnimationFrame(frameId);
+  frameId = 0;
+  width = window.innerWidth;
+  height = window.innerHeight;
+  segmentCount = 0;
+  segmentLimit = width < 560 ? 460 : 1100;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  element.style.width = `${width}px`;
+  element.style.height = `${height}px`;
+  element.width = Math.round(width * dpr);
+  element.height = Math.round(height * dpr);
+
+  context = element.getContext("2d");
+  if (!context) return;
+
+  context.setTransform(dpr, 0, 0, dpr, 0, 0);
+  context.clearRect(0, 0, width, height);
+  context.lineCap = "round";
+  context.lineJoin = "round";
+  seedWalkers();
+
+  if (motionPreference?.matches) {
+    while (walkers.length && segmentCount < segmentLimit) advance();
+    return;
+  }
+
+  start();
+};
+
+const handleVisibility = () => {
+  if (document.hidden) {
+    cancelAnimationFrame(frameId);
+    frameId = 0;
+  } else {
+    start();
+  }
+};
+
+const handleResize = () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(render, 180);
+};
+
+onMounted(() => {
+  motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+  motionPreference.addEventListener("change", render);
+  window.addEventListener("resize", handleResize, { passive: true });
+  document.addEventListener("visibilitychange", handleVisibility);
+
+  themeObserver = new MutationObserver(render);
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+
+  render();
+});
+
+onUnmounted(() => {
+  cancelAnimationFrame(frameId);
+  clearTimeout(resizeTimer);
+  themeObserver?.disconnect();
+  motionPreference?.removeEventListener("change", render);
+  window.removeEventListener("resize", handleResize);
+  document.removeEventListener("visibilitychange", handleVisibility);
 });
 </script>
 
 <style scoped>
-.cobweb-background {
+.paper-canvas {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
   z-index: -1;
+  overflow: hidden;
   pointer-events: none;
+  background: var(--background);
+}
+
+.paper-canvas::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  opacity: 0.055;
+  background-image: radial-gradient(var(--faint) 0.45px, transparent 0.55px);
+  background-size: 5px 5px;
+  mask-image: linear-gradient(to bottom, black, transparent 18%);
+}
+
+.paper-canvas canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.86;
+  mask-image: radial-gradient(ellipse at center, transparent 10%, rgba(0, 0, 0, 0.12) 42%, black 100%);
+  -webkit-mask-image: radial-gradient(ellipse at center, transparent 10%, rgba(0, 0, 0, 0.12) 42%, black 100%);
+}
+
+@media (max-width: 560px) {
+  .paper-canvas canvas {
+    opacity: 0.72;
+    mask-image: radial-gradient(ellipse at center, transparent 20%, rgba(0, 0, 0, 0.08) 52%, black 100%);
+    -webkit-mask-image: radial-gradient(ellipse at center, transparent 20%, rgba(0, 0, 0, 0.08) 52%, black 100%);
+  }
+}
+
+@media print {
+  .paper-canvas {
+    display: none;
+  }
 }
 </style>

@@ -1,75 +1,183 @@
 <template>
-  <header class="flex justify-between items-center mb-16 sm:mb-15">
-    <NuxtLink to="/" class="cursor-pointer">
+  <header class="site-header">
+    <NuxtLink to="/" class="brand-link" aria-label="Afrodev home">
       <img
-        class="hidden dark:block"
-        width="100"
-        height="100"
+        class="brand-link__logo brand-link__logo--dark"
+        width="96"
+        height="38"
         src="../assets/img/logo-dark.svg"
-        alt="logo"
+        alt="Afrodev"
       />
       <img
-        class="dark:hidden"
-        width="100"
-        height="100"
+        class="brand-link__logo brand-link__logo--light"
+        width="96"
+        height="38"
         src="../assets/img/logo.svg"
-        alt="logo"
+        alt="Afrodev"
       />
     </NuxtLink>
 
-    <div class="px-2 h-9 items-center flex gap-5">
-      <div>
-        <a
-          href="/portfolio"
-          class="text-sm font-medium text-gray-900 dark:text-gray-300 group-hover:text-red-500 cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
-        >
-          Portfolio
-        </a>
-      </div>
-      
-      <div>
-        <a
-          href="/blog"
-          class="text-sm font-medium text-gray-900 dark:text-gray-300 group-hover:text-red-500 cursor-pointer transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300"
-        >
-          Blog
-        </a>
-      </div>
-
-      <div class="dark:hidden">
-        <Icon
-          name="material-symbols:dark-mode"
-          @click="toggleDark()"
-          class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 ... text-gray-500 dark:text-gray-300 cursor-pointer text-2xl hover:dark:text-gray-50 hover:text-gray-900"
-        />
-      </div>
-      <div class="hidden dark:block">
-        <Icon
-          name="material-symbols:light-mode"
-          @click="toggleDark()"
-          class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 ... text-gray-500 dark:text-gray-300 cursor-pointer text-2xl hover:dark:text-gray-50 hover:text-gray-900"
-        />
-      </div>
-
-      <span class="copied-text text-gray-400 text-sm" v-if="copied"
-        >Copied!</span
+    <nav class="site-nav" aria-label="Primary navigation">
+      <NuxtLink
+        v-for="item in navigation"
+        :key="item.to"
+        :to="item.to"
+        class="site-nav__link"
+        :class="{ 'site-nav__link--active': isActive(item.to) }"
       >
-      <Icon
-        name="mdi:link-variant"
-        @click="copy(`${location.href}`)"
-        class="text-gray-500 dark:text-gray-300 cursor-pointer text-2xl hover:dark:text-gray-50 hover:text-gray-900"
-      />
-    </div>
+        {{ item.label }}
+      </NuxtLink>
+      <a href="https://github.com/johnexzy" target="_blank" rel="noreferrer" title="GitHub" aria-label="GitHub">
+        <Icon name="ph:github-logo" />
+      </a>
+      <ClientOnly>
+        <button
+          class="theme-toggle"
+          type="button"
+          :aria-label="isDark ? 'Use light theme' : 'Use dark theme'"
+          :title="isDark ? 'Use light theme' : 'Use dark theme'"
+          @click="toggleDark"
+        >
+          <Icon :name="isDark ? 'ph:sun' : 'ph:moon'" />
+        </button>
+        <template #fallback>
+          <span class="theme-toggle" aria-hidden="true"><Icon name="ph:moon" /></span>
+        </template>
+      </ClientOnly>
+    </nav>
   </header>
 </template>
-<script setup lang="ts">
-import { useDark, useClipboard, useBrowserLocation } from "@vueuse/core";
-const { copy, copied, text } = useClipboard();
 
-const isDark = useDark();
-function toggleDark() {
-  isDark.value = !isDark.value;
+<script setup lang="ts">
+const route = useRoute();
+const colorMode = useColorMode();
+const isDark = ref(colorMode.value === "dark");
+let themeObserver: MutationObserver | undefined;
+
+const navigation = [
+  { label: "Writing", to: "/blog" },
+  { label: "Projects", to: "/portfolio" },
+];
+
+const isActive = (path: string) => route.path.startsWith(path);
+const toggleDark = () => {
+  const nextIsDark = !document.documentElement.classList.contains("dark");
+  colorMode.preference = nextIsDark ? "dark" : "light";
+  document.documentElement.classList.toggle("dark", nextIsDark);
+  isDark.value = nextIsDark;
+};
+
+onMounted(() => {
+  const syncTheme = () => {
+    isDark.value = document.documentElement.classList.contains("dark");
+  };
+
+  syncTheme();
+  themeObserver = new MutationObserver(syncTheme);
+  themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+});
+
+onUnmounted(() => themeObserver?.disconnect());
+</script>
+
+<style scoped>
+.site-header {
+  position: relative;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 5.5rem;
+  margin-bottom: 3.5rem;
 }
 
-const location = useBrowserLocation();
-</script>
+.brand-link {
+  display: inline-flex;
+  padding: 0.3rem;
+  opacity: 0.8;
+  transition: opacity 160ms ease, transform 140ms var(--ease-out);
+}
+
+.brand-link__logo {
+  width: 6rem;
+  height: 2.4rem;
+  object-fit: contain;
+}
+
+.brand-link__logo--dark {
+  display: none;
+}
+
+.dark .brand-link__logo--dark {
+  display: block;
+}
+
+.dark .brand-link__logo--light {
+  display: none;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.site-nav__link,
+.site-nav a,
+.theme-toggle {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--foreground);
+  font-size: 0.8rem;
+  opacity: 0.74;
+  transition: opacity 160ms ease, transform 140ms var(--ease-out);
+}
+
+.theme-toggle,
+.site-nav > a {
+  min-width: 2.75rem;
+}
+
+.site-nav__link--active {
+  opacity: 1;
+}
+
+.theme-toggle {
+  font-size: 1.05rem;
+}
+
+.brand-link:active,
+.site-nav a:active,
+.theme-toggle:active {
+  transform: scale(0.96);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .brand-link:hover,
+  .site-nav a:hover,
+  .theme-toggle:hover {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    min-height: 4.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .brand-link__logo {
+    width: 5.2rem;
+  }
+
+  .site-nav {
+    gap: 0.85rem;
+  }
+
+  .site-nav__link {
+    font-size: 0.78rem;
+  }
+}
+</style>
