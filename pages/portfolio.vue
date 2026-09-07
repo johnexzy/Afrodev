@@ -1,239 +1,150 @@
 <template>
-  <main class="portfolio-page">
-    <header class="portfolio-intro reading-column reveal">
-      <p class="eyebrow">Projects / 2019—now</p>
-      <h1>Selected work.</h1>
+  <main id="main-content" tabindex="-1">
+    <div class="page-mast">
+      <span>The work index</span
+      ><span>Independent projects & collaborations</span>
+    </div>
+    <header class="page-heading reveal">
+      <h1>Products, tools,<br /><em>& experiments.</em></h1>
       <p>
-        Products I’ve worked on across AI, fintech, government, and independent projects.
+        Long-running products, small tools, and experiments that took on a life
+        of their own.
       </p>
-      <div class="portfolio-intro__links">
-        <a
-          href="https://docs.google.com/document/d/1nhlf5X-M4HKSYbJ-e0UEuBLLmFAcIyYSc5T9wdHnazg/edit?usp=sharing"
-          target="_blank"
-          rel="noreferrer"
-        >Résumé <Icon name="ph:arrow-up-right" /></a>
-        <a href="mailto:obajohn75@gmail.com">Email me <Icon name="ph:paper-plane-tilt" /></a>
-      </div>
     </header>
-
-    <section class="portfolio-section portfolio-section--reading">
-      <div class="portfolio-section__title">
-        <span>Experience</span>
-        <p>Recent roles and responsibilities.</p>
+    <div class="work-filters" aria-label="Filter projects">
+      <button
+        v-for="filter in filters"
+        :key="filter"
+        type="button"
+        :aria-pressed="activeFilter === filter"
+        @click="activeFilter = filter"
+      >
+        {{ filter }}<span>{{ countFor(filter) }}</span>
+      </button>
+    </div>
+    <p class="sr-only" role="status">
+      {{ visibleProjects.length }} projects shown
+    </p>
+    <div class="work-grid">
+      <NuxtLink
+        v-for="project in visibleProjects"
+        :key="project.slug"
+        :to="'/work/' + project.slug"
+        class="work-card"
+      >
+        <WorkExhibit :variant="project.visual" />
+        <div class="work-card__meta">
+          <span>{{ project.category }}</span
+          ><span>{{ project.period }}</span>
+        </div>
+        <h2>{{ project.title }}<span aria-hidden="true">↗</span></h2>
+        <p>{{ project.summary }}</p>
+      </NuxtLink>
+    </div>
+    <section class="editorial-section">
+      <div class="section-label">
+        <h2><span>↳</span>Smaller, earlier, open-ended</h2>
+        <span class="eyebrow">Code worth sharing</span>
       </div>
-      <div class="experience-list">
-        <ExperienceCard
-          v-for="experience in experiences"
-          :key="`${experience.title}-${experience.company}`"
-          :experience="experience"
-        />
-      </div>
+      <a
+        v-for="work in smallWorks"
+        :key="work.title"
+        :href="work.href"
+        class="project-line"
+        target="_blank"
+        rel="noopener noreferrer"
+        ><div>
+          <h3>{{ work.title }}</h3>
+          <p>{{ work.description }}</p>
+        </div>
+        <span class="mono">{{ work.category }}</span
+        ><span class="line-arrow" aria-hidden="true">↗</span></a
+      >
     </section>
-
-    <section class="portfolio-section portfolio-section--wide">
-      <div class="portfolio-section__title portfolio-section__title--wide">
-        <span>Selected work</span>
-        <p>Client work, team projects, and products I helped build.</p>
+    <section class="editorial-section">
+      <div class="section-label">
+        <h2><span>↳</span>Built with others</h2>
+        <NuxtLink to="/about">Experience ↗</NuxtLink>
       </div>
-      <div class="project-grid">
-        <ProjectCard
-          v-for="project in featuredProjects"
-          :key="project.title"
-          :project="project"
-        />
-      </div>
-    </section>
-
-    <section class="portfolio-section portfolio-section--wide">
-      <div class="portfolio-section__title portfolio-section__title--wide">
-        <span>Experiments</span>
-        <p>Smaller projects and technical experiments.</p>
-      </div>
-      <div class="indie-grid">
-        <IndieProjectCard
-          v-for="project in indieProjects"
-          :key="project.title"
-          :project="project"
-        />
-      </div>
-    </section>
-
-    <section class="portfolio-section portfolio-section--reading">
-      <div class="portfolio-section__title">
-        <span>Toolbox</span>
-        <p>Languages, frameworks, and systems I use regularly.</p>
-      </div>
-      <div class="expertise-grid">
-        <ExpertiseCard
-          v-for="(expertise, index) in expertiseAreas"
-          :key="expertise.title"
-          :expertise="expertise"
-          :index="index"
-        />
-      </div>
-    </section>
-
-    <section class="portfolio-contact reading-column">
-      <p>Want to work together?</p>
-      <a href="mailto:obajohn75@gmail.com">Email me <Icon name="ph:arrow-up-right" /></a>
+      <a
+        v-for="work in collaborations"
+        :key="work.title"
+        :href="work.href"
+        class="project-line"
+        ><div>
+          <h3>{{ work.title }}</h3>
+          <p>{{ work.description }}</p>
+        </div>
+        <span class="mono">{{ work.discipline }}</span
+        ><span class="line-arrow" aria-hidden="true">↗</span></a
+      >
     </section>
   </main>
 </template>
-
 <script setup lang="ts">
-import { experiences, expertiseAreas, featuredProjects, indieProjects } from "~/data/projects";
-
-useServerSeoMeta({
-  title: "Projects — John Oba",
-  ogTitle: "Projects — John Oba",
-  description: "Selected product engineering work across AI, real-time systems, and scalable platforms.",
-  ogDescription: "Selected product engineering work across AI, real-time systems, and scalable platforms.",
-  ogImage: "https://res.cloudinary.com/dpq6dieap/image/upload/v1678755812/meta_en37in.png",
-  twitterCard: "summary_large_image",
+import { projects, smallWorks, collaborations } from "~/data/work";
+const filters = ["All work", "Products", "Open source", "Experiments"];
+const activeFilter = ref("All work");
+const kinds: Record<string, string> = {
+  Products: "Product",
+  "Open source": "Open source",
+  Experiments: "Experiment",
+};
+const countFor = (filter: string) =>
+  filter === "All work"
+    ? projects.length
+    : projects.filter((p) => p.kind === kinds[filter]).length;
+const visibleProjects = computed(() =>
+  activeFilter.value === "All work"
+    ? projects
+    : projects.filter((p) => p.kind === kinds[activeFilter.value]),
+);
+useSeoMeta({
+  title: "Work — John Oba",
+  description:
+    "Products, native Mac apps, open-source tools, and experiments by John Oba.",
+  ogTitle: "Work — John Oba",
 });
 </script>
-
 <style scoped>
-.portfolio-page {
-  padding: 2rem 0 3rem;
+.page-heading h1 {
+  font-size: clamp(54px, 5.9vw, 76px);
+  line-height: 1.06;
 }
-
-.portfolio-intro h1 {
-  max-width: 16ch;
-  margin: 1.15rem 0 0;
-  font-size: clamp(2.25rem, 6vw, 4rem);
-  font-weight: 500;
-  letter-spacing: -0.06em;
-  line-height: 1.08;
-}
-
-.portfolio-intro > p:nth-of-type(2) {
-  max-width: 42rem;
-  margin: 1.35rem 0 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.75;
-}
-
-.portfolio-intro__links {
+.work-filters {
   display: flex;
-  gap: 1.25rem;
-  margin-top: 1.5rem;
-}
-
-.portfolio-intro__links a,
-.portfolio-contact a {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: var(--foreground);
+  gap: 22px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  font-size: 0.8rem;
-  opacity: 0.78;
-  transition: color 160ms ease, opacity 160ms ease, border-color 160ms ease;
+  margin-bottom: 28px;
 }
-
-.portfolio-section {
-  margin-top: 7rem;
-}
-
-.portfolio-section--reading {
-  width: min(65ch, 100%);
-  margin-inline: auto;
-}
-
-.portfolio-section--wide {
-  width: min(67rem, 100%);
-  margin-inline: auto;
-}
-
-.portfolio-section__title {
-  display: grid;
-  grid-template-columns: 8rem minmax(0, 1fr);
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  color: var(--faint);
-  font-size: 0.76rem;
-}
-
-.portfolio-section__title span {
-  color: var(--foreground);
-  font-weight: 500;
-}
-
-.portfolio-section__title p {
-  margin: 0;
-}
-
-.portfolio-section__title--wide {
-  width: min(65ch, 100%);
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.experience-list {
-  border-top: 1px solid var(--border-subtle);
-}
-
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.45rem;
-}
-
-.indie-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.45rem;
-}
-
-.expertise-grid {
-  border-top: 1px solid var(--border-subtle);
-}
-
-.portfolio-contact {
+.work-filters button {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 2rem;
-  margin-top: 7rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border-subtle);
-}
-
-.portfolio-contact p {
-  margin: 0;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  min-height: 46px;
   color: var(--muted);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 1.25rem;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
 }
-
-@media (hover: hover) and (pointer: fine) {
-  .portfolio-intro__links a:hover,
-  .portfolio-contact a:hover {
-    color: var(--accent);
-    border-color: var(--accent);
-    opacity: 1;
-  }
+.work-filters button[aria-pressed="true"] {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
 }
-
-@media (max-width: 760px) {
-  .portfolio-page {
-    padding-top: 0;
+.work-filters span {
+  font: 9px var(--mono);
+}
+@media (max-width: 520px) {
+  .page-heading h1 {
+    font-size: 55px;
   }
-
-  .portfolio-section {
-    margin-top: 5rem;
+  .work-filters {
+    gap: 16px;
   }
-
-  .project-grid,
-  .indie-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .portfolio-contact {
-    align-items: flex-start;
-    flex-direction: column;
+  .work-filters button {
+    font-size: 11px;
   }
 }
 </style>

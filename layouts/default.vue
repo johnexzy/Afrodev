@@ -1,11 +1,7 @@
 <template>
-  <div class="site-shell">
-    <CobwebBackground />
-    <div class="site-frame">
-      <the-header />
-      <slot />
-    </div>
-    <the-footer />
+  <div id="top" class="site-shell">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <TheHeader />
+    <div class="site-main"><slot /><TheFooter /></div>
   </div>
 </template>
-<script setup lang="ts"></script>

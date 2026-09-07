@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: 'class',
+  darkMode: "class",
   content: [
     "./components/**/*.{js,vue,ts}",
     "./layouts/**/*.vue",
@@ -14,23 +14,23 @@ module.exports = {
     extend: {
       colors: {
         red: {
-          DEFAULT: '#f98b4d',
+          DEFAULT: "#f98b4d",
         },
-        dark: '#111216'
+        dark: "#111216",
       },
 
       fontFamily: {
-        'sans': ['Inter', 'sans-serif'],
-        inter: ['Inter', 'sans-serif']
+        sans: ["Instrument Sans", "sans-serif"],
+        inter: ["Instrument Sans", "sans-serif"],
       }, //end of fontFamily
     },
   },
   plugins: [
-    require('@tailwindcss/aspect-ratio'),
-    require('@tailwindcss/typography'),
-    require('tailwind-scrollbar')({ nocompatible: true }),
+    require("@tailwindcss/aspect-ratio"),
+    require("@tailwindcss/typography"),
+    require("tailwind-scrollbar")({ nocompatible: true }),
   ],
   variants: {
-    scrollbar: ['rounded', 'dark']
-  }
-}
+    scrollbar: ["rounded", "dark"],
+  },
+};

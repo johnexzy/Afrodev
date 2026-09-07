@@ -10,6 +10,9 @@
     >
       {{ copied ? "Copied" : "Copy" }}
     </button>
+    <span class="sr-only" role="status">{{
+      copied ? "Code copied to clipboard." : ""
+    }}</span>
   </div>
 </template>
 
@@ -26,7 +29,7 @@ const props = withDefaults(
     filename?: string | null;
     highlights?: Array<number>;
   }>(),
-  { code: "", language: null, filename: null, highlights: () => [] }
+  { code: "", language: null, filename: null, highlights: () => [] },
 );
 </script>
 
@@ -52,8 +55,8 @@ const props = withDefaults(
   border-radius: 0.35rem;
   color: var(--muted);
   background: var(--code);
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 0.72rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
   line-height: 1;
   cursor: pointer;
   transition:

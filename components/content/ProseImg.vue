@@ -1,8 +1,8 @@
 <template>
-  
   <img
-    class="lazyload shadow-md rounded-md"
-    :data-src="refinedSrc"
+    :src="refinedSrc"
+    loading="lazy"
+    decoding="async"
     :alt="alt"
     :width="width"
     :height="height"
@@ -30,9 +30,10 @@ const props = defineProps({
   },
 });
 
+const appBase = useRuntimeConfig().app.baseURL;
 const refinedSrc = computed(() => {
   if (props.src?.startsWith("/") && !props.src.startsWith("//")) {
-    return withBase(props.src, useRuntimeConfig().baseURL);
+    return withBase(props.src, appBase);
   }
   return props.src;
 });

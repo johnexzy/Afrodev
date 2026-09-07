@@ -1,245 +1,236 @@
 <template>
-  <main v-if="data" class="article-page reading-column">
-    <NuxtLink to="/blog" class="article-back">
-      <Icon name="ph:arrow-left" />
-      Writing
-    </NuxtLink>
-
+  <main
+    v-if="data"
+    id="main-content"
+    class="article-page reading-column"
+    tabindex="-1"
+  >
+    <div class="page-mast">
+      <NuxtLink to="/blog">← Writing</NuxtLink>
+      <span>{{ data.read_time }} read</span>
+    </div>
     <header class="article-header reveal">
-      <div class="article-header__meta">
-        <time>{{ data.date }}</time>
-        <span>{{ data.read_time }} read</span>
+      <div class="article-meta">
+        <time :datetime="isoDate(data.date)">{{ data.date }}</time
+        ><span>{{ categories.join(" / ") }}</span>
       </div>
       <h1>{{ data.title }}</h1>
-      <p>{{ data.description }}</p>
-      <div v-if="categories.length" class="article-header__categories">
-        <span v-for="category in categories" :key="category">{{ category }}</span>
-      </div>
+      <p v-if="data.description">{{ data.description }}</p>
     </header>
-
     <figure v-if="data.featured_image" class="article-cover">
-      <NuxtImg :src="data.featured_image" :alt="data.title" format="webp" />
+      <img :src="data.featured_image" :alt="data.title" decoding="async" />
     </figure>
-
+    <details v-if="outline.length" class="article-outline">
+      <summary>In this article <span aria-hidden="true">+</span></summary>
+      <nav aria-label="Table of contents">
+        <a
+          v-for="heading in outline"
+          :key="heading.id"
+          :href="'#' + heading.id"
+          >{{ heading.text }}</a
+        >
+      </nav>
+    </details>
     <article class="article-content">
-      <ContentDoc class="prose" />
+      <ContentRenderer :value="data" class="prose" />
     </article>
-
-    <div class="article-reaction">
-      <div
-        data-lyket-type="clap"
-        :data-lyket-id="path.replace('/', '')"
-        data-lyket-namespace="blog"
-        data-lyket-template="medium"
-      />
-    </div>
-
-    <section id="commentSection" class="article-comments">
-      <h2>Notes & responses</h2>
-      <Comments is-dark class="hidden dark:block" />
-      <Comments class="dark:hidden" />
-    </section>
-
-    <section v-if="moreArticles?.length" class="more-stories">
-      <div class="more-stories__heading">
-        <h2>Continue reading</h2>
-        <NuxtLink to="/blog">Full archive</NuxtLink>
+    <section
+      id="commentSection"
+      class="article-comments"
+      aria-labelledby="responses-heading"
+    >
+      <div class="section-label">
+        <h2 id="responses-heading">Notes & responses</h2>
+        <span class="mono">Via GitHub</span>
       </div>
-      <ListArticles :data="moreArticles" hide-images />
+      <template v-if="!commentsOpen">
+        <p>Have a question, a correction, or something to add?</p>
+        <button type="button" class="text-link" @click="commentsOpen = true">
+          Load the discussion <span aria-hidden="true">↗</span>
+        </button>
+        <small
+          >Loads comments from utteranc.es. A GitHub account is needed to
+          reply.</small
+        >
+      </template>
+      <ClientOnly v-else
+        ><Comments :key="colorMode.value" :is-dark="colorMode.value === 'dark'"
+      /></ClientOnly>
+    </section>
+    <section v-if="moreArticles.length" class="more-stories">
+      <div class="section-label">
+        <h2>Continue reading</h2>
+        <NuxtLink to="/blog">Full archive ↗</NuxtLink>
+      </div>
+      <ListArticles :data="moreArticles" />
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
 import { withBase } from "ufo";
+import { articleTime, isoDate } from "~/utils/articles";
 
 const { path } = useRoute();
-const { baseURL } = useRuntimeConfig();
-
+const colorMode = useColorMode();
+const commentsOpen = ref(false);
 const { data } = await useAsyncData(`content-${path}`, () =>
-  queryContent()
-    .where({ _path: path })
-    .only([
-      "title",
-      "featured_image",
-      "date",
-      "og_image",
-      "read_time",
-      "description",
-      "author",
-      "category",
-    ])
-    .findOne(),
+  queryContent().where({ _path: path, draft: false }).findOne(),
 );
-
-const { data: moreArticles } = await useAsyncData(`more-${path}`, async () =>
-  (
-    await queryContent("/")
-      .where({ draft: false })
-      .only(["title", "description", "date", "read_time", "_path", "category"])
-      .limit(4)
-      .findSurround(path, { before: 2, after: 2 })
-  ).filter((article) => article !== null),
+if (!data.value)
+  throw createError({
+    statusCode: 404,
+    statusMessage: "Writing not found",
+    fatal: true,
+  });
+const { data: articles } = await useAsyncData("reading-index", () =>
+  queryContent("/")
+    .where({ draft: false })
+    .only(["title", "description", "date", "read_time", "_path", "category"])
+    .find(),
 );
-
-const categories = computed(() => data.value?.category?.split(", ").filter(Boolean) || []);
-
-useHead({
-  script: [
-    {
-      src: "https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js",
-      async: true,
-    },
-    {
-      src: "https://unpkg.com/@lyket/widget@latest/dist/lyket.js?apiKey=pt_b0d91ee87b0df642d88c0b6ada49b8",
-      async: true,
-    },
-  ],
-});
-
-const ogImage = computed(() => {
-  if (data.value?.og_image?.startsWith("/") && !data.value.og_image.startsWith("//")) {
-    return withBase(data.value.og_image, baseURL);
-  }
-  return data.value?.og_image;
-});
-
-useServerSeoMeta({
-  title: data.value?.title,
-  ogTitle: data.value?.title,
-  description: data.value?.description,
-  ogDescription: data.value?.description,
+const moreArticles = computed(() =>
+  (articles.value || [])
+    .filter((article) => article._path !== path)
+    .sort((a, b) => articleTime(b.date) - articleTime(a.date))
+    .slice(0, 3),
+);
+const categories = computed(
+  () =>
+    data.value?.category
+      ?.split(",")
+      .map((category: string) => category.trim())
+      .filter(Boolean) || [],
+);
+const outline = computed(() => data.value?.body?.toc?.links || []);
+const ogImage = computed(() =>
+  data.value?.og_image
+    ? withBase(data.value.og_image, "https://afrodev.space")
+    : undefined,
+);
+useSeoMeta({
+  title: () => data.value?.title,
+  ogTitle: () => data.value?.title,
+  description: () => data.value?.description,
+  ogDescription: () => data.value?.description,
   ogImage,
-  author: data.value?.author,
+  author: () => data.value?.author,
   ogType: "article",
   twitterCard: "summary_large_image",
-} as any);
+});
 </script>
 
 <style scoped>
-.article-page {
-  padding: 0 0 3rem;
+.article-header {
+  margin: 34px 0 36px;
 }
-
-.article-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin-bottom: 3rem;
-  color: var(--faint);
-  font-size: 0.76rem;
-  transition: color 160ms ease, transform 140ms var(--ease-out);
-}
-
-.article-header__meta {
-  display: flex;
-  gap: 0.65rem;
-  color: var(--faint);
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 0.68rem;
-}
-
-.article-header__meta span::before {
-  margin-right: 0.65rem;
-  content: '·';
-}
-
-.article-header h1 {
-  margin: 1.25rem 0 0;
-  font-size: clamp(2.2rem, 6vw, 4.25rem);
-  font-weight: 500;
-  letter-spacing: -0.06em;
-  line-height: 1.08;
-}
-
-.article-header > p {
-  margin: 1.35rem 0 0;
-  color: var(--muted);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
-  line-height: 1.65;
-}
-
-.article-header__categories {
+.article-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-top: 1.35rem;
-  color: var(--faint);
-  font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 0.66rem;
+  gap: 12px 20px;
+  justify-content: space-between;
+  font: 10px/1.8 var(--mono);
+  color: var(--muted);
 }
-
-.article-header__categories span + span::before {
-  margin-right: 0.75rem;
-  content: '·';
+.article-meta > span {
+  max-width: 60%;
+  text-align: right;
 }
-
+.article-header h1 {
+  font: 400 clamp(42px, 4.8vw, 64px)/1.06 var(--serif);
+  letter-spacing: -0.025em;
+  margin: 25px 0 22px;
+  text-wrap: balance;
+}
+.article-header > p {
+  color: var(--muted);
+  font-size: 17px;
+  line-height: 1.75;
+}
 .article-cover {
-  width: min(54rem, calc(100vw - 2rem));
-  margin: 3.5rem 0 3.5rem 50%;
-  transform: translateX(-50%);
+  margin: 36px 0;
 }
-
 .article-cover img {
   display: block;
+  max-height: 440px;
   width: 100%;
-  max-height: 34rem;
-  border-radius: 0.45rem;
   object-fit: cover;
-  filter: saturate(0.82);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
 }
-
-.article-content :deep(.prose) {
-  width: 100%;
-  margin-inline: auto;
+.article-outline {
+  margin: 32px 0 40px;
+  padding: 15px 0;
+  border-block: 1px solid var(--border);
+  font-size: 13px;
 }
-
-.article-reaction {
+.article-outline summary {
+  cursor: pointer;
   display: flex;
-  justify-content: center;
-  margin-top: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  color: var(--accent);
 }
-
+.article-outline summary::-webkit-details-marker {
+  display: none;
+}
+.article-outline summary > span {
+  font-size: 20px;
+  line-height: 1;
+}
+.article-outline[open] summary > span {
+  transform: rotate(45deg);
+}
+.article-outline nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 21px 0 5px;
+}
+.article-outline nav a {
+  color: var(--muted);
+  line-height: 1.5;
+}
+.article-outline nav a:hover {
+  color: var(--accent);
+}
 .article-comments,
 .more-stories {
-  margin-top: 5rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border-subtle);
+  margin-top: 64px;
 }
-
-.article-comments > h2,
-.more-stories h2 {
-  margin: 0 0 2rem;
-  font-size: 0.9rem;
-  font-weight: 500;
+.article-comments .section-label > span {
+  font-size: 10px;
+  color: var(--muted);
 }
-
-.more-stories__heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
+.article-comments > p {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
 }
-
-.more-stories__heading a {
-  color: var(--faint);
-  font-size: 0.72rem;
+.article-comments > button {
+  margin-top: 15px;
 }
-
-@media (hover: hover) and (pointer: fine) {
-  .article-back:hover,
-  .more-stories__heading a:hover {
-    color: var(--foreground);
+.article-comments > small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-top: 10px;
+}
+@media (max-width: 520px) {
+  .article-header h1 {
+    font-size: 43px;
   }
-}
-
-@media (max-width: 560px) {
-  .article-back {
-    margin-bottom: 2rem;
+  .article-header > p {
+    font-size: 16px;
   }
-
-  .article-cover {
-    margin-block: 2.5rem;
+  .article-meta > span {
+    max-width: 100%;
+    text-align: left;
+  }
+  .article-header {
+    margin-top: 25px;
   }
 }
 </style>

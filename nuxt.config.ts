@@ -1,4 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import { projects } from "./data/work";
 export default defineNuxtConfig({
   devtools: {
     enabled: false,
@@ -6,11 +7,6 @@ export default defineNuxtConfig({
 
   site: {
     url: "https://afrodev.space",
-  },
-
-  runtimeConfig: {
-    baseURL:
-      process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://afrodev.space",
   },
 
   content: {
@@ -26,9 +22,9 @@ export default defineNuxtConfig({
   },
 
   colorMode: {
-    preference: 'system',
-    fallback: 'light',
-    classSuffix: '',
+    preference: "system",
+    fallback: "light",
+    classSuffix: "",
   },
 
   modules: [
@@ -37,7 +33,7 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "@nuxtjs/color-mode",
     "@nuxt/image",
-    "@nuxtjs/sitemap"
+    "@nuxtjs/sitemap",
   ],
 
   tailwindcss: {
@@ -48,8 +44,14 @@ export default defineNuxtConfig({
   // Static Site Generation Configuration
   nitro: {
     prerender: {
-      routes: ['/portfolio', '/blog']
-    }
+      routes: [
+        "/",
+        "/portfolio",
+        "/blog",
+        "/about",
+        ...projects.map((project) => `/work/${project.slug}`),
+      ],
+    },
   },
 
   app: {
@@ -66,18 +68,16 @@ export default defineNuxtConfig({
             r=o.createElement('script');r.async=1;
             r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
             a.appendChild(r);
-        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=')`
-        } as any
-      ]
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=')`,
+        } as any,
+      ],
     },
-    baseURL: process.env.NODE_ENV === 'production' ? '/' : '/'
+    baseURL: "/",
   },
 
   sitemap: {
-    sources: [
-      '/api/__sitemap__/urls',
-    ]
+    sources: ["/api/__sitemap__/urls"],
   },
 
-  compatibilityDate: "2024-08-25"
+  compatibilityDate: "2024-08-25",
 } as any);
