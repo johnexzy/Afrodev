@@ -6,7 +6,7 @@
     tabindex="-1"
   >
     <div class="page-mast">
-      <NuxtLink to="/blog">← Writing</NuxtLink>
+      <NuxtLink :to="writingHome">← Writing</NuxtLink>
       <span>{{ data.read_time }} read</span>
     </div>
     <header class="article-header reveal">
@@ -60,7 +60,7 @@
     <section v-if="moreArticles.length" class="more-stories">
       <div class="section-label">
         <h2>Continue reading</h2>
-        <NuxtLink to="/blog">Full archive ↗</NuxtLink>
+        <NuxtLink :to="writingHome">Full archive ↗</NuxtLink>
       </div>
       <ListArticles :data="moreArticles" />
     </section>
@@ -68,10 +68,12 @@
 </template>
 
 <script setup lang="ts">
+import { blogOrigin, mainOrigin } from "~/utils/site";
 import { withBase } from "ufo";
 import { articleTime, isoDate } from "~/utils/articles";
 
 const { path } = useRoute();
+const writingHome = useRuntimeConfig().public.blogSite ? "/" : blogOrigin;
 const colorMode = useColorMode();
 const commentsOpen = ref(false);
 const { data } = await useAsyncData(`content-${path}`, () =>
@@ -104,9 +106,7 @@ const categories = computed(
 );
 const outline = computed(() => data.value?.body?.toc?.links || []);
 const ogImage = computed(() =>
-  data.value?.og_image
-    ? withBase(data.value.og_image, "https://afrodev.space")
-    : undefined,
+  data.value?.og_image ? withBase(data.value.og_image, mainOrigin) : undefined,
 );
 useSeoMeta({
   title: () => data.value?.title,

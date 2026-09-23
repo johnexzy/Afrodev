@@ -1,12 +1,33 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import { projects } from "./data/work";
+import { blogOrigin, mainOrigin } from "./utils/site";
+
+const blogSite = process.env.BLOG_SITE === "true";
+
 export default defineNuxtConfig({
   devtools: {
     enabled: false,
   },
 
   site: {
-    url: "https://afrodev.space",
+    url: blogSite ? blogOrigin : mainOrigin,
+  },
+
+  runtimeConfig: {
+    public: { blogSite },
+  },
+
+  hooks: {
+    "pages:extend"(pages) {
+      if (!blogSite) return;
+      const index = pages.find((page) => page.path === "/")!;
+      const archive = pages.find((page) => page.path === "/blog")!;
+      index.file = archive.file;
+      for (let i = pages.length - 1; i >= 0; i--) {
+        if (pages[i] !== index && !pages[i].file?.endsWith("/[...slug].vue"))
+          pages.splice(i, 1);
+      }
+    },
   },
 
   content: {
@@ -44,13 +65,15 @@ export default defineNuxtConfig({
   // Static Site Generation Configuration
   nitro: {
     prerender: {
-      routes: [
-        "/",
-        "/portfolio",
-        "/blog",
-        "/about",
-        ...projects.map((project) => `/work/${project.slug}`),
-      ],
+      routes: blogSite
+        ? ["/"]
+        : [
+            "/",
+            "/portfolio",
+            "/blog",
+            "/about",
+            ...projects.map((project) => `/work/${project.slug}`),
+          ],
     },
   },
 
@@ -77,6 +100,7 @@ export default defineNuxtConfig({
 
   sitemap: {
     sources: ["/api/__sitemap__/urls"],
+    exclude: blogSite ? [] : ["/blog"],
   },
 
   compatibilityDate: "2024-08-25",

@@ -26,6 +26,15 @@ pnpm preview
 
 For a static export, use `pnpm generate`. Generated public files are in `.output/public`. Home, archive, about, and project detail routes are explicitly prerendered; Nuxt Content serves the writing.
 
+The writing subdomain uses a second Vercel project connected to this same repository. Set `BLOG_SITE=true` in that project's build environment, then attach `blog.johnoba.com` as its domain. The normal project remains at `www.johnoba.com` with `BLOG_SITE` unset. The blog build serves the archive at `/` and articles at their existing slugs; its links back to the portfolio use the main domain. In Cloudflare DNS, add the `blog` CNAME to the exact target Vercel shows for the blog project. Do not point it at the `www` project, which serves different routes.
+
+To check the blog build locally:
+
+```sh
+BLOG_SITE=true pnpm build
+pnpm preview
+```
+
 ## Where to edit
 
 - `data/work.ts` — project narratives, categories, public links, smaller repositories, and collaborations.
@@ -67,4 +76,4 @@ See [the refresh notes](docs/design-refresh.md) for the design direction, conten
 
 ## Contact
 
-[afrodev.space](https://afrodev.space) · [GitHub](https://github.com/johnexzy) · [Email](mailto:obajohn75@gmail.com)
+[johnoba.com](https://www.johnoba.com) · [GitHub](https://github.com/johnexzy) · [Email](mailto:obajohn75@gmail.com)

@@ -74,12 +74,12 @@
     <section class="editorial-section">
       <div class="section-label">
         <h2><span>03</span>Notes along the way</h2>
-        <NuxtLink to="/blog">All writing ↗</NuxtLink>
+        <NuxtLink :to="blogOrigin">All writing ↗</NuxtLink>
       </div>
       <NuxtLink
         v-for="article in selectedArticles"
         :key="article._path"
-        :to="article._path"
+        :to="blogOrigin + article._path"
         class="home-note"
       >
         <time :datetime="isoDate(article.date)">{{
@@ -102,6 +102,7 @@
   </main>
 </template>
 <script setup lang="ts">
+import { blogOrigin } from "~/utils/site";
 import { projects } from "~/data/work";
 import { isoDate, yearOf } from "~/utils/articles";
 const selectedWork = projects.filter((p) =>

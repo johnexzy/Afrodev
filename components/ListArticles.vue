@@ -10,7 +10,7 @@
         <NuxtLink
           v-for="article in group.articles"
           :key="article._path"
-          :to="article._path"
+          :to="blogSite ? article._path : blogOrigin + article._path"
           class="article-row"
         >
           <div>
@@ -33,7 +33,9 @@
   </div>
 </template>
 <script setup lang="ts">
+import { blogOrigin } from "~/utils/site";
 import { articleTime, yearOf, shortDate, isoDate } from "~/utils/articles";
+const blogSite = useRuntimeConfig().public.blogSite;
 interface Article {
   title?: string;
   description?: string;

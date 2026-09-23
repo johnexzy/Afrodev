@@ -1,3 +1,5 @@
+import { blogOrigin } from "../utils/site";
+
 export type WorkKind = "Product" | "Open source" | "Experiment" | "Client work";
 export interface WorkProject {
   slug: string;
@@ -51,7 +53,10 @@ export const projects: WorkProject[] = [
     stack: ["Next.js", "PostgreSQL", "Data pipelines", "Google Cloud"],
     links: [
       { label: "Visit StartupList", href: "https://www.startuplist.africa" },
-      { label: "Read the story", href: "/startuplist-africa-4yrs-anniversary" },
+      {
+        label: "Read the story",
+        href: `${blogOrigin}/startuplist-africa-4yrs-anniversary`,
+      },
     ],
   },
   {
@@ -155,7 +160,7 @@ export const projects: WorkProject[] = [
       },
       {
         label: "Related writing",
-        href: "/building-real-time-collaborative-systems",
+        href: `${blogOrigin}/building-real-time-collaborative-systems`,
       },
     ],
   },
@@ -219,7 +224,7 @@ export const projects: WorkProject[] = [
       { label: "View source", href: "https://github.com/johnexzy/pixelator" },
       {
         label: "Read about Pixelator",
-        href: "/introducing-pixelator-figma-plugin",
+        href: `${blogOrigin}/introducing-pixelator-figma-plugin`,
       },
     ],
   },
@@ -248,7 +253,7 @@ export const projects: WorkProject[] = [
     links: [
       {
         label: "Read & listen",
-        href: "/fine-tuning-xtts-v2-for-more-natural-bible-narration",
+        href: `${blogOrigin}/fine-tuning-xtts-v2-for-more-natural-bible-narration`,
       },
     ],
   },
@@ -277,7 +282,7 @@ export const projects: WorkProject[] = [
     stack: ["Next.js", "TypeScript", "PostgreSQL", "Media pipelines"],
     links: [
       { label: "Visit the toolbox", href: "https://box.tools" },
-      { label: "The original launch", href: "/box.tools-launch" },
+      { label: "The original launch", href: `${blogOrigin}/box.tools-launch` },
     ],
   },
 ];
@@ -345,7 +350,7 @@ export const collaborations = [
     description:
       "Backend systems, Swiss Ephemeris calculations, and AI-assisted interpretation.",
     discipline: "Backend engineering",
-    href: "/from-zero-knowledge-to-kp-astro",
+    href: `${blogOrigin}/from-zero-knowledge-to-kp-astro`,
   },
   {
     title: "BonBonPay",
