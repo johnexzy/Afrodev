@@ -16,6 +16,11 @@
       </div>
       <h1>{{ data.title }}</h1>
       <p v-if="data.description">{{ data.description }}</p>
+      <nav v-if="data.tags?.length" class="article-tags" aria-label="Article tags">
+        <NuxtLink v-for="tag in data.tags" :key="tag" :to="tagLink(tag)">
+          {{ tagLabel(tag) }}
+        </NuxtLink>
+      </nav>
     </header>
     <figure v-if="data.featured_image" class="article-cover">
       <img :src="data.featured_image" :alt="data.title" decoding="async" />
@@ -71,9 +76,12 @@
 import { blogOrigin, mainOrigin } from "~/utils/site";
 import { withBase } from "ufo";
 import { articleTime, isoDate } from "~/utils/articles";
+import { isReadingTag, tagLabel } from "~/utils/articleTags";
 
 const { path } = useRoute();
 const writingHome = useRuntimeConfig().public.blogSite ? "/" : blogOrigin;
+const tagLink = (tag: string) =>
+  `${writingHome}?${isReadingTag(tag) ? "reading" : "topic"}=${encodeURIComponent(tag)}`;
 const colorMode = useColorMode();
 const commentsOpen = ref(false);
 const { data } = await useAsyncData(`content-${path}`, () =>
@@ -88,7 +96,15 @@ if (!data.value)
 const { data: articles } = await useAsyncData("reading-index", () =>
   queryContent("/")
     .where({ draft: false })
-    .only(["title", "description", "date", "read_time", "_path", "category"])
+    .only([
+      "title",
+      "description",
+      "date",
+      "read_time",
+      "_path",
+      "category",
+      "tags",
+    ])
     .find(),
 );
 const moreArticles = computed(() =>
@@ -146,6 +162,22 @@ useSeoMeta({
   color: var(--muted);
   font-size: 17px;
   line-height: 1.75;
+}
+.article-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+.article-tags a {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font: 11px/1.5 var(--mono);
+}
+.article-tags a:hover {
+  color: var(--foreground);
+  border-color: var(--foreground);
 }
 .article-cover {
   margin: 36px 0;

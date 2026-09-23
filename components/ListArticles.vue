@@ -17,6 +17,7 @@
             <h3>{{ article.title }}</h3>
             <p v-if="showDescriptions">{{ article.description }}</p>
             <span class="article-category">{{
+              article.tags?.map(tagLabel).join(" / ") ||
               article.category?.split(",")[0]
             }}</span>
           </div>
@@ -35,6 +36,7 @@
 <script setup lang="ts">
 import { blogOrigin } from "~/utils/site";
 import { articleTime, yearOf, shortDate, isoDate } from "~/utils/articles";
+import { tagLabel } from "~/utils/articleTags";
 const blogSite = useRuntimeConfig().public.blogSite;
 interface Article {
   title?: string;
@@ -43,6 +45,7 @@ interface Article {
   read_time?: string;
   _path?: string;
   category?: string;
+  tags?: string[];
 }
 const props = withDefaults(
   defineProps<{
@@ -106,15 +109,15 @@ const groupedArticles = computed(() => {
   display: block;
   margin-top: 10px;
   color: var(--muted);
-  font: 10px/1.5 var(--mono);
+  font: 11px/1.5 var(--mono);
 }
 .article-row__meta {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding-top: 5px;
-  font: 10px/1.5 var(--mono);
-  color: var(--faint);
+  font: 11px/1.5 var(--mono);
+  color: var(--muted);
   text-align: right;
 }
 @media (hover: hover) {

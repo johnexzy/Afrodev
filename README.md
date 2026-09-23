@@ -65,8 +65,11 @@ author: "John Oba - Afrodev"
 date: "7 Sep, 2026"
 read_time: "5 min"
 category: "Engineering"
+tags: [technical, engineering]
 ---
 ```
+
+The first tag is the reading type: `technical` for guides and technical case studies, or `less-technical` for stories and reflections. Add a broad topic tag so readers can filter the archive. Current topics are `ai`, `blockchain`, `career`, `design`, `engineering`, `product`, `startups`, `systems`, and `web`.
 
 Images in `public/images` are referenced as `/images/...`. They load from the current site origin, including non-default development ports. Comments load on request through Utterances, using the existing GitHub discussion repository.
 
