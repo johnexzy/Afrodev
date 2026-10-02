@@ -8,14 +8,6 @@
       <p class="eyebrow">{{ project.role }} / {{ project.period }}</p>
       <h1>{{ project.title }}</h1>
       <p>{{ project.summary }}</p>
-    </header>
-    <WorkExhibit :variant="project.visual" class="detail-exhibit" />
-    <div class="detail-caption">
-      <span>Illustrated study / {{ project.title }}</span
-      ><span>{{ project.kind }}</span>
-    </div>
-    <div class="detail-body">
-      <p class="detail-introduction">{{ project.description }}</p>
       <div class="detail-links">
         <NuxtLink
           v-for="link in project.links"
@@ -28,6 +20,14 @@
           >{{ link.label }} ↗</NuxtLink
         >
       </div>
+    </header>
+    <WorkExhibit :variant="project.visual" class="detail-exhibit" />
+    <div class="detail-caption">
+      <span>Illustrated study / {{ project.title }}</span
+      ><span>{{ project.kind }}</span>
+    </div>
+    <div class="detail-body">
+      <p class="detail-introduction">{{ project.description }}</p>
       <ProjectPlayground
         v-if="['now', 'pixelator', 'peerplay'].includes(project.slug)"
         :project="project.slug"
@@ -133,8 +133,13 @@ useSeoMeta({
 .detail-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 25px;
-  margin: 24px 0 48px;
+  gap: 8px 25px;
+  margin-top: 20px;
+}
+.detail-links .text-link {
+  align-items: center;
+  min-height: 44px;
+  margin-top: 0;
 }
 .detail-section {
   display: grid;

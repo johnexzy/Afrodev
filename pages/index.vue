@@ -16,14 +16,19 @@
           across interfaces, backend systems, and the details that make them fit
           together.
         </p>
-        <NuxtLink class="text-link" to="/about"
-          >A little about me <span aria-hidden="true">↗</span></NuxtLink
-        >
+        <div class="home-actions">
+          <a class="text-link" href="#selected-work"
+            >Explore my work <span aria-hidden="true">↓</span></a
+          >
+          <a class="text-link" href="mailto:obajohn75@gmail.com"
+            >Say hello <span aria-hidden="true">↗</span></a
+          >
+        </div>
       </div>
       <ThreadStudy />
     </section>
 
-    <section class="editorial-section home-work">
+    <section id="selected-work" class="editorial-section home-work">
       <div class="section-label">
         <h2><span>01</span>Selected work</h2>
         <NuxtLink to="/portfolio">The full index ↗</NuxtLink>
@@ -165,6 +170,17 @@ useSeoMeta({
   line-height: 1.85;
   max-width: 44ch;
   margin: 19px 0 17px;
+}
+.home-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+}
+.home-actions .text-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
 }
 .home-intro :deep(.thread-study) {
   align-self: center;

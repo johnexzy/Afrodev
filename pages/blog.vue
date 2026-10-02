@@ -84,7 +84,15 @@ const data = (
     ])
     .find()
 ).sort((a, b) => articleTime(b.date) - articleTime(a.date));
-const search = ref("");
+const search = computed({
+  get: () => (typeof route.query.q === "string" ? route.query.q : ""),
+  set: (value: string) => {
+    navigateTo(
+      { path: route.path, query: { ...route.query, q: value || undefined } },
+      { replace: true },
+    );
+  },
+});
 const readingFilters = [
   { value: "", label: "All" },
   { value: "technical", label: "Technical" },
@@ -109,6 +117,7 @@ const readingLink = (value: string) => ({
   query: {
     ...(value ? { reading: value } : {}),
     ...(topic.value ? { topic: topic.value } : {}),
+    ...(search.value ? { q: search.value } : {}),
   },
 });
 function changeTopic(event: Event) {
@@ -118,11 +127,11 @@ function changeTopic(event: Event) {
     query: {
       ...(reading.value ? { reading: reading.value } : {}),
       ...(value ? { topic: value } : {}),
+      ...(search.value ? { q: search.value } : {}),
     },
   });
 }
 function clearFilters() {
-  search.value = "";
   navigateTo({ path: route.path });
 }
 const filtered = computed(() =>
@@ -171,6 +180,11 @@ useSeoMeta({
   color: var(--muted);
 }
 .reading-filters a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
   padding: 7px 0;
   color: var(--muted);
   font-size: 13px;
@@ -185,6 +199,8 @@ useSeoMeta({
   color: var(--foreground);
 }
 .topic-filter select {
+  min-width: 44px;
+  min-height: 44px;
   padding: 7px 24px 7px 0;
   background: transparent;
   color: var(--foreground);
@@ -218,6 +234,7 @@ useSeoMeta({
 }
 .archive-search input {
   width: 100%;
+  min-height: 44px;
   padding: 8px 0;
   min-width: 0;
   background: transparent;
@@ -230,8 +247,9 @@ useSeoMeta({
   color: var(--faint);
 }
 .archive-search button {
-  width: 32px;
-  height: 32px;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
   font-size: 22px;
 }
 .search-count {
@@ -249,6 +267,9 @@ useSeoMeta({
   margin: 15px 0;
   color: var(--muted);
   font-size: 14px;
+}
+.empty-search button {
+  min-height: 44px;
 }
 @media (max-width: 520px) {
   .reading-filters {
