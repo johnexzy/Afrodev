@@ -3,7 +3,7 @@
     <figcaption class="chart-heading">
       <span class="chart-kicker">Playable waveform comparison</span>
       <strong id="voice-progression-title">John 3:16 across four XTTS stages</strong>
-      <span>Play the same sentence at each stage, or select a position in any waveform to compare its timing.</span>
+      <span id="voice-progression-help">Play the same sentence at each stage. Tap or click a waveform to seek, or use the arrow keys when focused.</span>
     </figcaption>
 
     <div class="track-list">
@@ -19,7 +19,6 @@
             <span>{{ track.description }}</span>
           </div>
           <div class="track-meta">
-            <span>{{ track.loading ? 'Decoding…' : formatTime(track.duration) }}</span>
             <a :href="track.src" download :aria-label="`Download ${track.title} WAV file`">WAV ↓</a>
           </div>
         </header>
@@ -28,7 +27,7 @@
           <button
             class="play-button"
             type="button"
-            :disabled="track.loading"
+            :disabled="track.loading || track.error"
             :aria-label="activeIndex === index && isPlaying ? `Pause ${track.title}` : `Play ${track.title}`"
             @click="togglePlayback(index)"
           >
@@ -41,65 +40,79 @@
             </svg>
           </button>
 
-          <div
-            class="waveform"
-            role="slider"
-            tabindex="0"
-            :aria-label="`Seek within ${track.title}`"
-            aria-valuemin="0"
-            :aria-valuemax="Math.round(track.duration)"
-            :aria-valuenow="Math.round(trackCurrentTime(index))"
-            :aria-valuetext="`${formatTime(trackCurrentTime(index))} of ${formatTime(track.duration)}`"
-            @pointermove="showHoverTime(index, $event)"
-            @pointerleave="hoverIndex = -1"
-            @pointerdown="seekFromPointer(index, $event)"
-            @keydown.left.prevent="nudge(index, -1)"
-            @keydown.right.prevent="nudge(index, 1)"
-            @keydown.home.prevent="seekToRatio(index, 0)"
-            @keydown.end.prevent="seekToRatio(index, 1)"
-          >
-            <div v-if="track.loading" class="waveform-placeholder" aria-hidden="true">
-              <span v-for="bar in 32" :key="bar" :style="{ height: `${placeholderHeight(bar, index)}%` }" />
-            </div>
-
-            <svg v-else viewBox="0 0 600 72" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <clipPath :id="`played-${track.id}`">
-                  <rect x="0" y="0" :width="playbackRatio(index) * 600" height="72" />
-                </clipPath>
-              </defs>
-              <line class="waveform-axis" x1="0" x2="600" y1="36" y2="36" />
-              <path class="waveform-shape waveform-shape--rest" :d="waveformPath(track)" />
-              <path
-                class="waveform-shape waveform-shape--played"
-                :d="waveformPath(track)"
-                :clip-path="`url(#played-${track.id})`"
-              />
-              <line
-                v-if="activeIndex === index"
-                class="playhead"
-                :x1="playbackRatio(index) * 600"
-                :x2="playbackRatio(index) * 600"
-                y1="5"
-                y2="67"
-              />
-              <line
-                v-if="hoverIndex === index"
-                class="hover-guide"
-                :x1="hoverRatio * 600"
-                :x2="hoverRatio * 600"
-                y1="7"
-                y2="65"
-              />
-            </svg>
-
-            <span
-              v-if="hoverIndex === index && !track.loading"
-              class="hover-time"
-              :style="{ left: `${hoverLeft}%` }"
+          <div class="track-timeline">
+            <div
+              class="waveform"
+              role="slider"
+              :tabindex="track.loading || track.error ? -1 : 0"
+              :aria-label="`Seek within ${track.title}`"
+              aria-describedby="voice-progression-help"
+              :aria-disabled="track.loading || track.error"
+              :aria-busy="track.loading"
+              aria-valuemin="0"
+              :aria-valuemax="track.duration"
+              :aria-valuenow="trackCurrentTime(index)"
+              :aria-valuetext="`${formatTime(trackCurrentTime(index))} of ${formatTime(track.duration)}`"
+              @pointerdown="beginSeek(index, $event)"
+              @pointermove="movePointer(index, $event)"
+              @pointerup="finishSeek(index, $event)"
+              @pointercancel="leaveWaveform"
+              @pointerleave="leaveWaveform"
+              @keydown.left.prevent="nudge(index, -1)"
+              @keydown.right.prevent="nudge(index, 1)"
+              @keydown.down.prevent="nudge(index, -1)"
+              @keydown.up.prevent="nudge(index, 1)"
+              @keydown.home.prevent="seekToRatio(index, 0)"
+              @keydown.end.prevent="seekToRatio(index, 1)"
             >
-              {{ formatTime(track.duration * hoverRatio) }}
-            </span>
+              <div v-if="track.loading" class="waveform-placeholder" aria-hidden="true">
+                <span v-for="bar in 32" :key="bar" :style="{ height: `${placeholderHeight(bar, index)}%` }" />
+              </div>
+
+              <svg v-else viewBox="0 0 600 72" preserveAspectRatio="none" aria-hidden="true">
+                <defs>
+                  <clipPath :id="`played-${track.id}`">
+                    <rect x="0" y="0" :width="playbackRatio(index) * 600" height="72" />
+                  </clipPath>
+                </defs>
+                <line class="waveform-axis" x1="0" x2="600" y1="36" y2="36" />
+                <path class="waveform-shape waveform-shape--rest" :d="track.path" />
+                <path
+                  class="waveform-shape waveform-shape--played"
+                  :d="track.path"
+                  :clip-path="`url(#played-${track.id})`"
+                />
+                <line
+                  v-if="activeIndex === index"
+                  class="playhead"
+                  :x1="playbackRatio(index) * 600"
+                  :x2="playbackRatio(index) * 600"
+                  y1="5"
+                  y2="67"
+                />
+                <line
+                  v-if="hoverIndex === index"
+                  class="hover-guide"
+                  :x1="hoverRatio * 600"
+                  :x2="hoverRatio * 600"
+                  y1="7"
+                  y2="65"
+                />
+              </svg>
+
+              <span
+                v-if="hoverIndex === index && !track.loading && !track.error"
+                class="hover-time"
+                :style="{ left: `${hoverLeft}%` }"
+              >
+                {{ formatTime(track.duration * hoverRatio) }}
+              </span>
+            </div>
+            <div class="timeline-meta" aria-hidden="true">
+              <span>
+                {{ track.loading ? 'Loading sample…' : track.error ? 'Preview unavailable' : `${formatTime(trackCurrentTime(index))} / ${formatTime(track.duration)}` }}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -109,20 +122,23 @@
           preload="metadata"
           @ended="handleEnded(index)"
           @pause="handlePause(index)"
+          @error="handlePlaybackError(index)"
         />
 
-        <p v-if="track.error" class="track-error">
-          The waveform could not be decoded. <a :href="track.src">Open the WAV file directly.</a>
+        <p v-if="track.error || track.playbackError" class="track-error" role="status">
+          <span class="sr-only">{{ track.title }}. </span>
+          {{ track.error ? 'Audio preview unavailable.' : 'Playback could not start. Try again or' }}
+          <a :href="track.src">{{ track.error ? 'Open the WAV file directly.' : 'open the WAV file.' }}</a>
         </p>
       </article>
     </div>
 
     <div class="chart-note">
       <span aria-hidden="true">↳</span>
-      Waveforms are decoded from the published WAV files, trimmed at 40 dB below peak, and normalized per track. Shape shows timing and energy—not perceived quality.
+      <span class="chart-note-copy">Each waveform has its own time scale, from 0:00 to the sample’s duration. Audio is trimmed at 40 dB below peak and amplitude is normalized per track. Use listening to judge quality.</span>
     </div>
 
-    <p class="sr-only" aria-live="polite">{{ playbackAnnouncement }}</p>
+    <p class="sr-only" role="status" aria-atomic="true">{{ playbackAnnouncement }}</p>
   </figure>
 </template>
 
@@ -133,12 +149,13 @@ type VoiceTrack = {
   title: string;
   description: string;
   src: string;
-  peaks: Peak[];
+  path: string;
   duration: number;
   trimStart: number;
   trimEnd: number;
   loading: boolean;
   error: boolean;
+  playbackError: boolean;
 };
 
 const tracks = reactive<VoiceTrack[]>([
@@ -147,28 +164,28 @@ const tracks = reactive<VoiceTrack[]>([
     title: 'Base XTTS model',
     description: 'Supplied 324-clip baseline',
     src: '/audio/voice-model-process/untrained-john-3-16.wav',
-    peaks: [], duration: 0, trimStart: 0, trimEnd: 0, loading: true, error: false,
+    path: 'M 0 36 L 600 36', duration: 0, trimStart: 0, trimEnd: 0, loading: true, error: false, playbackError: false,
   },
   {
     id: 'early',
     title: 'Earlier XTTS fine-tune',
     description: 'Intermediate model before selection',
     src: '/audio/voice-model-process/earlier-finetune-john-3-16.wav',
-    peaks: [], duration: 0, trimStart: 0, trimEnd: 0, loading: true, error: false,
+    path: 'M 0 36 L 600 36', duration: 0, trimStart: 0, trimEnd: 0, loading: true, error: false, playbackError: false,
   },
   {
     id: 'selected',
     title: 'Selected Gospels model',
     description: 'Validation-best · step 10,725',
     src: '/audio/voice-model-process/gospels-best-john-3-16.wav',
-    peaks: [], duration: 0, trimStart: 0, trimEnd: 0, loading: true, error: false,
+    path: 'M 0 36 L 600 36', duration: 0, trimStart: 0, trimEnd: 0, loading: true, error: false, playbackError: false,
   },
   {
     id: 'later',
     title: 'Checkpoint 34,000',
     description: 'Later model after validation loss increased',
     src: '/audio/voice-model-process/checkpoint-34000-john-3-16.wav',
-    peaks: [], duration: 0, trimStart: 0, trimEnd: 0, loading: true, error: false,
+    path: 'M 0 36 L 600 36', duration: 0, trimStart: 0, trimEnd: 0, loading: true, error: false, playbackError: false,
   },
 ]);
 
@@ -179,12 +196,13 @@ const isPlaying = ref(false);
 const hoverIndex = ref(-1);
 const hoverRatio = ref(0);
 let animationFrame: number | undefined;
+let pointerStart: { id: number; index: number; x: number; y: number; moved: boolean } | undefined;
 
 const hoverLeft = computed(() => Math.min(92, Math.max(8, hoverRatio.value * 100)));
 const playbackAnnouncement = computed(() => {
   if (activeIndex.value < 0) return 'No audio sample is playing.';
   const track = tracks[activeIndex.value];
-  return `${track.title} is ${isPlaying.value ? 'playing' : 'paused'} at ${formatTime(trackCurrentTime(activeIndex.value))}.`;
+  return `${track.title} is ${isPlaying.value ? 'playing' : 'paused'}.`;
 });
 
 function setAudioRef(element: unknown, index: number) {
@@ -207,7 +225,7 @@ async function decodeTracks() {
       const buffer = await context.decodeAudioData(await response.arrayBuffer());
       const samples = buffer.getChannelData(0);
       const { peaks, startSample, endSample } = buildPeaks(samples, 360);
-      track.peaks = peaks;
+      track.path = buildWaveformPath(peaks);
       track.trimStart = startSample / buffer.sampleRate;
       track.trimEnd = endSample / buffer.sampleRate;
       track.duration = track.trimEnd - track.trimStart;
@@ -252,14 +270,13 @@ function buildPeaks(samples: Float32Array, bins: number) {
   return { peaks, startSample, endSample };
 }
 
-function waveformPath(track: VoiceTrack) {
-  if (!track.peaks.length) return 'M 0 36 L 600 36';
-  const lastIndex = track.peaks.length - 1;
-  const upper = track.peaks.map((peak, index) => {
+function buildWaveformPath(peaks: Peak[]) {
+  const lastIndex = peaks.length - 1;
+  const upper = peaks.map((peak, index) => {
     const x = (index / lastIndex) * 600;
     return `${index === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${(36 - peak.max * 30).toFixed(2)}`;
   });
-  const lower = [...track.peaks].reverse().map((peak, reverseIndex) => {
+  const lower = [...peaks].reverse().map((peak, reverseIndex) => {
     const index = lastIndex - reverseIndex;
     const x = (index / lastIndex) * 600;
     return `L ${x.toFixed(2)} ${(36 - peak.min * 30).toFixed(2)}`;
@@ -270,7 +287,7 @@ function waveformPath(track: VoiceTrack) {
 async function togglePlayback(index: number) {
   const audio = audioElements[index];
   const track = tracks[index];
-  if (!audio || track.loading) return;
+  if (!audio || track.loading || track.error) return;
 
   if (activeIndex.value === index && !audio.paused) {
     audio.pause();
@@ -286,13 +303,17 @@ async function togglePlayback(index: number) {
   }
   activeIndex.value = index;
   currentTime.value = audio.currentTime;
+  isPlaying.value = false;
+  track.playbackError = false;
 
   try {
     await audio.play();
-    isPlaying.value = true;
-    startProgressLoop();
-  } catch {
-    isPlaying.value = false;
+    if (activeIndex.value !== index) return;
+    isPlaying.value = !audio.paused;
+    if (isPlaying.value) startProgressLoop();
+  } catch (error) {
+    if (activeIndex.value !== index || (error instanceof DOMException && error.name === 'AbortError')) return;
+    handlePlaybackError(index);
   }
 }
 
@@ -318,15 +339,25 @@ function startProgressLoop() {
 
 function handlePause(index: number) {
   if (activeIndex.value !== index) return;
+  currentTime.value = audioElements[index].currentTime;
   isPlaying.value = false;
   if (animationFrame) cancelAnimationFrame(animationFrame);
 }
 
 function handleEnded(index: number) {
+  if (activeIndex.value !== index) return;
   const track = tracks[index];
-  activeIndex.value = index;
+  audioElements[index].currentTime = track.trimStart;
   currentTime.value = track.trimStart;
   isPlaying.value = false;
+}
+
+function handlePlaybackError(index: number) {
+  tracks[index].playbackError = true;
+  if (activeIndex.value !== index) return;
+  audioElements[index]?.pause();
+  isPlaying.value = false;
+  if (animationFrame) cancelAnimationFrame(animationFrame);
 }
 
 function showHoverTime(index: number, event: PointerEvent) {
@@ -335,15 +366,36 @@ function showHoverTime(index: number, event: PointerEvent) {
   hoverRatio.value = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width));
 }
 
-function seekFromPointer(index: number, event: PointerEvent) {
-  showHoverTime(index, event);
-  seekToRatio(index, hoverRatio.value);
+function beginSeek(index: number, event: PointerEvent) {
+  if (!event.isPrimary || event.button !== 0 || tracks[index].loading || tracks[index].error) return;
+  pointerStart = { id: event.pointerId, index, x: event.clientX, y: event.clientY, moved: false };
+}
+
+function movePointer(index: number, event: PointerEvent) {
+  if (pointerStart?.id === event.pointerId && Math.hypot(event.clientX - pointerStart.x, event.clientY - pointerStart.y) > 8) {
+    pointerStart.moved = true;
+  }
+  if (event.pointerType !== 'touch' && !tracks[index].loading && !tracks[index].error) showHoverTime(index, event);
+}
+
+function finishSeek(index: number, event: PointerEvent) {
+  const start = pointerStart;
+  pointerStart = undefined;
+  if (!start || start.id !== event.pointerId || start.index !== index || start.moved) return;
+  if (Math.hypot(event.clientX - start.x, event.clientY - start.y) > 8) return;
+  const bounds = (event.currentTarget as HTMLElement).getBoundingClientRect();
+  seekToRatio(index, (event.clientX - bounds.left) / bounds.width);
+}
+
+function leaveWaveform() {
+  pointerStart = undefined;
+  hoverIndex.value = -1;
 }
 
 function seekToRatio(index: number, ratio: number) {
   const audio = audioElements[index];
   const track = tracks[index];
-  if (!audio || track.loading) return;
+  if (!audio || track.loading || track.error) return;
 
   if (activeIndex.value !== index) {
     audioElements.forEach(element => element?.pause());
@@ -358,21 +410,20 @@ function seekToRatio(index: number, ratio: number) {
 
 function nudge(index: number, seconds: number) {
   const track = tracks[index];
-  const current = activeIndex.value === index ? trackCurrentTime(index) : 0;
+  const current = trackCurrentTime(index);
   seekToRatio(index, (current + seconds) / Math.max(track.duration, 1));
 }
 
 function playbackRatio(index: number) {
-  if (activeIndex.value !== index) return 0;
   const track = tracks[index];
   if (!track.duration) return 0;
-  return Math.min(1, Math.max(0, (currentTime.value - track.trimStart) / track.duration));
+  return trackCurrentTime(index) / track.duration;
 }
 
 function trackCurrentTime(index: number) {
-  if (activeIndex.value !== index) return 0;
   const track = tracks[index];
-  return Math.min(track.duration, Math.max(0, currentTime.value - track.trimStart));
+  const time = activeIndex.value === index ? currentTime.value : (audioElements[index]?.currentTime ?? track.trimStart);
+  return Math.min(track.duration, Math.max(0, time - track.trimStart));
 }
 
 function formatTime(seconds: number) {
@@ -408,8 +459,8 @@ onBeforeUnmount(() => {
 .chart-heading { display: grid; gap: 0.28rem; }
 .chart-heading strong { color: var(--foreground); font-size: 1rem; font-weight: 600; letter-spacing: -0.025em; }
 .chart-heading > span:last-child,
-.chart-note { color: var(--faint); font-size: 0.74rem; line-height: 1.55; }
-.chart-kicker { color: var(--faint); font-family: 'DM Mono', ui-monospace, monospace; font-size: 0.63rem; letter-spacing: 0.045em; text-transform: uppercase; }
+.chart-note { color: var(--faint); font-size: 0.75rem; line-height: 1.55; }
+.chart-kicker { color: var(--faint); font-family: 'DM Mono', ui-monospace, monospace; font-size: 0.75rem; letter-spacing: 0.045em; text-transform: uppercase; }
 
 .track-list { display: grid; gap: 0.65rem; }
 
@@ -417,7 +468,7 @@ onBeforeUnmount(() => {
   --track-color: #667085;
   display: grid;
   gap: 0.7rem;
-  padding: 0.82rem;
+  padding: 1.1rem;
   border: 1px solid var(--border-subtle);
   border-radius: 0.45rem;
   background: var(--surface);
@@ -429,21 +480,25 @@ onBeforeUnmount(() => {
 .voice-track--later { --track-color: #7651c9; }
 .voice-track.is-active { border-color: color-mix(in srgb, var(--track-color) 55%, var(--border)); background: color-mix(in srgb, var(--track-color) 4%, var(--surface)); }
 
-.track-header { display: flex; justify-content: space-between; gap: 1rem; }
+.track-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem; }
 .track-header > div:first-child { display: grid; gap: 0.14rem; min-width: 0; }
-.track-header strong { color: var(--foreground); font-size: 0.82rem; font-weight: 500; letter-spacing: -0.015em; }
+.track-header strong { color: var(--foreground); font-size: 0.875rem; font-weight: 500; letter-spacing: -0.015em; }
 .track-header span,
-.track-meta a { color: var(--faint); font-family: 'DM Mono', ui-monospace, monospace; font-size: 0.61rem; line-height: 1.5; }
+.track-meta a { color: var(--faint); font-family: 'DM Mono', ui-monospace, monospace; font-size: 0.75rem; line-height: 1.5; }
 .track-meta { display: flex; flex: 0 0 auto; align-items: center; gap: 0.65rem; }
-.track-meta a { text-decoration: none; }
+.track-meta a { display: inline-flex; min-width: 2.75rem; min-height: 2.75rem; align-items: center; justify-content: center; text-decoration: none; }
 .track-meta a:hover { color: var(--foreground); }
+.track-meta a:focus-visible { outline: 2px solid var(--track-color); outline-offset: 2px; border-radius: 0.25rem; }
 
-.track-player { display: grid; grid-template-columns: 2rem minmax(0, 1fr); align-items: center; gap: 0.7rem; }
+.track-player { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr); align-items: start; gap: 0.75rem; }
+.track-timeline { display: grid; min-width: 0; gap: 0.25rem; }
+.timeline-meta { display: flex; min-height: 1.125rem; justify-content: flex-end; color: var(--faint); font-family: 'DM Mono', ui-monospace, monospace; font-size: 0.75rem; line-height: 1.5; font-variant-numeric: tabular-nums; }
 
 .play-button {
   display: grid;
-  width: 2rem;
-  height: 2rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-top: 0.625rem;
   padding: 0;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--track-color) 48%, var(--border));
@@ -453,20 +508,22 @@ onBeforeUnmount(() => {
   transition: transform 150ms var(--ease-out), background-color 150ms ease;
 }
 
-.play-button svg { width: 0.85rem; height: 0.85rem; fill: currentColor; }
-.play-button:disabled { cursor: wait; opacity: 0.45; }
+.play-button svg { width: 1rem; height: 1rem; fill: currentColor; }
+.play-button:disabled { cursor: default; opacity: 0.45; }
+.play-button:focus-visible { outline: 2px solid var(--track-color); outline-offset: 3px; }
 .play-button:not(:disabled):active { transform: scale(0.94); }
 
 .waveform {
   position: relative;
   min-width: 0;
-  height: 4.5rem;
+  height: 4rem;
   overflow: visible;
   border-radius: 0.28rem;
   cursor: crosshair;
-  touch-action: none;
+  touch-action: pan-y pinch-zoom;
 }
 
+.waveform[aria-disabled="true"] { cursor: default; }
 .waveform:focus-visible { outline: 2px solid var(--track-color); outline-offset: 3px; }
 .waveform svg { display: block; width: 100%; height: 100%; overflow: visible; }
 .waveform-axis { stroke: var(--border-subtle); stroke-width: 1; }
@@ -486,7 +543,7 @@ onBeforeUnmount(() => {
   color: var(--foreground);
   background: var(--background);
   font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   line-height: 1;
   pointer-events: none;
   transform: translate(-50%, -100%);
@@ -502,11 +559,11 @@ onBeforeUnmount(() => {
 
 .waveform-placeholder span { flex: 1; max-height: 80%; border-radius: 1px; background: var(--track-color); }
 .voice-track audio { display: none; }
-.track-error { margin: 0; color: var(--faint); font-size: 0.68rem; }
+.track-error { margin: 0; color: var(--faint); font-size: 0.75rem; line-height: 1.55; }
 .track-error a { color: var(--foreground); }
 
 .chart-note { display: flex; gap: 0.55rem; padding-top: 0.8rem; border-top: 1px solid var(--border-subtle); }
-.chart-note span { color: var(--accent); font-family: 'DM Mono', ui-monospace, monospace; }
+.chart-note > span:first-child { color: var(--accent); font-family: 'DM Mono', ui-monospace, monospace; }
 
 @media (hover: hover) and (pointer: fine) {
   .play-button:not(:disabled):hover { background: color-mix(in srgb, var(--track-color) 8%, var(--background)); }
@@ -514,10 +571,7 @@ onBeforeUnmount(() => {
 
 @media (max-width: 560px) {
   .voice-chart { padding: 0.9rem; }
-  .track-header { align-items: flex-start; }
-  .track-meta { display: grid; justify-items: end; gap: 0.12rem; }
-  .track-player { gap: 0.55rem; }
-  .waveform { height: 4rem; }
+  .voice-track { padding: 0.9rem; }
 }
 
 :global(.dark) .voice-track--base { --track-color: #aab0ba; }

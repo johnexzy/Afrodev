@@ -3,18 +3,19 @@
     <figcaption class="chart-heading">
       <span class="chart-kicker">Training evidence</span>
       <strong id="xtts-loss-title">Evaluation loss by global step</strong>
-      <span>Every point comes from the held-out evaluation pass at the end of an epoch.</span>
+      <span>Choose a run to inspect its checkpoints. Each point is one held-out evaluation pass.</span>
     </figcaption>
 
-    <div class="chart-toolbar" aria-label="Visible training runs">
+    <div class="chart-toolbar" role="group" aria-label="Training run to inspect">
       <button
         v-for="run in runs"
         :key="run.id"
         class="series-toggle"
-        :class="[`series-toggle--${run.id}`, { 'is-muted': !visibleRuns[run.id] }]"
+        :class="[`series-toggle--${run.id}`, { 'is-active': activeRun.id === run.id }]"
         type="button"
-        :aria-pressed="visibleRuns[run.id]"
-        @click="toggleRun(run.id)"
+        :aria-label="run.label"
+        :aria-pressed="activeRun.id === run.id"
+        @click="setActivePoint(run.id, run.bestIndex)"
       >
         <span class="series-toggle__line" aria-hidden="true" />
         {{ run.shortLabel }}
@@ -22,20 +23,35 @@
       <span class="chart-toolbar__hint">Lower is better</span>
     </div>
 
-    <div class="chart-readout" :class="`chart-readout--${activeRun.id}`" aria-live="polite">
-      <span class="chart-readout__eyebrow">{{ activeRun.label }}</span>
-      <strong>Step {{ formatStep(activePoint.step) }} · {{ activePoint.loss.toFixed(4) }}</strong>
-      <span>{{ activePointSummary }}</span>
+    <div class="chart-readout" :class="`chart-readout--${activeRun.id}`">
+      <div class="chart-readout__value">
+        <span class="chart-readout__eyebrow">{{ activeRun.label }}</span>
+        <strong>Step {{ formatStep(activePoint.step) }} · Loss {{ activePoint.loss.toFixed(4) }}</strong>
+      </div>
+      <div class="checkpoint-controls" role="group" aria-label="Inspect checkpoints">
+        <button type="button" aria-label="Previous checkpoint" :disabled="activeSelection.pointIndex === 0" @click="moveCheckpoint(-1)">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m12 5-5 5 5 5" /></svg>
+        </button>
+        <span>Checkpoint {{ activeSelection.pointIndex + 1 }} / {{ activeRun.points.length }}</span>
+        <button type="button" aria-label="Next checkpoint" :disabled="activeSelection.pointIndex === activeRun.points.length - 1" @click="moveCheckpoint(1)">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m8 5 5 5-5 5" /></svg>
+        </button>
+      </div>
+      <span class="chart-readout__summary">{{ activePointSummary }}</span>
     </div>
+    <p class="sr-only" aria-live="polite">{{ checkpointAnnouncement }}</p>
 
     <div ref="chartContainer" class="chart-canvas">
       <svg
         :viewBox="`0 0 ${chartWidth} ${chartHeight}`"
         role="img"
         aria-labelledby="xtts-loss-title xtts-loss-description"
+        @pointermove="inspectPoint($event, true)"
+        @click="inspectPoint($event)"
       >
         <desc id="xtts-loss-description">
           The Genesis and Gospels runs both reached their minimum evaluation loss before their final epoch.
+          Use the training run buttons and previous or next checkpoint controls to inspect every value.
         </desc>
 
         <g class="chart-grid" aria-hidden="true">
@@ -79,10 +95,10 @@
 
         <g
           v-for="run in runs"
-          v-show="visibleRuns[run.id]"
           :key="run.id"
           class="chart-series"
           :class="`chart-series--${run.id}`"
+          aria-hidden="true"
         >
           <path class="series-line" :d="linePath(run.points)" />
 
@@ -104,12 +120,6 @@
               :cx="xScale(point.step)"
               :cy="yScale(point.loss)"
               r="4.5"
-              tabindex="0"
-              role="button"
-              :aria-label="`${run.label}, step ${formatStep(point.step)}, evaluation loss ${point.loss.toFixed(4)}${pointIndex === run.bestIndex ? ', selected checkpoint' : ''}`"
-              @mouseenter="setActivePoint(run.id, pointIndex)"
-              @focus="setActivePoint(run.id, pointIndex)"
-              @click="setActivePoint(run.id, pointIndex)"
             />
           </g>
         </g>
@@ -121,18 +131,13 @@
             :y1="margins.top"
             :y2="chartHeight - margins.bottom"
           />
-          <g :transform="`translate(${tooltipPosition.x} ${tooltipPosition.y})`">
-            <rect width="152" height="48" rx="6" />
-            <text x="12" y="19">Step {{ formatStep(activePoint.step) }}</text>
-            <text class="tooltip-value" x="12" y="37">Loss {{ activePoint.loss.toFixed(4) }}</text>
-          </g>
         </g>
       </svg>
     </div>
 
     <div class="chart-note">
       <span class="chart-note__mark" aria-hidden="true">↳</span>
-      Both runs selected an earlier checkpoint. Continued training increased held-out loss.
+      Both runs selected an earlier checkpoint. Compare progress within each run; the datasets differ.
     </div>
 
     <details class="source-data">
@@ -141,7 +146,7 @@
         <table v-for="run in runs" :key="`table-${run.id}`">
           <caption>{{ run.label }}</caption>
           <thead>
-            <tr><th>Step</th><th>Loss</th></tr>
+            <tr><th scope="col">Step</th><th scope="col">Loss</th></tr>
           </thead>
           <tbody>
             <tr v-for="(point, pointIndex) in run.points" :key="`row-${run.id}-${point.step}`">
@@ -170,7 +175,7 @@ const runs: TrainingRun[] = [
   {
     id: 'genesis',
     label: '324-clip Genesis run',
-    shortLabel: 'Genesis · 324 clips',
+    shortLabel: 'Genesis · 324',
     bestIndex: 2,
     points: [
       { step: 1884, loss: 3.1101099253 },
@@ -193,7 +198,7 @@ const runs: TrainingRun[] = [
   {
     id: 'gospels',
     label: '3,611-clip Gospels run',
-    shortLabel: 'Gospels · 3,611 clips',
+    shortLabel: 'Gospels · 3,611',
     bestIndex: 2,
     points: [
       { step: 3575, loss: 2.8874030731 },
@@ -212,11 +217,11 @@ const runs: TrainingRun[] = [
 
 const chartContainer = ref<HTMLElement | null>(null);
 const chartWidth = ref(720);
-const visibleRuns = reactive<Record<RunId, boolean>>({ genesis: true, gospels: true });
 const activeSelection = ref<{ runId: RunId; pointIndex: number }>({
   runId: 'gospels',
   pointIndex: 2,
 });
+const checkpointAnnouncement = ref('');
 let resizeObserver: ResizeObserver | undefined;
 
 const chartHeight = computed(() => chartWidth.value < 520 ? 330 : 360);
@@ -241,13 +246,6 @@ const activePointSummary = computed(() => {
   const increase = ((activePoint.value.loss / bestPoint.loss) - 1) * 100;
   return `${increase.toFixed(1)}% above this run’s minimum`;
 });
-const tooltipPosition = computed(() => {
-  const tooltipWidth = 152;
-  const desiredX = xScale(activePoint.value.step) + 10;
-  const x = Math.min(Math.max(margins.value.left, desiredX), chartWidth.value - tooltipWidth - 6);
-  const y = Math.max(8, yScale(activePoint.value.loss) - 58);
-  return { x, y };
-});
 
 function xScale(step: number) {
   return margins.value.left + (step / 36000) * plotWidth.value;
@@ -263,18 +261,36 @@ function linePath(points: LossPoint[]) {
   ).join(' ');
 }
 
-function setActivePoint(runId: RunId, pointIndex: number) {
+function setActivePoint(runId: RunId, pointIndex: number, announce = true) {
   activeSelection.value = { runId, pointIndex };
+  if (announce) {
+    checkpointAnnouncement.value = `${activeRun.value.label}, checkpoint ${pointIndex + 1} of ${activeRun.value.points.length}, step ${formatStep(activePoint.value.step)}, loss ${activePoint.value.loss.toFixed(4)}. ${activePointSummary.value}.`;
+  }
 }
 
-function toggleRun(runId: RunId) {
-  const visibleCount = Object.values(visibleRuns).filter(Boolean).length;
-  if (visibleRuns[runId] && visibleCount === 1) return;
-  visibleRuns[runId] = !visibleRuns[runId];
+function moveCheckpoint(direction: number) {
+  setActivePoint(activeRun.value.id, activeSelection.value.pointIndex + direction);
+}
 
-  if (!visibleRuns[activeSelection.value.runId]) {
-    const nextRun = runs.find(run => visibleRuns[run.id]) ?? runs[1];
-    setActivePoint(nextRun.id, nextRun.bestIndex);
+function inspectPoint(event: MouseEvent | PointerEvent, hover = false) {
+  if (hover && (event as PointerEvent).pointerType !== 'mouse') return;
+  const bounds = (event.currentTarget as SVGSVGElement).getBoundingClientRect();
+  const x = (event.clientX - bounds.left) / bounds.width * chartWidth.value;
+  const y = (event.clientY - bounds.top) / bounds.height * chartHeight.value;
+  let nearest: { runId: RunId; pointIndex: number } | undefined;
+  let distance = 32;
+  for (const run of hover ? [activeRun.value] : runs) {
+    for (let pointIndex = 0; pointIndex < run.points.length; pointIndex += 1) {
+      const point = run.points[pointIndex];
+      const pointDistance = Math.hypot(x - xScale(point.step), y - yScale(point.loss));
+      if (pointDistance < distance) {
+        distance = pointDistance;
+        nearest = { runId: run.id, pointIndex };
+      }
+    }
+  }
+  if (nearest) {
+    setActivePoint(nearest.runId, nearest.pointIndex, !hover);
   }
 }
 
@@ -289,7 +305,7 @@ function formatAxisStep(step: number) {
 onMounted(() => {
   if (!chartContainer.value) return;
   resizeObserver = new ResizeObserver(([entry]) => {
-    chartWidth.value = Math.max(300, Math.min(720, Math.round(entry.contentRect.width)));
+    chartWidth.value = Math.round(entry.contentRect.width);
   });
   resizeObserver.observe(chartContainer.value);
 });
@@ -327,7 +343,7 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
 .chart-note,
 .chart-toolbar__hint {
   color: var(--faint);
-  font-size: 0.74rem;
+  font-size: 0.75rem;
   line-height: 1.55;
 }
 
@@ -335,7 +351,7 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
 .chart-readout__eyebrow {
   color: var(--faint);
   font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 0.63rem !important;
+  font-size: 0.6875rem !important;
   letter-spacing: 0.045em;
   text-transform: uppercase;
 }
@@ -344,7 +360,7 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.5rem;
 }
 
 .series-toggle {
@@ -352,19 +368,21 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
   display: inline-flex;
   align-items: center;
   gap: 0.42rem;
-  min-height: 2rem;
-  padding: 0.35rem 0.58rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.65rem;
   border: 1px solid var(--border-subtle);
   border-radius: 0.35rem;
   color: var(--foreground);
-  background: var(--surface);
+  background: transparent;
   font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 0.64rem;
+  font-size: 0.6875rem;
   transition: color 150ms ease, background-color 150ms ease, transform 150ms var(--ease-out);
 }
 
 .series-toggle--genesis { --run-color: var(--genesis); }
-.series-toggle.is-muted { color: var(--faint); background: transparent; }
+.series-toggle.is-active { border-color: color-mix(in srgb, var(--run-color) 45%, var(--border-subtle)); background: var(--surface); }
+.series-toggle:focus-visible,
+.checkpoint-controls button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .series-toggle:active { transform: scale(0.97); }
 
 .series-toggle__line {
@@ -374,33 +392,43 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
   background: var(--run-color);
 }
 
-.series-toggle.is-muted .series-toggle__line { opacity: 0.32; }
 .chart-toolbar__hint { margin-left: auto; }
 
 .chart-readout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.16rem 1rem;
-  padding: 0.7rem 0.8rem;
+  align-items: center;
+  gap: 0.4rem 1rem;
+  padding: 0.8rem;
   border-left: 2px solid var(--gospels);
+  border-radius: 0 0.35rem 0.35rem 0;
   background: var(--surface);
 }
 
 .chart-readout--genesis { border-left-color: var(--genesis); }
 
+.chart-readout__value { display: grid; gap: 0.3rem; min-width: 0; }
+
 .chart-readout strong {
-  grid-column: 1;
   color: var(--foreground);
-  font-size: 0.83rem;
+  font-size: 0.875rem;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
-.chart-readout > span:last-child {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
-  text-align: right;
+.chart-readout__summary { grid-column: 1 / -1; }
+
+.checkpoint-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
+
+.checkpoint-controls span { font-family: 'DM Mono', ui-monospace, monospace; font-size: 0.6875rem; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.checkpoint-controls button { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border: 1px solid var(--border-subtle); border-radius: 0.35rem; background: var(--background); color: var(--foreground); transition: background-color 150ms ease, transform 150ms var(--ease-out); }
+.checkpoint-controls button:active:not(:disabled) { transform: scale(0.95); }
+.checkpoint-controls button:disabled { color: var(--faint); opacity: 0.4; cursor: default; }
+.checkpoint-controls svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
 .chart-canvas {
   width: 100%;
@@ -412,6 +440,8 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
   width: 100%;
   height: auto;
   overflow: visible;
+  touch-action: pan-y pinch-zoom;
+  cursor: crosshair;
 }
 
 .chart-grid line {
@@ -423,17 +453,14 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
 .axis-label {
   fill: var(--faint);
   font-family: 'DM Mono', ui-monospace, monospace;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .chart-series { --run-color: var(--gospels); color: var(--run-color); }
 .chart-series--genesis { --run-color: var(--genesis); }
 .series-line { fill: none; stroke: var(--run-color); stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
-.series-point { fill: var(--background); stroke: var(--run-color); stroke-width: 2.5; cursor: pointer; transition: r 150ms var(--ease-out), fill 150ms ease; }
-.series-point:hover,
-.series-point:focus,
-.series-point.is-active { r: 6px; fill: var(--run-color); outline: none; }
-.series-point:focus-visible { stroke: var(--foreground); stroke-width: 3; }
+.series-point { fill: var(--background); stroke: var(--run-color); stroke-width: 2.5; transition: fill 150ms ease; }
+.series-point.is-active { r: 6px; fill: var(--run-color); }
 .best-ring { fill: none; stroke: var(--run-color); stroke-width: 1.5; opacity: 0.42; }
 
 .active-guide line {
@@ -443,9 +470,7 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
   opacity: 0.42;
 }
 
-.active-guide rect { fill: var(--background); stroke: var(--border); }
-.active-guide text { fill: var(--faint); font-family: 'DM Mono', ui-monospace, monospace; font-size: 9px; }
-.active-guide .tooltip-value { fill: var(--foreground); font-size: 11px; font-weight: 500; }
+.active-guide { pointer-events: none; }
 
 .chart-note {
   display: flex;
@@ -458,13 +483,15 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
 
 .source-data {
   color: var(--faint);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
 }
 
 .source-data summary {
   width: fit-content;
   cursor: pointer;
   font-family: 'DM Mono', ui-monospace, monospace;
+  min-height: 2.75rem;
+  align-content: center;
 }
 
 .source-data__tables {
@@ -475,7 +502,7 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
   overflow-x: auto;
 }
 
-.source-data table { width: 100%; margin: 0; border-collapse: collapse; font-size: 0.66rem; }
+.source-data table { width: 100%; margin: 0; border-collapse: collapse; font-size: 0.75rem; }
 .source-data caption { padding-bottom: 0.4rem; color: var(--foreground); font-weight: 500; text-align: left; }
 .source-data th,
 .source-data td { padding: 0.28rem 0.35rem; border-bottom: 1px solid var(--border-subtle); text-align: right; white-space: nowrap; }
@@ -484,13 +511,17 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
 
 @media (hover: hover) and (pointer: fine) {
   .series-toggle:hover { background: var(--surface-hover); }
+  .checkpoint-controls button:not(:disabled):hover { background: var(--surface-hover); }
 }
 
 @media (max-width: 560px) {
   .loss-chart { margin-inline: 0; padding: 0.9rem; }
-  .chart-toolbar__hint { width: 100%; margin-left: 0; }
+  .chart-toolbar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .series-toggle { justify-content: center; padding-inline: 0.125rem; gap: 0.25rem; }
+  .series-toggle__line { width: 0.375rem; flex: 0 0 auto; }
+  .chart-toolbar__hint { grid-column: 1 / -1; width: 100%; margin-left: 0; }
   .chart-readout { grid-template-columns: 1fr; }
-  .chart-readout > span:last-child { grid-column: 1; grid-row: auto; text-align: left; }
+  .checkpoint-controls { justify-content: space-between; }
   .source-data__tables { grid-template-columns: 1fr; }
 }
 
@@ -501,6 +532,9 @@ onBeforeUnmount(() => resizeObserver?.disconnect());
 
 @media (prefers-reduced-motion: reduce) {
   .series-toggle,
+  .checkpoint-controls button,
   .series-point { transition-duration: 0ms; }
+  .series-toggle:active,
+  .checkpoint-controls button:active:not(:disabled) { transform: none; }
 }
 </style>
