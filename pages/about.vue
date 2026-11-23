@@ -1,17 +1,20 @@
 <template>
   <main id="main-content" tabindex="-1">
-    <div class="page-mast">
-      <span>About</span><span>John Oba / Afrodev</span>
-    </div>
-    <header class="page-heading reveal">
-      <h1>Hey, I’m<br /><em>John Oba.</em></h1>
+    <header class="page-hero reveal">
+      <div class="split-pill">
+        <span>ABOUT</span>
+        <span class="split-pill__divider" aria-hidden="true" />
+        <span class="split-pill__accent">JOHN OBA / AFRODEV</span>
+      </div>
+      <h1>Hey, I’m John Oba<span>.</span></h1>
+      <p>
+        I’m a software engineer based in Lagos. Most people online know me as
+        Afrodev.
+      </p>
     </header>
-    <div class="about-intro">
-      <div>
-        <p>
-          I’m a software engineer based in Lagos. Most people online know me as
-          Afrodev.
-        </p>
+
+    <section class="about-grid">
+      <div class="about-story">
         <p>
           Back in 2020 I co-founded StartupList Africa, and since then I’ve
           worked across fintech, edtech, real-time apps, AI tools, and native
@@ -23,76 +26,122 @@
           tweaking a UI interaction until it stops annoying me.
         </p>
       </div>
-      <div class="about-note">
-        <span class="eyebrow">Usually</span>
-        <p>Building the<br />tool I couldn’t<br /><em>find online.</em></p>
-        <span aria-hidden="true">↙</span>
-      </div>
-    </div>
-    <section class="editorial-section">
-      <div class="section-label">
-        <h2><span>01</span>Where I’ve worked</h2>
+
+      <aside class="about-accent-card">
+        <span class="about-accent-card__label">Usually</span>
+        <p>Building the tool I couldn’t find online.</p>
+        <div class="about-accent-card__meta">
+          <span>Lagos, Nigeria</span>
+          <span>Full-stack · AI · macOS</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section-block">
+      <div class="section-header">
+        <div>
+          <h2>Where I’ve worked</h2>
+          <p>Companies and teams I’ve built with over the years.</p>
+        </div>
         <a
-          class="text-link"
+          class="btn-pill"
           href="https://docs.google.com/document/d/1nhlf5X-M4HKSYbJ-e0UEuBLLmFAcIyYSc5T9wdHnazg/edit?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
           >Resume ↗</a
         >
       </div>
-      <div v-for="role in roles" :key="role.company" class="career-row">
-        <time>{{ role.period }}</time>
-        <div>
-          <h3>{{ role.company }}</h3>
-          <span>{{ role.title }}</span>
+
+      <div class="career-list">
+        <article v-for="role in roles" :key="role.company" class="career-card">
+          <div class="career-card__head">
+            <div>
+              <h3>{{ role.company }}</h3>
+              <span class="career-card__title">{{ role.title }}</span>
+            </div>
+            <time class="career-card__period">{{ role.period }}</time>
+          </div>
           <p>{{ role.description }}</p>
-        </div>
+        </article>
       </div>
     </section>
-    <section class="editorial-section">
-      <div class="section-label">
-        <h2><span>02</span>Stuff I enjoy working on</h2>
-      </div>
-      <div class="practice-grid">
+
+    <section class="section-block">
+      <div class="section-header">
         <div>
+          <h2>Stuff I enjoy working on</h2>
+          <p>The kinds of problems that keep pulling me in.</p>
+        </div>
+      </div>
+
+      <div class="practice-grid">
+        <div class="practice-card">
+          <span class="practice-card__num">01</span>
           <h3>Frontend &amp; Mac apps</h3>
           <p>
             Web apps, Figma plugins, and native macOS tools. I like making
             everyday software fast and straightforward to use.
           </p>
-          <NuxtLink to="/work/now" class="text-link">Now ↗</NuxtLink>
+          <NuxtLink to="/work/now" class="text-link">See Now ↗</NuxtLink>
         </div>
-        <div>
+
+        <div class="practice-card">
+          <span class="practice-card__num">02</span>
           <h3>Backend &amp; real-time</h3>
           <p>
             WebSockets, payment flows, data pipelines, and keeping state in sync
             when multiple people or processes are involved.
           </p>
-          <NuxtLink to="/work/peerplay" class="text-link">PeerPlay ↗</NuxtLink>
+          <NuxtLink to="/work/peerplay" class="text-link"
+            >See PeerPlay ↗</NuxtLink
+          >
         </div>
-        <div>
+
+        <div class="practice-card">
+          <span class="practice-card__num">03</span>
           <h3>AI &amp; search</h3>
           <p>
             Embeddings, retrieval, citations you can actually check, and testing
             model output against real tasks instead of guessing.
           </p>
-          <NuxtLink to="/work/oystack" class="text-link">Oystack ↗</NuxtLink>
+          <NuxtLink to="/work/oystack" class="text-link"
+            >See Oystack ↗</NuxtLink
+          >
         </div>
       </div>
     </section>
-    <section class="about-contact editorial-section">
-      <p class="eyebrow">Say hi</p>
-      <h2>Want to talk?</h2>
-      <a href="mailto:obajohn75@gmail.com" class="text-link"
-        >obajohn75@gmail.com ↗</a
-      >
+
+    <section class="section-block about-contact">
+      <span class="eyebrow">Say hi</span>
+      <h2>Want to talk<span>?</span></h2>
       <p>
         Whether it’s a project, a technical question, or just feedback on
         something I built or wrote, my inbox is open.
       </p>
+      <div class="about-contact__actions">
+        <a href="mailto:obajohn75@gmail.com" class="btn-primary">
+          <span>obajohn75@gmail.com</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+        <a
+          href="https://github.com/johnexzy"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-pill"
+          >GitHub ↗</a
+        >
+        <a
+          href="https://linkedin.com/in/johnoba"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-pill"
+          >LinkedIn ↗</a
+        >
+      </div>
     </section>
   </main>
 </template>
+
 <script setup lang="ts">
 const roles = [
   {
@@ -124,139 +173,207 @@ const roles = [
       "Co-founded the startup and funding database. I handle pretty much the whole technical side: public site, backend, data pipelines, internal review tools, and cloud infra.",
   },
 ];
+
 useSeoMeta({
   title: "About — John Oba",
   description:
     "About John Oba (Afrodev), a software engineer in Lagos and co-founder of StartupList Africa building web products, AI tools, and Mac apps.",
 });
 </script>
+
 <style scoped>
-.about-intro {
+.about-grid {
   display: grid;
-  grid-template-columns: 1fr 220px;
-  gap: 45px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 16px;
 }
-.about-intro p {
-  font-size: 16px;
-  line-height: 1.85;
-  margin-bottom: 18px;
-  color: var(--muted);
-}
-.about-intro > div > p:first-child {
-  color: var(--foreground);
-  font-size: 19px;
-}
-.about-note {
-  border: 1px solid var(--border);
-  padding: 25px 22px;
+
+.about-story {
+  padding: 30px;
+  border-radius: var(--radius-card);
   background: var(--surface);
-  transform: rotate(3deg);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
 }
-.about-note p {
-  font: 30px/1.15 var(--serif);
-  color: var(--foreground);
-  margin-top: 18px;
+
+.about-story p {
+  font-size: 16.5px;
+  line-height: 1.75;
+  color: var(--fg);
 }
-.about-note em {
-  color: var(--accent);
+
+.about-accent-card {
+  padding: 28px;
+  border-radius: var(--radius-card);
+  background: var(--accent);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 16px 36px -14px rgba(255, 77, 0, 0.45);
 }
-.about-note > span:last-child {
-  font-size: 35px;
-  color: var(--accent);
+
+.about-accent-card__label {
+  align-self: flex-start;
+  padding: 5px 11px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.18);
+  font: 500 11px/1 var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
-.career-row {
+
+.about-accent-card p {
+  font: 700 clamp(24px, 2.8vw, 32px)/1.12 var(--display);
+  letter-spacing: -0.038em;
+}
+
+.about-accent-card__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+  font: 500 11.5px var(--mono);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.career-list {
   display: grid;
-  grid-template-columns: 130px 1fr;
-  gap: 25px;
-  padding: 26px 0;
-  border-bottom: 1px solid var(--border-subtle);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
 }
-.career-row time {
-  font: 10px/1.8 var(--mono);
-  color: var(--muted);
-  padding-top: 4px;
+
+.career-card {
+  padding: 24px;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
 }
-.career-row h3 {
-  font-size: 19px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+
+.career-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
 }
-.career-row div > span {
+
+.career-card h3 {
+  font: 700 19px/1.2 var(--display);
+  letter-spacing: -0.025em;
+  color: var(--foreground);
+}
+
+.career-card__title {
   display: block;
-  margin-top: 6px;
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--accent);
-  font-size: 12px;
 }
-.career-row p {
-  font-size: 14px;
+
+.career-card__period {
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--card);
+  border: 1px solid var(--border-subtle);
+  font: 500 11px/1.1 var(--mono);
   color: var(--muted);
-  line-height: 1.7;
-  margin-top: 12px;
-  max-width: 49ch;
+  white-space: nowrap;
 }
+
+.career-card p {
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.68;
+  color: var(--muted);
+}
+
 .practice-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 26px;
+  gap: 14px;
 }
-.practice-grid h3 {
-  font: 25px/1.2 var(--serif);
+
+.practice-card {
+  padding: 24px;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
 }
-.practice-grid p {
-  font-size: 13px;
-  line-height: 1.8;
-  margin: 16px 0;
+
+.practice-card__num {
+  font: 600 11.5px var(--mono);
+  color: var(--accent);
+}
+
+.practice-card h3 {
+  margin-top: 14px;
+  font: 700 19px/1.25 var(--display);
+  letter-spacing: -0.025em;
+  color: var(--foreground);
+}
+
+.practice-card p {
+  margin: 10px 0 20px;
+  font-size: 14px;
+  line-height: 1.68;
   color: var(--muted);
+  flex: 1;
 }
+
 .about-contact {
-  padding: 30px;
-  border: 1px solid var(--border);
+  padding: clamp(32px, 5vw, 48px);
+  border-radius: var(--radius-stage);
+  background: var(--canvas);
+  border: 1px solid var(--border-subtle);
 }
+
 .about-contact h2 {
-  font: 42px var(--serif);
-  margin: 16px 0;
+  margin-top: 12px;
+  font: 800 clamp(32px, 4.5vw, 48px)/1.05 var(--display);
+  letter-spacing: -0.04em;
 }
-.about-contact > p:last-child {
-  font-size: 13px;
-  line-height: 1.7;
+
+.about-contact h2 span {
+  color: var(--accent);
+}
+
+.about-contact > p {
+  margin-top: 14px;
+  max-width: 500px;
+  font-size: 16px;
+  line-height: 1.65;
   color: var(--muted);
-  max-width: 43ch;
-  margin-top: 18px;
 }
-@media (max-width: 1000px) {
-  .about-intro {
-    grid-template-columns: 1fr 180px;
-    gap: 25px;
-  }
-  .about-note {
-    padding: 20px 15px;
-  }
-  .about-note p {
-    font-size: 26px;
-  }
+
+.about-contact__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
 }
-@media (max-width: 520px) {
-  .about-intro {
-    grid-template-columns: 1fr;
-  }
-  .about-note {
-    width: 220px;
-    margin: 4px auto 10px;
-  }
-  .career-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
+
+@media (max-width: 860px) {
+  .about-grid,
+  .career-list,
   .practice-grid {
     grid-template-columns: 1fr;
-    gap: 28px;
   }
-  .about-contact {
-    padding: 22px;
-  }
-  .about-contact h2 {
-    font-size: 37px;
+}
+
+@media (max-width: 520px) {
+  .career-card__head {
+    flex-direction: column;
   }
 }
 </style>

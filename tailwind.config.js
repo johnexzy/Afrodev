@@ -20,8 +20,8 @@ module.exports = {
       },
 
       fontFamily: {
-        sans: ["Instrument Sans", "sans-serif"],
-        inter: ["Instrument Sans", "sans-serif"],
+        sans: ["Plus Jakarta Sans", "Instrument Sans", "sans-serif"],
+        inter: ["Plus Jakarta Sans", "Instrument Sans", "sans-serif"],
       }, //end of fontFamily
     },
   },

@@ -5,28 +5,39 @@
     class="article-page reading-column"
     tabindex="-1"
   >
-    <div class="page-mast">
-      <NuxtLink :to="writingHome">← Writing</NuxtLink>
-      <span>{{ data.read_time }} read</span>
+    <div class="article-topbar">
+      <NuxtLink :to="writingHome" class="back-pill">← Writing</NuxtLink>
+      <span class="article-read-pill">{{ data.read_time }} read</span>
     </div>
+
     <header class="article-header reveal">
       <div class="article-meta">
-        <time :datetime="isoDate(data.date)">{{ data.date }}</time
-        ><span>{{ categories.join(" / ") }}</span>
+        <time :datetime="isoDate(data.date)">{{ data.date }}</time>
+        <span v-if="categories.length" aria-hidden="true">·</span>
+        <span v-if="categories.length">{{ categories.join(" / ") }}</span>
       </div>
       <h1>{{ data.title }}</h1>
       <p v-if="data.description">{{ data.description }}</p>
-      <nav v-if="data.tags?.length" class="article-tags" aria-label="Article tags">
+      <nav
+        v-if="data.tags?.length"
+        class="article-tags"
+        aria-label="Article tags"
+      >
         <NuxtLink v-for="tag in data.tags" :key="tag" :to="tagLink(tag)">
           {{ tagLabel(tag) }}
         </NuxtLink>
       </nav>
     </header>
+
     <figure v-if="data.featured_image" class="article-cover">
       <img :src="data.featured_image" :alt="data.title" decoding="async" />
     </figure>
+
     <details v-if="outline.length" class="article-outline">
-      <summary>In this article <span aria-hidden="true">+</span></summary>
+      <summary>
+        <span>In this article</span>
+        <span class="outline-plus" aria-hidden="true">+</span>
+      </summary>
       <nav aria-label="Table of contents">
         <a
           v-for="heading in outline"
@@ -36,21 +47,23 @@
         >
       </nav>
     </details>
+
     <article class="article-content">
       <ContentRenderer :value="data" class="prose" />
     </article>
+
     <section
       id="commentSection"
       class="article-comments"
       aria-labelledby="responses-heading"
     >
-      <div class="section-label">
+      <div class="article-comments__head">
         <h2 id="responses-heading">Comments</h2>
         <span class="mono">Via GitHub</span>
       </div>
       <template v-if="!commentsOpen">
         <p>Got a question, correction, or thought to add?</p>
-        <button type="button" class="text-link" @click="commentsOpen = true">
+        <button type="button" class="btn-primary" @click="commentsOpen = true">
           Load comments <span aria-hidden="true">↗</span>
         </button>
         <small
@@ -58,14 +71,17 @@
           comment.</small
         >
       </template>
-      <ClientOnly v-else
-        ><Comments :key="colorMode.value" :is-dark="colorMode.value === 'dark'"
-      /></ClientOnly>
+      <ClientOnly v-else>
+        <Comments :key="colorMode.value" :is-dark="colorMode.value === 'dark'" />
+      </ClientOnly>
     </section>
+
     <section v-if="moreArticles.length" class="more-stories">
-      <div class="section-label">
-        <h2>More posts</h2>
-        <NuxtLink :to="writingHome">All posts ↗</NuxtLink>
+      <div class="section-header">
+        <div>
+          <h2>More posts</h2>
+        </div>
+        <NuxtLink :to="writingHome" class="btn-pill">All posts ↗</NuxtLink>
       </div>
       <ListArticles :data="moreArticles" />
     </section>
@@ -82,17 +98,21 @@ const { path } = useRoute();
 const writingHome = useRuntimeConfig().public.blogSite ? "/" : blogOrigin;
 const tagLink = (tag: string) =>
   `${writingHome}?${isReadingTag(tag) ? "reading" : "topic"}=${encodeURIComponent(tag)}`;
+
 const colorMode = useColorMode();
 const commentsOpen = ref(false);
+
 const { data } = await useAsyncData(`content-${path}`, () =>
   queryContent().where({ _path: path, draft: false }).findOne(),
 );
+
 if (!data.value)
   throw createError({
     statusCode: 404,
     statusMessage: "Writing not found",
     fatal: true,
   });
+
 const { data: articles } = await useAsyncData("reading-index", () =>
   queryContent("/")
     .where({ draft: false })
@@ -107,12 +127,14 @@ const { data: articles } = await useAsyncData("reading-index", () =>
     ])
     .find(),
 );
+
 const moreArticles = computed(() =>
   (articles.value || [])
     .filter((article) => article._path !== path)
     .sort((a, b) => articleTime(b.date) - articleTime(a.date))
     .slice(0, 3),
 );
+
 const categories = computed(
   () =>
     data.value?.category
@@ -120,10 +142,12 @@ const categories = computed(
       .map((category: string) => category.trim())
       .filter(Boolean) || [],
 );
+
 const outline = computed(() => data.value?.body?.toc?.links || []);
 const ogImage = computed(() =>
   data.value?.og_image ? withBase(data.value.og_image, mainOrigin) : undefined,
 );
+
 useSeoMeta({
   title: () => data.value?.title,
   ogTitle: () => data.value?.title,
@@ -137,132 +161,184 @@ useSeoMeta({
 </script>
 
 <style scoped>
-.article-header {
-  margin: 34px 0 36px;
+.article-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 28px;
 }
+
+.article-read-pill {
+  padding: 7px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  font: 500 11px/1.2 var(--mono);
+  color: var(--muted);
+}
+
+.article-header {
+  margin: 28px 0 32px;
+}
+
 .article-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 20px;
-  justify-content: space-between;
-  font: 10px/1.8 var(--mono);
+  gap: 8px;
+  font: 500 12px/1.5 var(--mono);
   color: var(--muted);
 }
-.article-meta > span {
-  max-width: 60%;
-  text-align: right;
-}
+
 .article-header h1 {
-  font: 400 clamp(42px, 4.8vw, 64px)/1.06 var(--serif);
-  letter-spacing: -0.025em;
-  margin: 25px 0 22px;
+  font: 800 clamp(32px, 4.6vw, 52px)/1.08 var(--display);
+  letter-spacing: -0.04em;
+  margin: 16px 0 18px;
+  color: var(--foreground);
   text-wrap: balance;
 }
+
 .article-header > p {
   color: var(--muted);
-  font-size: 17px;
-  line-height: 1.75;
+  font-size: 17.5px;
+  line-height: 1.68;
 }
+
 .article-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 24px;
+  margin-top: 22px;
 }
+
 .article-tags a {
-  padding: 6px 10px;
-  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
   color: var(--muted);
-  font: 11px/1.5 var(--mono);
+  font: 500 11.5px/1.2 var(--mono);
+  transition:
+    color 150ms ease,
+    border-color 150ms ease;
 }
+
 .article-tags a:hover {
   color: var(--foreground);
-  border-color: var(--foreground);
+  border-color: var(--border);
 }
+
 .article-cover {
-  margin: 36px 0;
+  margin: 30px 0;
+  padding: 8px;
+  border-radius: 26px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
 }
+
 .article-cover img {
   display: block;
   max-height: 440px;
   width: 100%;
   object-fit: cover;
-  border: 1px solid var(--border-subtle);
-  border-radius: 3px;
+  border-radius: 18px;
 }
+
 .article-outline {
-  margin: 32px 0 40px;
-  padding: 15px 0;
-  border-block: 1px solid var(--border);
-  font-size: 13px;
+  margin: 28px 0 38px;
+  padding: 16px 20px;
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  font-size: 14px;
 }
+
 .article-outline summary {
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
   list-style: none;
-  color: var(--accent);
+  font-weight: 600;
+  color: var(--foreground);
 }
+
 .article-outline summary::-webkit-details-marker {
   display: none;
 }
-.article-outline summary > span {
+
+.outline-plus {
   font-size: 20px;
   line-height: 1;
+  color: var(--accent);
+  transition: transform 180ms var(--ease-out);
 }
-.article-outline[open] summary > span {
+
+.article-outline[open] .outline-plus {
   transform: rotate(45deg);
 }
+
 .article-outline nav {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 21px 0 5px;
+  gap: 10px;
+  padding-top: 16px;
+  margin-top: 14px;
+  border-top: 1px solid var(--border-subtle);
 }
+
 .article-outline nav a {
   color: var(--muted);
-  line-height: 1.5;
+  line-height: 1.45;
+  transition: color 150ms ease;
 }
+
 .article-outline nav a:hover {
   color: var(--accent);
 }
-.article-comments,
-.more-stories {
+
+.article-comments {
   margin-top: 64px;
+  padding: 28px;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
 }
-.article-comments .section-label > span {
-  font-size: 10px;
-  color: var(--muted);
+
+.article-comments__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
 }
-.article-comments > p {
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.7;
+
+.article-comments__head h2 {
+  font: 700 22px/1.2 var(--display);
+  letter-spacing: -0.03em;
 }
-.article-comments > button {
-  margin-top: 15px;
-}
-.article-comments > small {
-  display: block;
+
+.article-comments__head span {
   font-size: 11px;
   color: var(--muted);
-  line-height: 1.7;
-  margin-top: 10px;
 }
-@media (max-width: 520px) {
-  .article-header h1 {
-    font-size: 43px;
-  }
-  .article-header > p {
-    font-size: 16px;
-  }
-  .article-meta > span {
-    max-width: 100%;
-    text-align: left;
-  }
-  .article-header {
-    margin-top: 25px;
-  }
+
+.article-comments > p {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 18px;
+}
+
+.article-comments > small {
+  display: block;
+  font-size: 12px;
+  color: var(--faint);
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+.more-stories {
+  margin-top: 64px;
 }
 </style>

@@ -5,39 +5,47 @@
       :key="group.year"
       class="article-year"
     >
-      <h2 class="article-year__label">{{ group.year }}</h2>
-      <div class="article-year__items">
+      <div class="article-year__header">
+        <h2>{{ group.year }}</h2>
+        <span>{{ group.articles.length }} {{ group.articles.length === 1 ? "post" : "posts" }}</span>
+      </div>
+      <div class="surface-list">
         <NuxtLink
           v-for="article in group.articles"
           :key="article._path"
           :to="blogSite ? article._path : blogOrigin + article._path"
-          class="article-row"
+          class="surface-row article-row"
         >
           <div>
             <h3>{{ article.title }}</h3>
             <p v-if="showDescriptions">{{ article.description }}</p>
-            <span class="article-category">{{
-              article.tags?.map(tagLabel).join(" / ") ||
-              article.category?.split(",")[0]
-            }}</span>
+            <div class="article-tags-inline">
+              <span>{{
+                article.tags?.map(tagLabel).join(" · ") ||
+                article.category?.split(",")[0]
+              }}</span>
+            </div>
           </div>
           <div class="article-row__meta">
             <time :datetime="isoDate(article.date)">{{
               shortDate(article.date)
-            }}</time
-            ><span v-if="article.read_time">{{ article.read_time }}</span>
+            }}</time>
+            <span v-if="article.read_time">{{ article.read_time }}</span>
           </div>
-          <span class="line-arrow" aria-hidden="true">↗</span>
+          <span class="surface-row__arrow" aria-hidden="true">↗</span>
         </NuxtLink>
       </div>
     </section>
   </div>
 </template>
+
 <script setup lang="ts">
 import { blogOrigin } from "~/utils/site";
 import { articleTime, yearOf, shortDate, isoDate } from "~/utils/articles";
 import { tagLabel } from "~/utils/articleTags";
+
 const blogSite = useRuntimeConfig().public.blogSite;
+
 interface Article {
   title?: string;
   description?: string;
@@ -47,6 +55,7 @@ interface Article {
   category?: string;
   tags?: string[];
 }
+
 const props = withDefaults(
   defineProps<{
     data?: Article[] | null;
@@ -55,6 +64,7 @@ const props = withDefaults(
   }>(),
   { data: () => [], showDescriptions: false },
 );
+
 const groupedArticles = computed(() => {
   const groups = new Map<string, Article[]>();
   for (const article of [...(props.data || [])].sort(
@@ -67,78 +77,58 @@ const groupedArticles = computed(() => {
   return Array.from(groups, ([year, articles]) => ({ year, articles }));
 });
 </script>
+
 <style scoped>
 .article-list {
   display: grid;
-  gap: 37px;
+  gap: 32px;
 }
-.article-year {
-  display: grid;
-  grid-template-columns: 65px minmax(0, 1fr);
-  gap: 25px;
+
+.article-year__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 0 8px 12px;
 }
-.article-year__label {
-  font: 30px var(--serif);
-  font-weight: 400;
-  color: var(--muted);
-  padding-top: 13px;
+
+.article-year__header h2 {
+  font: 700 22px/1 var(--display);
+  letter-spacing: -0.03em;
+  color: var(--foreground);
 }
-.article-year__items {
-  border-top: 1px solid var(--border);
+
+.article-year__header span {
+  font: 500 11.5px var(--mono);
+  color: var(--faint);
 }
-.article-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 55px 15px;
-  gap: 16px;
-  padding: 22px 0;
-  border-bottom: 1px solid var(--border-subtle);
+
+.article-tags-inline {
+  margin-top: 6px;
+  font: 500 11.5px/1.4 var(--mono);
+  color: var(--faint);
 }
-.article-row h3 {
-  font-size: 17px;
-  line-height: 1.5;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-}
-.article-row p {
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.7;
-  margin: 10px 0;
-}
-.article-category {
-  display: block;
-  margin-top: 10px;
-  color: var(--muted);
-  font: 11px/1.5 var(--mono);
-}
+
 .article-row__meta {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding-top: 5px;
-  font: 11px/1.5 var(--mono);
+  align-items: flex-end;
+  gap: 3px;
+  font: 500 11.5px/1.4 var(--mono);
   color: var(--muted);
-  text-align: right;
+  white-space: nowrap;
 }
-@media (hover: hover) {
-  .article-row:hover h3 {
-    color: var(--accent);
-  }
+
+.article-row__meta span {
+  color: var(--faint);
+  font-size: 11px;
 }
-@media (max-width: 520px) {
-  .article-year {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-  .article-year__label {
-    font-size: 28px;
-  }
+
+@media (max-width: 640px) {
   .article-row {
-    gap: 10px;
-    grid-template-columns: minmax(0, 1fr) 44px 12px;
+    grid-template-columns: minmax(0, 1fr) 28px;
   }
-  .article-row h3 {
-    font-size: 16px;
+  .article-row__meta {
+    display: none;
   }
 }
 </style>

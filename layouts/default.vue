@@ -3,8 +3,8 @@
     <a href="#main-content" class="skip-link">Skip to content</a>
     <TheHeader />
     <div class="site-main">
-      <div><slot /></div>
-      <TheFooter />
+      <slot />
     </div>
+    <TheFooter />
   </div>
 </template>
