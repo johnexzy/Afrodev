@@ -1,8 +1,8 @@
 <template>
   <footer class="site-footer">
     <div>
-      <span class="footer-mark" aria-hidden="true">↳</span> Thanks for finding
-      your way here.
+      <span class="footer-mark" aria-hidden="true">↳</span> Thanks for stopping
+      by.
     </div>
     <div class="footer-bottom">
       <span>© {{ new Date().getFullYear() }} John Oba</span>

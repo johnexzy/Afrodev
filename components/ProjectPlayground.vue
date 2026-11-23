@@ -10,8 +10,8 @@
     "
   >
     <div class="playground-heading">
-      <span class="eyebrow">Try the idea</span
-      ><span>A small browser demonstration</span>
+      <span class="eyebrow">Try it out</span
+      ><span>Interactive browser preview</span>
     </div>
     <template v-if="project === 'pixelator'">
       <div class="pixel-demo">
@@ -60,12 +60,12 @@
       </div>
       <p class="demo-feedback" role="status">
         Selected: <strong>{{ clips[selected] }}</strong
-        ><span>Nothing is copied to your clipboard.</span>
+        ><span>Just a preview. Nothing is copied to your clipboard.</span>
       </p>
     </template>
     <template v-else>
       <div class="playback-demo">
-        <div v-for="person in ['You', 'A friend']" :key="person">
+        <div v-for="person in ['You', 'Friend']" :key="person">
           <span>{{ person }}</span>
           <div class="playback-track">
             <i :style="{ width: position + '%' }" />
@@ -87,8 +87,8 @@
         max="100"
       />
       <p class="demo-footnote">
-        One playback position, reflected in both rooms. The live project sends
-        these changes over WebSockets.
+        Drag the slider to scrub both players together. In the real app, seek
+        events sync over WebSockets.
       </p>
     </template>
   </section>
@@ -99,13 +99,13 @@ const cell = ref(8);
 const selected = ref(1);
 const position = ref(33);
 const clips = [
-  "A note",
-  "A link",
-  "An image",
-  "A file",
-  "A colour",
-  "A quote",
-  "An idea",
+  "API key",
+  "GitHub URL",
+  "Screenshot",
+  "invoice.pdf",
+  "#344ab2",
+  "SQL query",
+  "Draft text",
 ];
 function moveClip(index: number, event: KeyboardEvent) {
   selected.value = (index + clips.length) % clips.length;

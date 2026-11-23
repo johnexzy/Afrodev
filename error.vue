@@ -8,14 +8,14 @@
       <header class="page-heading">
         <h1>
           {{
-            error.statusCode === 404 ? "Nothing here." : "Something went wrong."
+            error.statusCode === 404 ? "Page not found." : "Something broke."
           }}
         </h1>
         <p>
           {{
             error.statusCode === 404
-              ? "This address doesn’t lead to a page. The work index and writing archive are still here."
-              : "This page couldn’t load. You can try again from the index."
+              ? "That link doesn’t point to anything. You can head back home or check the projects and blog."
+              : "Couldn’t load this page. Try heading back home."
           }}
         </p>
       </header>
@@ -24,7 +24,7 @@
         class="text-link"
         @click="clearError({ redirect: '/' })"
       >
-        Back to the index ↗
+        Back home ↗
       </button>
     </main>
   </NuxtLayout>

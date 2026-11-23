@@ -29,7 +29,7 @@
       </NuxtLink>
     </nav>
     <div class="header-aside">
-      <p class="mono">Elsewhere</p>
+      <p class="mono">Find me</p>
       <a
         href="https://github.com/johnexzy"
         target="_blank"
@@ -37,7 +37,7 @@
         >GitHub <span aria-hidden="true">↗</span></a
       >
       <a href="mailto:obajohn75@gmail.com"
-        >Say hello <span aria-hidden="true">↗</span></a
+        >Say hi <span aria-hidden="true">↗</span></a
       >
       <div class="header-location">
         <span class="location-dot" aria-hidden="true" /> Lagos, Nigeria
@@ -69,8 +69,8 @@ const colorMode = useColorMode();
 const blogSite = useRuntimeConfig().public.blogSite;
 const isDark = computed(() => colorMode.value === "dark");
 const navigation = [
-  { label: "Index", to: blogSite ? mainOrigin : "/" },
-  { label: "Work", to: blogSite ? mainOrigin + "/portfolio" : "/portfolio" },
+  { label: "Home", to: blogSite ? mainOrigin : "/" },
+  { label: "Projects", to: blogSite ? mainOrigin + "/portfolio" : "/portfolio" },
   { label: "Writing", to: blogSite ? "/" : blogOrigin },
   { label: "About", to: blogSite ? mainOrigin + "/about" : "/about" },
 ];
@@ -84,8 +84,8 @@ const isActive = (label: string) => {
         !route.path.startsWith("/work/"))
     );
   if (blogSite) return false;
-  if (label === "Index") return route.path === "/";
-  if (label === "Work")
+  if (label === "Home") return route.path === "/";
+  if (label === "Projects")
     return route.path === "/portfolio" || route.path.startsWith("/work/");
   if (label === "About") return route.path === "/about";
   return false;

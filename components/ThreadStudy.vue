@@ -10,11 +10,11 @@
       />
     </svg>
     <figcaption>
-      <span>Connection study / {{ String(seed).padStart(3, "0") }}</span
+      <span>Sketch #{{ String(seed).padStart(3, "0") }}</span
       ><button
         type="button"
         @click="seed++"
-        aria-label="Redraw connection study"
+        aria-label="Redraw sketch"
         title="Redraw"
       >
         <span aria-hidden="true">↻</span>

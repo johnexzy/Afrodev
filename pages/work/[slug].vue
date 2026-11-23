@@ -1,7 +1,7 @@
 <template>
   <main id="main-content" tabindex="-1" class="work-detail">
     <div class="page-mast">
-      <NuxtLink to="/portfolio">← The work index</NuxtLink
+      <NuxtLink to="/portfolio">← All projects</NuxtLink
       ><span>{{ project.category }}</span>
     </div>
     <header class="page-heading reveal">
@@ -23,7 +23,7 @@
     </header>
     <WorkExhibit :variant="project.visual" class="detail-exhibit" />
     <div class="detail-caption">
-      <span>Illustrated study / {{ project.title }}</span
+      <span>Preview / {{ project.title }}</span
       ><span>{{ project.kind }}</span>
     </div>
     <div class="detail-body">
@@ -50,7 +50,7 @@
     </div>
     <NuxtLink :to="'/work/' + nextProject.slug" class="next-work"
       ><div>
-        <span class="eyebrow">Next in the index</span>
+        <span class="eyebrow">Next project</span>
         <h2>{{ nextProject.title }}</h2>
         <p>{{ nextProject.category }}</p>
       </div>

@@ -1,40 +1,43 @@
 <template>
   <main id="main-content" tabindex="-1">
     <div class="page-mast">
-      <span>A little background</span><span>John Oba / Afrodev</span>
+      <span>About</span><span>John Oba / Afrodev</span>
     </div>
     <header class="page-heading reveal">
-      <h1>Hello again.<br /><em>I’m John.</em></h1>
+      <h1>Hey, I’m<br /><em>John Oba.</em></h1>
     </header>
     <div class="about-intro">
       <div>
-        <p>I’m John, a product engineer in Lagos. Online, I go by Afrodev.</p>
         <p>
-          I co-founded StartupList Africa in 2020. Since then, my work has taken
-          me through fintech, online learning, real-time collaboration, research
-          software, and native Mac apps.
+          I’m a software engineer based in Lagos. Most people online know me as
+          Afrodev.
         </p>
         <p>
-          I tend to follow a problem across the stack. Sometimes that means a
-          database model or a background job. Sometimes it means the few
-          milliseconds between a keypress and something feeling right.
+          Back in 2020 I co-founded StartupList Africa, and since then I’ve
+          worked across fintech, edtech, real-time apps, AI tools, and native
+          macOS software.
+        </p>
+        <p>
+          I don’t really stick to one side of the stack. I’m just as happy
+          designing a database schema or debugging a background job as I am
+          tweaking a UI interaction until it stops annoying me.
         </p>
       </div>
       <div class="about-note">
-        <span class="eyebrow">A recurring interest</span>
-        <p>How much can<br />a small, considered<br /><em>tool do?</em></p>
+        <span class="eyebrow">Usually</span>
+        <p>Building the<br />tool I couldn’t<br /><em>find online.</em></p>
         <span aria-hidden="true">↙</span>
       </div>
     </div>
     <section class="editorial-section">
       <div class="section-label">
-        <h2><span>01</span>Work, over time</h2>
+        <h2><span>01</span>Where I’ve worked</h2>
         <a
           class="text-link"
           href="https://docs.google.com/document/d/1nhlf5X-M4HKSYbJ-e0UEuBLLmFAcIyYSc5T9wdHnazg/edit?usp=sharing"
           target="_blank"
           rel="noopener noreferrer"
-          >Résumé ↗</a
+          >Resume ↗</a
         >
       </div>
       <div v-for="role in roles" :key="role.company" class="career-row">
@@ -48,44 +51,44 @@
     </section>
     <section class="editorial-section">
       <div class="section-label">
-        <h2><span>02</span>The work I come back to</h2>
+        <h2><span>02</span>Stuff I enjoy working on</h2>
       </div>
       <div class="practice-grid">
         <div>
-          <h3>Interfaces & interaction</h3>
+          <h3>Frontend &amp; Mac apps</h3>
           <p>
-            Native Mac surfaces, the web, design tools, and the small decisions
-            that make software easier to use.
+            Web apps, Figma plugins, and native macOS tools. I like making
+            everyday software fast and straightforward to use.
           </p>
           <NuxtLink to="/work/now" class="text-link">Now ↗</NuxtLink>
         </div>
         <div>
-          <h3>State & systems</h3>
+          <h3>Backend &amp; real-time</h3>
           <p>
-            Shared playback, payment flows, publishing pipelines, and what
-            happens when work crosses a process boundary.
+            WebSockets, payment flows, data pipelines, and keeping state in sync
+            when multiple people or processes are involved.
           </p>
           <NuxtLink to="/work/peerplay" class="text-link">PeerPlay ↗</NuxtLink>
         </div>
         <div>
-          <h3>Information & evidence</h3>
+          <h3>AI &amp; search</h3>
           <p>
-            Finding related information, making sources traceable, and
-            evaluating model output against something concrete.
+            Embeddings, retrieval, citations you can actually check, and testing
+            model output against real tasks instead of guessing.
           </p>
           <NuxtLink to="/work/oystack" class="text-link">Oystack ↗</NuxtLink>
         </div>
       </div>
     </section>
     <section class="about-contact editorial-section">
-      <p class="eyebrow">Have something in mind?</p>
-      <h2>I’d like to hear about it.</h2>
+      <p class="eyebrow">Say hi</p>
+      <h2>Want to talk?</h2>
       <a href="mailto:obajohn75@gmail.com" class="text-link"
         >obajohn75@gmail.com ↗</a
       >
       <p>
-        For a project, a technical conversation, or a note about something you
-        found here.
+        Whether it’s a project, a technical question, or just feedback on
+        something I built or wrote, my inbox is open.
       </p>
     </section>
   </main>
@@ -97,34 +100,34 @@ const roles = [
     company: "Alveum",
     title: "Senior Software Engineer",
     description:
-      "Backend systems and AI-assisted products, including domain-specific calculations and work on speech generation.",
+      "Building backend systems and AI products, including domain-specific astrology calculations for KP Astro and fine-tuning speech models for narration.",
   },
   {
     period: "2023 — 2024",
     company: "Niyo Group",
     title: "Senior Software Engineer & Technical Lead",
     description:
-      "Real-time learning experiences, video delivery, transcription, and technical leadership.",
+      "Led engineering on real-time learning features, HLS video streaming, and automated transcription with Whisper.",
   },
   {
     period: "2023",
     company: "Nomba",
     title: "Senior Frontend Developer",
     description:
-      "The marketing frontend and terminal purchase experience following the Kudi rebrand.",
+      "Rebuilt the marketing site and POS terminal checkout flow right after the Kudi-to-Nomba rebrand.",
   },
   {
     period: "2020 — present",
     company: "StartupList Africa",
     title: "Co-founder & CTO",
     description:
-      "The startup and funding data platform, from public interfaces to data collection, review, and infrastructure.",
+      "Co-founded the startup and funding database. I handle pretty much the whole technical side: public site, backend, data pipelines, internal review tools, and cloud infra.",
   },
 ];
 useSeoMeta({
   title: "About — John Oba",
   description:
-    "John Oba, also known as Afrodev. Product engineer in Lagos, co-founder of StartupList Africa, and maker of tools for the web and Mac.",
+    "About John Oba (Afrodev), a software engineer in Lagos and co-founder of StartupList Africa building web products, AI tools, and Mac apps.",
 });
 </script>
 <style scoped>

@@ -37,7 +37,7 @@
         />
       </svg>
       <div class="exhibit-note">
-        <span>A connected ecosystem</span><span>StartupList Africa</span>
+        <span>African startup database</span><span>StartupList Africa</span>
       </div>
     </template>
     <template v-else-if="variant === 'now'">
@@ -49,40 +49,40 @@
       <div class="clip-tray">
         <div class="clip-piece">
           <span class="clip-kind">Text</span>
-          <p>Keep what’s<br />active close.</p>
+          <p>pnpm run<br />build</p>
           <span class="clip-key">1</span>
         </div>
         <div class="clip-piece clip-piece--selected">
           <span class="clip-kind">Link</span>
           <div class="clip-link-icon">↗</div>
-          <p>Something<br />worth keeping.</p>
+          <p>github.com/<br />johnexzy</p>
           <span class="clip-key">2</span>
         </div>
         <div class="clip-piece clip-piece--color">
-          <span class="clip-kind">Colour</span>
+          <span class="clip-kind">Color</span>
           <div class="clip-swatch" />
           <span class="clip-key">3</span>
         </div>
       </div>
       <div class="exhibit-note">
-        <span>Seven clips. One shortcut.</span><span>Native to the Mac</span>
+        <span>7 active clips</span><span>macOS menu bar</span>
       </div>
     </template>
     <template v-else-if="variant === 'research'">
       <div class="research-paper">
-        <span class="paper-kicker">Source material</span>
-        <div class="paper-title">A question is<br />a place to begin.</div>
+        <span class="paper-kicker">Paper</span>
+        <div class="paper-title">Notes tied to<br />the source.</div>
         <div class="paper-lines"><i /><i /><i /><i /></div>
-        <span class="paper-reference">[1] Keep the evidence close.</span>
+        <span class="paper-reference">[1] Section 3.2, page 4</span>
       </div>
       <div class="research-note">
-        <span>Reading note</span>
-        <p>Where does this<br />claim come from?</p>
+        <span>Note</span>
+        <p>Check the citation<br />before quoting</p>
         <span class="note-arrow">↖</span>
       </div>
     </template>
     <template v-else-if="variant === 'sync'">
-      <div class="sync-room" v-for="city in ['You', 'A friend']" :key="city">
+      <div class="sync-room" v-for="city in ['You', 'Friend']" :key="city">
         <span>{{ city }}</span>
         <div class="sync-screen">
           <div class="sync-orbit" />
@@ -93,7 +93,7 @@
       </div>
       <div class="sync-connector">↔</div>
       <div class="exhibit-note">
-        <span>Different places</span><span>The same moment</span>
+        <span>Synced playback</span><span>WebSockets</span>
       </div>
     </template>
     <template v-else-if="variant === 'pixels'">
@@ -106,7 +106,7 @@
       </div>
       <div class="pixel-caption">
         <span>Image → vector</span
-        ><span>Small cells.<br />A different picture.</span>
+        ><span>Editable<br />vector blocks</span>
       </div>
     </template>
     <template v-else-if="variant === 'native'">
@@ -120,7 +120,7 @@
         <span class="native-cursor">↖</span>
       </div>
       <div class="exhibit-note">
-        <span>Inspect → target → act</span><span>MCP + Swift</span>
+        <span>Accessibility + OCR</span><span>MCP + Swift</span>
       </div>
     </template>
     <template v-else-if="variant === 'voice'">
@@ -137,7 +137,7 @@
         />
       </div>
       <div class="exhibit-note">
-        <span>Training is only half the work.</span><span>Listen closely.</span>
+        <span>XTTS v2 fine-tune</span><span>Step 10,725</span>
       </div>
     </template>
     <template v-else>
@@ -145,7 +145,7 @@
         <span>Aa</span><span>↗</span><span>{ }</span><span>◩</span>
       </div>
       <div class="exhibit-note">
-        <span>Files, images, and ideas</span><span>Box.tools</span>
+        <span>Browser utilities</span><span>Box.tools</span>
       </div>
     </template>
   </div>

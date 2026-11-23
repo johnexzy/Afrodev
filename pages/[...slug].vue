@@ -45,17 +45,17 @@
       aria-labelledby="responses-heading"
     >
       <div class="section-label">
-        <h2 id="responses-heading">Notes & responses</h2>
+        <h2 id="responses-heading">Comments</h2>
         <span class="mono">Via GitHub</span>
       </div>
       <template v-if="!commentsOpen">
-        <p>Have a question, a correction, or something to add?</p>
+        <p>Got a question, correction, or thought to add?</p>
         <button type="button" class="text-link" @click="commentsOpen = true">
-          Load the discussion <span aria-hidden="true">↗</span>
+          Load comments <span aria-hidden="true">↗</span>
         </button>
         <small
-          >Loads comments from utteranc.es. A GitHub account is needed to
-          reply.</small
+          >Powered by utteranc.es. You’ll need a GitHub account to
+          comment.</small
         >
       </template>
       <ClientOnly v-else
@@ -64,8 +64,8 @@
     </section>
     <section v-if="moreArticles.length" class="more-stories">
       <div class="section-label">
-        <h2>Continue reading</h2>
-        <NuxtLink :to="writingHome">Full archive ↗</NuxtLink>
+        <h2>More posts</h2>
+        <NuxtLink :to="writingHome">All posts ↗</NuxtLink>
       </div>
       <ListArticles :data="moreArticles" />
     </section>

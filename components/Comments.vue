@@ -1,13 +1,13 @@
 <template>
   <div class="discussion">
-    <p v-if="failed" role="status">The discussion couldn’t load here.</p>
+    <p v-if="failed" role="status">Couldn’t load the comments here.</p>
     <div ref="container" />
     <a
       class="text-link"
       href="https://github.com/johnexzy/utterances-afrodev/issues"
       target="_blank"
       rel="noopener noreferrer"
-      >Open discussions on GitHub ↗</a
+      >View on GitHub ↗</a
     >
   </div>
 </template>

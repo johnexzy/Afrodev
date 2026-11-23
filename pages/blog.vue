@@ -1,14 +1,13 @@
 <template>
   <main id="main-content" tabindex="-1">
     <div class="page-mast">
-      <span>Notes from the work</span
-      ><span>{{ data.length }} entries / {{ years }}</span>
+      <span>Writing</span><span>{{ data.length }} posts / {{ years }}</span>
     </div>
     <header class="page-heading reveal">
-      <h1>Notes from<br /><em>the work.</em></h1>
+      <h1>Writing &amp;<br /><em>build logs.</em></h1>
       <p>
-        Things I’ve learned by building them. Engineering notes, project
-        stories, and the occasional change of mind.
+        Stories from projects I’ve shipped, technical deep dives, and stuff I
+        figured out along the way.
       </p>
     </header>
     <div class="archive-filters">
@@ -33,14 +32,14 @@
       </div>
     </div>
     <div class="archive-search">
-      <label for="writing-search">Find a note</label>
+      <label for="writing-search">Search</label>
       <div>
         <span aria-hidden="true">⌕</span
         ><input
           id="writing-search"
           v-model="search"
           type="search"
-          placeholder="Search titles, topics, or ideas…"
+          placeholder="Search posts by title or topic…"
           autocomplete="off"
         /><button
           v-if="search"
@@ -53,15 +52,15 @@
       </div>
     </div>
     <p v-if="search || reading || topic" class="search-count" role="status">
-      {{ filtered.length }} matching
-      {{ filtered.length === 1 ? "note" : "notes" }}
+      {{ filtered.length }}
+      {{ filtered.length === 1 ? "post" : "posts" }}
     </p>
     <ListArticles v-if="filtered.length" :data="filtered" />
     <div v-else class="empty-search">
-      <h2>No notes found.</h2>
-      <p>Try a different search or filter, or return to the full archive.</p>
+      <h2>Nothing matched.</h2>
+      <p>Try another keyword or clear your filters to see everything.</p>
       <button type="button" class="text-link" @click="clearFilters">
-        Show all notes ↗
+        Show all posts ↗
       </button>
     </div>
   </main>
@@ -156,7 +155,7 @@ const years = data.length
 useSeoMeta({
   title: "Writing — John Oba",
   description:
-    "Engineering notes, project stories, and lessons from building software. By John Oba.",
+    "Technical deep dives, project stories, and engineering lessons by John Oba (Afrodev).",
 });
 </script>
 <style scoped>

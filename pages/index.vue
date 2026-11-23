@@ -1,27 +1,26 @@
 <template>
   <main id="main-content" tabindex="-1">
     <div class="page-mast">
-      <span>A personal corner of the internet</span
-      ><span>Software, systems & small tools</span>
+      <span>Afrodev</span><span>Software &amp; side projects</span>
     </div>
     <section class="home-intro reveal">
       <div class="home-intro__copy">
-        <p class="eyebrow">Product engineer · Lagos, Nigeria</p>
+        <p class="eyebrow">Software engineer · Lagos, Nigeria</p>
         <h1>John Oba<span>.</span></h1>
         <p class="home-statement">
-          I make software.<br /><em>And follow my curiosity.</em>
+          I build web products<br /><em>and tools I actually use.</em>
         </p>
         <p class="home-summary">
-          From a database of African startups to a seven-clip Mac app. I work
-          across interfaces, backend systems, and the details that make them fit
-          together.
+          Co-founder at StartupList Africa and senior engineer at Alveum. Most
+          of my time goes into web apps, backend systems, AI features, and the
+          occasional Mac app.
         </p>
         <div class="home-actions">
           <a class="text-link" href="#selected-work"
-            >Explore my work <span aria-hidden="true">↓</span></a
+            >See my work <span aria-hidden="true">↓</span></a
           >
           <a class="text-link" href="mailto:obajohn75@gmail.com"
-            >Say hello <span aria-hidden="true">↗</span></a
+            >Say hi <span aria-hidden="true">↗</span></a
           >
         </div>
       </div>
@@ -30,8 +29,8 @@
 
     <section id="selected-work" class="editorial-section home-work">
       <div class="section-label">
-        <h2><span>01</span>Selected work</h2>
-        <NuxtLink to="/portfolio">The full index ↗</NuxtLink>
+        <h2><span>01</span>Selected projects</h2>
+        <NuxtLink to="/portfolio">All projects ↗</NuxtLink>
       </div>
       <div class="work-grid">
         <NuxtLink
@@ -53,7 +52,7 @@
 
     <section class="editorial-section">
       <div class="section-label">
-        <h2><span>02</span>From the workbench</h2>
+        <h2><span>02</span>Smaller tools &amp; experiments</h2>
         <a
           href="https://github.com/johnexzy"
           target="_blank"
@@ -78,8 +77,8 @@
 
     <section class="editorial-section">
       <div class="section-label">
-        <h2><span>03</span>Notes along the way</h2>
-        <NuxtLink :to="blogOrigin">All writing ↗</NuxtLink>
+        <h2><span>03</span>Recent writing</h2>
+        <NuxtLink :to="blogOrigin">All posts ↗</NuxtLink>
       </div>
       <NuxtLink
         v-for="article in selectedArticles"
@@ -100,8 +99,8 @@
     <div class="home-colophon">
       <span class="colophon-star" aria-hidden="true">✳</span>
       <p>
-        I share code on GitHub.<br />Here, I keep the work and the notes
-        together.
+        Most of my code is up on GitHub.<br />This site is just where I keep the
+        projects and write-ups in one place.
       </p>
     </div>
   </main>
@@ -128,12 +127,12 @@ const selectedArticles = [
   .map((path) => articles.find((a) => a._path === path))
   .filter(Boolean);
 useSeoMeta({
-  title: "John Oba — Software, systems & small tools",
+  title: "John Oba (Afrodev) — Software Engineer",
   description:
-    "Product engineer in Lagos. Co-founder of StartupList Africa. Building native software, research tools, and real-time systems.",
-  ogTitle: "John Oba — Software, systems & small tools",
+    "Software engineer in Lagos and co-founder of StartupList Africa. Building web products, backend systems, AI tools, and Mac apps.",
+  ogTitle: "John Oba (Afrodev) — Software Engineer",
   ogDescription:
-    "A personal index of products, open-source work, and notes on building software.",
+    "Projects, open-source tools, and writing by John Oba (Afrodev).",
   twitterCard: "summary",
 });
 </script>

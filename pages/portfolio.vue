@@ -1,14 +1,13 @@
 <template>
   <main id="main-content" tabindex="-1">
     <div class="page-mast">
-      <span>The work index</span
-      ><span>Independent projects & collaborations</span>
+      <span>Projects</span><span>Products, open source &amp; client work</span>
     </div>
     <header class="page-heading reveal">
-      <h1>Products, tools,<br /><em>& experiments.</em></h1>
+      <h1>Things I’ve<br /><em>built.</em></h1>
       <p>
-        Long-running products, small tools, and experiments that took on a life
-        of their own.
+        Products I’ve been running for years, open-source utilities, and weekend
+        experiments.
       </p>
     </header>
     <div class="work-filters" aria-label="Filter projects">
@@ -43,8 +42,8 @@
     </div>
     <section class="editorial-section">
       <div class="section-label">
-        <h2><span>↳</span>Smaller, earlier, open-ended</h2>
-        <span class="eyebrow">Code worth sharing</span>
+        <h2><span>↳</span>Smaller repos &amp; older experiments</h2>
+        <span class="eyebrow">On GitHub</span>
       </div>
       <a
         v-for="work in smallWorks"
@@ -63,8 +62,8 @@
     </section>
     <section class="editorial-section">
       <div class="section-label">
-        <h2><span>↳</span>Built with others</h2>
-        <NuxtLink to="/about">Experience ↗</NuxtLink>
+        <h2><span>↳</span>Client &amp; team work</h2>
+        <NuxtLink to="/about">Work history ↗</NuxtLink>
       </div>
       <a
         v-for="work in collaborations"
@@ -83,27 +82,27 @@
 </template>
 <script setup lang="ts">
 import { projects, smallWorks, collaborations } from "~/data/work";
-const filters = ["All work", "Products", "Open source", "Experiments"];
-const activeFilter = ref("All work");
+const filters = ["All", "Products", "Open source", "Experiments"];
+const activeFilter = ref("All");
 const kinds: Record<string, string> = {
   Products: "Product",
   "Open source": "Open source",
   Experiments: "Experiment",
 };
 const countFor = (filter: string) =>
-  filter === "All work"
+  filter === "All"
     ? projects.length
     : projects.filter((p) => p.kind === kinds[filter]).length;
 const visibleProjects = computed(() =>
-  activeFilter.value === "All work"
+  activeFilter.value === "All"
     ? projects
     : projects.filter((p) => p.kind === kinds[activeFilter.value]),
 );
 useSeoMeta({
-  title: "Work — John Oba",
+  title: "Projects — John Oba",
   description:
-    "Products, native Mac apps, open-source tools, and experiments by John Oba.",
-  ogTitle: "Work — John Oba",
+    "Products, Mac apps, open-source tools, and experiments built by John Oba (Afrodev).",
+  ogTitle: "Projects — John Oba",
 });
 </script>
 <style scoped>
