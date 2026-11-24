@@ -166,16 +166,16 @@ export const projects: WorkProject[] = [
     ],
   },
   {
-    slug: "macos-computer-use",
-    title: "macOS Computer Use",
+    slug: "useui",
+    title: "UseUI",
     category: "Developer tool",
     kind: "Open source",
     period: "2026",
     role: "Creator",
     summary:
-      "An MCP server that lets AI agents inspect and control Mac apps safely.",
+      "An MCP server that lets AI agents inspect and control Mac apps and browsers safely.",
     description:
-      "A Model Context Protocol server backed by a native Swift core. It gives agents access to macOS screenshots, Vision OCR, and Accessibility controls while keeping window targeting and permissions strict.",
+      "A Model Context Protocol server backed by a native Swift core. It gives agents access to macOS screenshots, Vision OCR, Accessibility controls, and background browser automation while keeping window targeting and permissions strict.",
     visual: "native",
     details: [
       {
@@ -195,7 +195,7 @@ export const projects: WorkProject[] = [
     links: [
       {
         label: "View source",
-        href: "https://github.com/johnexzy/macos-computer-use",
+        href: "https://github.com/johnexzy/useui",
       },
     ],
   },
@@ -333,7 +333,15 @@ export const smallWorks = [
   },
 ];
 
-export const collaborations = [
+export interface Collaboration {
+  title: string;
+  description: string;
+  discipline: string;
+  href?: string;
+  status?: string;
+}
+
+export const collaborations: Collaboration[] = [
   {
     title: "Nomba",
     description:
@@ -360,7 +368,7 @@ export const collaborations = [
     description:
       "Payment flows across web, mobile, and internal admin tools.",
     discipline: "Product engineering",
-    href: "https://www.bonbonpay.com",
+    status: "Sunset",
   },
   {
     title: "Victor Onazi",

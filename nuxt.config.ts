@@ -63,6 +63,10 @@ export default defineNuxtConfig({
   },
 
   // Static Site Generation Configuration
+  routeRules: {
+    "/work/macos-computer-use": { redirect: "/work/useui" },
+  },
+
   nitro: {
     prerender: {
       routes: blogSite

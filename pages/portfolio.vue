@@ -28,7 +28,8 @@
     </header>
 
     <p class="sr-only" role="status">
-      {{ visibleProjects.length }} projects shown
+      {{ visibleProjects.length }}
+      {{ visibleProjects.length === 1 ? "project" : "projects" }} shown
     </p>
 
     <section class="portfolio-grid-wrap">
@@ -98,21 +99,29 @@
         <NuxtLink to="/about" class="btn-pill">Work history ↗</NuxtLink>
       </div>
       <div class="surface-list">
-        <a
+        <component
+          :is="work.href ? 'a' : 'div'"
           v-for="work in collaborations"
           :key="work.title"
-          :href="work.href"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="surface-row"
+          :href="work.href || undefined"
+          :target="work.href ? '_blank' : undefined"
+          :rel="work.href ? 'noopener noreferrer' : undefined"
+          :class="['surface-row', { 'surface-row--static': !work.href }]"
         >
           <div>
-            <h3>{{ work.title }}</h3>
+            <div class="surface-row__title-row">
+              <h3>{{ work.title }}</h3>
+              <span v-if="work.status" class="surface-row__status">{{
+                work.status
+              }}</span>
+            </div>
             <p>{{ work.description }}</p>
           </div>
           <span class="surface-row__tag">{{ work.discipline }}</span>
-          <span class="surface-row__arrow" aria-hidden="true">↗</span>
-        </a>
+          <span v-if="work.href" class="surface-row__arrow" aria-hidden="true"
+            >↗</span
+          >
+        </component>
       </div>
     </section>
   </main>

@@ -192,7 +192,9 @@
           @click="menuOpen = false"
         >
           <span>{{ item.label }}</span>
-          <span aria-hidden="true">↗</span>
+          <span aria-hidden="true">{{
+            item.to.startsWith("https://") ? "↗" : "→"
+          }}</span>
         </NuxtLink>
       </nav>
       <div class="mobile-drawer__footer">
@@ -463,12 +465,19 @@ const toggleTheme = () => {
 .mobile-drawer__footer {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 20px;
+  gap: 4px 12px;
   margin-top: 10px;
-  padding: 12px 14px 4px;
+  padding: 4px 8px 0;
   border-top: 1px solid var(--border-subtle);
   font: 12px var(--mono);
   color: var(--muted);
+}
+
+.mobile-drawer__footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 6px;
 }
 
 @media (max-width: 820px) {

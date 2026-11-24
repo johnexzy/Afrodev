@@ -292,15 +292,44 @@ const copied = ref(false);
 let copyTimer: ReturnType<typeof setTimeout> | undefined;
 
 async function copyEmail() {
+  const email = "obajohn75@gmail.com";
+  let didCopy = false;
+
   try {
-    await navigator.clipboard.writeText("obajohn75@gmail.com");
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(email);
+      didCopy = true;
+    }
+  } catch {
+    // Fall back to execCommand below when Clipboard API is blocked.
+  }
+
+  if (!didCopy && typeof document !== "undefined") {
+    const textarea = document.createElement("textarea");
+    textarea.value = email;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    textarea.style.pointerEvents = "none";
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      didCopy = document.execCommand("copy");
+    } catch {
+      didCopy = false;
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  }
+
+  if (didCopy) {
     copied.value = true;
     clearTimeout(copyTimer);
     copyTimer = setTimeout(() => {
       copied.value = false;
     }, 1800);
-  } catch {
-    window.location.href = "mailto:obajohn75@gmail.com";
+  } else {
+    window.location.href = `mailto:${email}`;
   }
 }
 
@@ -311,7 +340,7 @@ const featuredBento = [
   "peerplay",
 ].map((slug) => projects.find((p) => p.slug === slug)!);
 
-const workbench = ["macos-computer-use", "pixelator", "xtts", "box-tools"].map(
+const workbench = ["useui", "pixelator", "xtts", "box-tools"].map(
   (slug) => projects.find((p) => p.slug === slug)!,
 );
 
@@ -428,7 +457,7 @@ useSeoMeta({
   align-items: center;
   gap: 10px;
   min-height: 46px;
-  padding: 5px 8px 5px 16px;
+  padding: 1px 2px 1px 16px;
   border-radius: 14px;
   background: var(--card);
   border: 1px solid var(--border);
@@ -447,9 +476,9 @@ useSeoMeta({
 }
 
 .contact-pill__copy {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  width: 44px;
+  height: 44px;
+  border-radius: 11px;
   display: grid;
   place-items: center;
   color: var(--muted);

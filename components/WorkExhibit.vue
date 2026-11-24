@@ -247,7 +247,7 @@
         <div class="mcu-inspector">
           <div class="mcu-inspector__head">
             <span class="mcu-dot" />
-            <span>macos-computer-use</span>
+            <span>useui</span>
             <span class="mcu-lang">Swift MCP</span>
           </div>
           <div class="mcu-log">
